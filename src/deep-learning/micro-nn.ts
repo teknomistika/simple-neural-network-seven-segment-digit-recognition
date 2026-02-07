@@ -1,5 +1,5 @@
 import { dot, sigmoid, sigmoidDerivative } from "./helpers";
-import type { Vector } from "./types";
+import type { Vector } from "../types";
 
 /**
  * Neural Network (1 neuron as output)

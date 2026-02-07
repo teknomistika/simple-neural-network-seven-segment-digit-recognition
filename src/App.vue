@@ -2,7 +2,9 @@
 import { onBeforeUnmount, onBeforeUpdate, ref } from 'vue';
 import SevenSegment from './components/SevenSegment.vue';
 import Drawer from './components/Drawer.vue';
-const disp = ref<number | null>(0)
+import type { Segment } from './types';
+
+const activeSegements = ref<Segment[]>([])
 
 // const i = setInterval(() => {
 //   if (disp.value == 9) disp.value = 0
@@ -17,8 +19,8 @@ const disp = ref<number | null>(0)
 
 <template>
   <div style="display: flex;">
-    <Drawer />
-    <SevenSegment :value="disp" />
+    <Drawer @segments="v => activeSegements = v" />
+    <SevenSegment :active-segements="activeSegements" />
   </div>
 </template>
 

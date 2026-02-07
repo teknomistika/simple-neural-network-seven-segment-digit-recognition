@@ -12,20 +12,21 @@
 </template>
 
 <script setup lang="ts">
-import { sevenSegmentMaps } from '@/utils/seven-segment.util';
+import type { Segment } from '@/types';
 import { onMounted, shallowRef, watch } from 'vue';
 
-const props = defineProps<{ value: number | null }>()
+const props = defineProps<{ activeSegements: Segment[] }>()
 const svg = shallowRef<SVGElement>()
-function updateDigit(value: number | null) {
-    const cls = (null === value || typeof value == 'undefined') ? '' : sevenSegmentMaps[value]
-    svg.value?.setAttribute('class', `svg ${cls}`)
+function updateSegments(value: Segment[]) {
+    const active = Array.isArray(value) ? value.join(' ') : ''
+    svg.value?.setAttribute('class', `svg ${active}`)
 }
 
-watch(() => props.value, (v) => {
-    updateDigit(v)
+watch(() => props.activeSegements, (v) => {
+    updateSegments(v)
 })
-onMounted( () => updateDigit(props.value))
+onMounted(() => updateSegments(props.activeSegements))
+
 </script>
 
 <style lang="css">

@@ -8,15 +8,22 @@
             <button class="clear-btn" @click="clearCanvas">Clear</button>
             <button class="save-btn" @click="saveDrawing">Download</button>
         </div>
+        <div ref="stats" class="stats"></div>
         <a style="display: none;" ref="link"></a>
     </div>
 </template>
 <script setup lang="ts">
+import type { Segment } from '@/types';
 import { scanSevenSegmentOnCanvas } from '@/utils/seven-segment.util';
 import { onBeforeUnmount, onMounted, shallowRef } from 'vue';
 
 const drawCanvas = shallowRef<HTMLCanvasElement>()
 const link = shallowRef<HTMLAnchorElement>()
+const stats = shallowRef<HTMLDivElement>()
+
+const emits = defineEmits<{
+    segments: [Segment[]]
+}>()
 
 let ctx: CanvasRenderingContext2D
 // Drawing state
@@ -32,12 +39,16 @@ function startDrawing(e) {
 function clearCanvas() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, drawCanvas.value.width, drawCanvas.value.height);
+    emits('segments', [])
+    stats.value.innerHTML = ''
     // updatePreview();
 }
 
 function scanDigit() {
     const result = scanSevenSegmentOnCanvas(ctx, drawCanvas.value.width, drawCanvas.value.height)
     console.log(result)
+    stats.value.innerHTML = `Detected: ${result.detected} (${result.confidence}%)<br/>Segments: ${result.segments}`
+    emits('segments', result.segments)
 }
 
 function draw(e) {
@@ -132,7 +143,7 @@ onBeforeUnmount(() => {
 })
 
 </script>
-<style scoped>
+<style>
 .drawer {
     background: white;
     border-radius: 20px;
@@ -142,7 +153,7 @@ onBeforeUnmount(() => {
     width: 100%;
 }
 
-.canvas-container {
+.drawer .canvas-container {
     background: #f8f9fa;
     border-radius: 15px;
     padding: 20px;
@@ -152,19 +163,25 @@ onBeforeUnmount(() => {
     align-items: center;
 }
 
-canvas {
+.drawer canvas {
     border: 2px dashed #ccc;
     cursor: crosshair;
     background: white;
     touch-action: none;
 }
 
-.controls {
+.drawer .controls {
     display: flex;
     gap: 4px;
 }
 
-.controls button {
+.drawer .stats {
+    margin-top: 12px;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.drawer .controls button {
     flex: 1;
     padding: 10px;
     border: none;
