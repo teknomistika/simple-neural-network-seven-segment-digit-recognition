@@ -1,19 +1,12 @@
-import type { Segment } from "@/types";
-import { addSample, getAllSamples } from "@/utils/samples.util";
+import type { Dataset, Segment } from "@/types";
+import { addSample, clearSamples, getAllSamples, importPredefined } from "@/utils/dataset.util";
 import { ref, type Ref } from "vue";
 
 /**
  * Seven-segment image record
  */
-export interface DataSetItem {
-    id: number;
-    digit: number;
-    segments: Segment[];
-    blob: Blob;
-    createdAt: Date;
-}
 
-const images = ref<DataSetItem[]>([])
+const images = ref<Dataset[]>([])
 const loading = ref(false)
 let sampleLoaded = false
 
@@ -24,13 +17,27 @@ async function loadImages() {
     return images.value
 }
 
+async function loadDefaults() {
+    loading.value = true
+    images.value = await importPredefined()
+    loading.value = false
+}
+
+async function clear() {
+    loading.value = true
+    await clearSamples()
+    images.value = []
+    loading.value = false
+}
+
 async function deleteById(id: number) {
     // await deleteImage(digit);
     await loadImages();
 }
 export function useDatasets() {
-    let ready: Promise<DataSetItem[]>
+    let ready: Promise<Dataset[]>
     if (!sampleLoaded) {
+        sampleLoaded = true
         ready = loadImages()
     } else {
         ready = Promise.resolve(images.value)
@@ -39,7 +46,9 @@ export function useDatasets() {
         images,
         loading,
         ready,
+        clear,
         loadImages,
+        loadDefaults,
         deleteById
     }
 }

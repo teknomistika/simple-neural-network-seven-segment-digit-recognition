@@ -1,4 +1,4 @@
-import type { Segment } from "@/types";
+import type { Segment, SegmentScanResult } from "@/types";
 
 /**
  * Digit to segment mapping (which segments are ON for each digit).
@@ -39,7 +39,7 @@ const SEVEN_SEGMENT_LOCATIONS: Map<Segment, { x1: number, y1: number, x2: number
     ['g', { x1: 1, y1: 3, x2: 3, y2: 5 }],   // middle horizontal
 ])
 
-export function scanSevenSegmentOnCanvas(ctx: CanvasRenderingContext2D, width: number, height: number) {
+export function scanSevenSegmentOnCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): SegmentScanResult {
     const imageData = ctx.getImageData(0, 0, width, height, {});
 
     const scaled = [];
@@ -134,7 +134,7 @@ DIGIT_SEGMENTS_SCANS.push(
 function guestDigitFromSegments(segments: Segment[]) {
 
     const filledSegments = segments.sort();
-    let bestMatch = null;
+    let bestMatch: number = null;
     let bestScore = 0;
 
     for (const { digit, segments } of DIGIT_SEGMENTS_SCANS) {

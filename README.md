@@ -23,6 +23,8 @@ If you understand this project, you understand the *core* of modern neural netwo
 
 We want to recognize digits `0–9` displayed using a **seven-segment display**:
 
+### TODO: Add Seven segment image with segment's name
+
 ```
  a
 f b

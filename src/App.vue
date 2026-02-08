@@ -1,54 +1,74 @@
 <script setup lang="ts">
-import { useSteps } from "@/composables/useSteps"
-import Step1RawData from "./pages/Step1RawData.vue";
+import { nextTick, onMounted, ref } from "vue";
+import Step1RawData from "./pages/Step1Dataset.vue";
 
-const { steps, currentStep, setStep } = useSteps()
+const steps = [
+  { value: 1, title: "Dataset" },
+  { value: 2, title: "Training" },
+  { value: 3, title: "Inference" }
+]
+
+const currentStep = ref(1)
+
+
 </script>
 
 <template>
-  <v-app>
-
-    <!-- App Bar -->
-    <v-app-bar elevation="1">
+  <v-app theme="dark">
+    <v-app-bar elevation="2" extended density="compact">
+      <template #prepend>
+        <VBtn :disabled="currentStep == 1" @click="--currentStep" prepend-icon="mdi-arrow-left">Prev</VBtn>
+      </template>
+      <template #append>
+        <VBtn :disabled="currentStep == steps.length" @click="++currentStep" append-icon="mdi-arrow-right">Next</VBtn>
+      </template>
       <v-app-bar-title>
-        Single-Neuron Seven-Segment Neural Network
+        <h1 class="text-h6 text-center text-disabled text-truncate">Single-Neuron Seven-Segment Neural Network</h1>
       </v-app-bar-title>
+      <template #extension>
+        <div class="d-flex flex-column w-100">
+          <VStepper :elevation="0" :model-value="currentStep">
+            <VStepperHeader key="stepper-header">
+              <template v-for="(step, i) of steps" :key="step.value">
+                <VDivider v-if="!!i" />
+                <VStepperItem color="primary" class="py-0" v-bind="step"></VStepperItem>
+              </template>
+            </VStepperHeader>
+          </VStepper>
+        </div>
+      </template>
     </v-app-bar>
-
-    <!-- Navigation Drawer -->
-    <v-navigation-drawer permanent width="280">
-      <v-list nav>
-        <v-list-item v-for="step in steps" :key="step.id" :active="step.id === currentStep" @click="setStep(step.id)"
-          rounded="lg">
-          <template #prepend>
-            <v-avatar size="28" color="primary">
-              <span class="text-white text-caption">
-                {{ step.id }}
-              </span>
-            </v-avatar>
-          </template>
-
-          <v-list-item-title>
-            {{ step.title }}
-          </v-list-item-title>
-
-          <v-list-item-subtitle>
-            Step {{ step.id }}
-          </v-list-item-subtitle>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
     <!-- Main Content -->
     <v-main>
-      <v-container fluid>
-        <Step1RawData v-if="currentStep === 1" />
-        <!-- <StepSegment v-if="currentStep === 2" />
-        <StepDataset v-if="currentStep === 3" />
-        <StepTraining v-if="currentStep === 4" />
-        <StepInference v-if="currentStep === 5" /> -->
-      </v-container>
-    </v-main>
+      <VWindow v-model="currentStep">
+        <VWindowItem :value="1">
+          <Step1RawData />
+        </VWindowItem>
+        <VWindowItem :value="2">
+          <v-card title="Step Two" flat>...</v-card>
+        </VWindowItem>
+        <VWindowItem :value="3">
+          <v-card title="Step Three" flat>...</v-card>
+        </VWindowItem>
 
+
+      </VWindow>
+      <!-- <VStepper :model-value="currentStep" >
+        <VStepperWindow key="stepper-window">
+AAA
+          <VStepperWindowItem :value="1">
+            X
+            <Step1RawData />
+          </VStepperWindowItem>
+          <VStepperWindowItem :value="2">
+            <v-card title="Step Two" flat>...</v-card>
+          </VStepperWindowItem>
+          <VStepperWindowItem :value="3">
+            <v-card title="Step Three" flat>...</v-card>
+          </VStepperWindowItem>
+        </VStepperWindow>
+      </VStepper> -->
+    </v-main>
+    
   </v-app>
 </template>
