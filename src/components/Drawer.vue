@@ -1,25 +1,35 @@
 <template>
     <div class="drawer">
-
-        <div class="canvas-container">
-            <canvas ref="drawCanvas" width="90" height="160"></canvas>
+        <VRow>
+            <VCol class="text-center">
+                <p>Draw seven-segment digit here:</p>
+                <canvas ref="drawCanvas" width="90" height="160"></canvas>
+            </VCol>
+            <VCol class="text-center">
+                <p>Detected segments:</p>
+                <SevenSegment :active-segements="result?.segments" />
+            </VCol>
+        </VRow>
+        <VSheet class="pa-3" color="primary">
+        </VSheet>
+        <div>
+            <VBtn density="comfortable" variant="text" color="warning" @click="clearCanvas">Clear</VBtn>
+            <VBtn density="comfortable" variant="text" color="primary" @click="saveDrawing">Download</VBtn>
         </div>
-        <div class="controls">
-            <button class="clear-btn" @click="clearCanvas">Clear</button>
-            <button class="save-btn" @click="saveDrawing">Download</button>
-        </div>
-        <div ref="stats" class="stats"></div>
+        <pre ref="stats" class="stats"></pre>
         <a style="display: none;" ref="link"></a>
     </div>
 </template>
 <script setup lang="ts">
-import type { Segment } from '@/types';
+import type { Segment, SegmentScanResult } from '@/types';
 import { scanSevenSegmentOnCanvas } from '@/utils/seven-segment.util';
-import { onBeforeUnmount, onMounted, shallowRef } from 'vue';
+import { onBeforeUnmount, onMounted, shallowRef, type ShallowRef } from 'vue';
+import SevenSegment from './SevenSegment.vue';
 
 const drawCanvas = shallowRef<HTMLCanvasElement>()
 const link = shallowRef<HTMLAnchorElement>()
 const stats = shallowRef<HTMLDivElement>()
+const result = shallowRef<SegmentScanResult>(null)
 
 const emits = defineEmits<{
     segments: [Segment[]]
@@ -45,10 +55,10 @@ function clearCanvas() {
 }
 
 function scanDigit() {
-    const result = scanSevenSegmentOnCanvas(ctx, drawCanvas.value.width, drawCanvas.value.height)
-    console.log(result)
-    stats.value.innerHTML = `Detected: ${result.detected} (${result.confidence}%)<br/>Segments: ${result.segments}`
-    emits('segments', result.segments)
+    result.value = scanSevenSegmentOnCanvas(ctx, drawCanvas.value.width, drawCanvas.value.height)
+    const { detected, segments, confidence } = result.value
+    stats.value.innerHTML = `Detected: ${detected} (${confidence}%)<br/>Segments: ${segments}`
+    emits('segments', segments)
 }
 
 function draw(e) {
@@ -144,51 +154,10 @@ onBeforeUnmount(() => {
 
 </script>
 <style>
-.drawer {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 200px;
-    width: 100%;
-}
-
-.drawer .canvas-container {
-    background: #f8f9fa;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .drawer canvas {
     border: 2px dashed #ccc;
     cursor: crosshair;
     background: white;
     touch-action: none;
-}
-
-.drawer .controls {
-    display: flex;
-    gap: 4px;
-}
-
-.drawer .stats {
-    margin-top: 12px;
-    font-size: 12px;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.drawer .controls button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
-    /* font-size: 16px; */
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
 }
 </style>

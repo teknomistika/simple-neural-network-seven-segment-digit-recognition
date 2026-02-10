@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Drawer from "@/components/Drawer.vue";
+import SevenSegment from "@/components/SevenSegment.vue";
 import { useDatasets } from "@/composables/useDatasets";
 import { onMounted, ref } from "vue";
 import { VCardItem } from "vuetify/components";
@@ -8,31 +10,20 @@ const {
     loading,
     ready,
     loadDefaults,
-    clear
+    clear,
+    deleteById
 } = useDatasets();
-
-/**
- * Reference to your drawing canvas
- */
-const canvasRef = ref<HTMLCanvasElement | null>(null);
-const selectedDigit = ref<number>(0);
-const digits = Array.from({ length: 10 }).map((_, i) => i)
 
 function blobToURL(blob: Blob): string {
     return URL.createObjectURL(blob);
 }
 
-function saveFromCanvas() {
-    if (!canvasRef.value) return;
-    // createOrUpdateFromCanvas(selectedDigit.value, canvasRef.value);
-}
-
-ready.then(samples => {
+ready.then(_ => {
     if (images.value.length > 0)
         return
 
+    // Load default samples
     if (window['_flag_db_is_just_created']) {
-        // Load default samples
         loadDefaults()
     }
 })
@@ -43,12 +34,20 @@ function clearAll() {
     clear()
 }
 
+function deleteIt(id: number) {
+    if (!confirm('Delete this?'))
+        return
+    deleteById(id)
+}
+
 function loadDefaultSample() {
     if (!confirm('Load default samples?'))
         return
 
     loadDefaults()
 }
+
+const dialog = ref(false)
 
 </script>
 
@@ -57,23 +56,15 @@ function loadDefaultSample() {
         <template v-slot:append>
             <v-btn @click="loadDefaultSample" prependIcon="mdi-database-import">Load Defaults</v-btn>
             <v-btn color="error" @click="clearAll" prependIcon="mdi-delete-sweep">Clear</v-btn>
-            <v-btn color="success" prependIcon="mdi-image-plus">Add</v-btn>
+            <v-btn color="success" @click="dialog = true" prependIcon="mdi-image-plus">Add</v-btn>
         </template>
     </VAppBar>
     <v-container fluid>
         <VProgressLinear color="primary" absolute v-if="loading" indeterminate />
-        <VDialog>
+        <VDialog v-model="dialog">
             <VCard title="Add new Image">
                 <VCardItem>
-                    <!-- Canvas -->
-                    <div>
-                        <!-- <canvas
-                    ref="canvasRef"
-                    width="200"
-                    height="300"
-                    style="border: 1px solid #ccc"
-                  /> -->
-                    </div>
+                    <Drawer/>
                 </VCardItem>
                 <VCardActions>
                     <VBtn>Add</VBtn>
@@ -81,34 +72,18 @@ function loadDefaultSample() {
             </VCard>
         </VDialog>
         <v-row>
-            <v-col v-for="(img, i) in images" :key="img.id" cols="12" sm="6" md="4" lg="3">
-                <v-sheet elevation="1">
-                    <div class="d-flex flex-row">
-                        <v-img :src="blobToURL(img.blob)" :minWidth="90" style="flex:none" aspectRatio="9 / 16"></v-img>
-                        <div style="flex: auto;" class="pa-3">
-                            <VBtn 
-                            style="float: right;"
-                            variant="plain" icon="mdi-delete" density="compact" color="error"/>
-                            <h3>
-                                Digit: {{ img.detected }}
-                            </h3>
-                            <div class="d-flex ga-1">
-                                <VChip size="small" variant="flat" density="comfortable" label color="primary"
-                                    v-for="item in img.segments" :key="item" v-text="item" />
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- <v-table class="text-caption" density="compact">
-                        <tbody>
-                            <tr align="right">
-                                <th>Digit:</th>
-
-                                <td>{{ img.detected }}</td>
-                            </tr>
-                        </tbody>
-                    </v-table> -->
+            <v-col v-for="(img, i) in images" :key="img.id" cols="12" sm="3" md="2">
+                <v-sheet elevation="1" class="pa-3 text-center">
+                    <VBtn @click="deleteIt(img.id)" style="float: right;" variant="plain" icon="mdi-delete"
+                        density="compact" color="error" />
+                    <h3>Digit: {{ img.detected }} </h3>
+                    <!-- <div class="d-flex ga-1">
+                            <VChip size="small" variant="flat" density="comfortable" label color="primary"
+                                v-for="item in img.segments" :key="item" v-text="item" />
+                        </div> -->
+                    <VImg>
+                        <SevenSegment :active-segements="img.segments" />
+                    </VImg>
                 </v-sheet>
             </v-col>
         </v-row>

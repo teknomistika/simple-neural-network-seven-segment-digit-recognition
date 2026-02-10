@@ -69,12 +69,15 @@ export async function getAllSamples(useDb?: IDBDatabase) {
 export async function deleteSample(id: number) {
     const db = await openDB();
 
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_NAME, "readwrite");
         tx.objectStore(STORE_NAME).delete(id);
         tx.oncomplete = () => resolve(undefined);
         tx.onerror = () => reject(tx.error);
     });
+    const samples = await getAllSamples(db)
+    db.close()
+    return samples
 }
 
 export async function clearSamples(): Promise<void> {
@@ -86,8 +89,8 @@ export async function clearSamples(): Promise<void> {
 
         const req = store.clear()
 
-        req.onsuccess = () => resolve()
-        req.onerror = () => reject(req.error)
+        req.onsuccess = () => {resolve(); db.close()}
+        req.onerror = () => {reject(req.error); db.close()}
     })
 }
 

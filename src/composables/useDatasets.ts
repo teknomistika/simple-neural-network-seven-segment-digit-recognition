@@ -1,5 +1,5 @@
 import type { Dataset, Segment } from "@/types";
-import { addSample, clearSamples, getAllSamples, importPredefined } from "@/utils/dataset.util";
+import { addSample, clearSamples, deleteSample, getAllSamples, importPredefined } from "@/utils/dataset.util";
 import { ref, type Ref } from "vue";
 
 /**
@@ -31,8 +31,9 @@ async function clear() {
 }
 
 async function deleteById(id: number) {
-    // await deleteImage(digit);
-    await loadImages();
+    loading.value = true
+    images.value = await deleteSample(id)
+    loading.value = false
 }
 export function useDatasets() {
     let ready: Promise<Dataset[]>
