@@ -154,11 +154,3 @@ onBeforeUnmount(() => {
 })
 
 </script>
-<style>
-.drawer canvas {
-    border: 2px dashed #ccc;
-    cursor: crosshair;
-    background: white;
-    touch-action: none;
-}
-</style>

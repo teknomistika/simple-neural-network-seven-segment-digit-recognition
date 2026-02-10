@@ -5,6 +5,7 @@ import { useDatasets } from "@/composables/useDatasets";
 import type { Segment } from "@/types";
 import { ref } from "vue";
 
+
 const {
     images,
     loading,
@@ -22,8 +23,7 @@ function onSegments(digit: number, segments: Segment[]) {
 }
 
 ready.then(_ => {
-    if (images.value.length > 0)
-        return console.log(images.value)
+    if (images.value.length > 0) return
 
     // Load default samples
     if (window['_flag_db_is_just_created']) {
@@ -64,7 +64,7 @@ const dialog = ref(false)
     </VAppBar>
     <v-container fluid>
         <VProgressLinear color="primary" absolute v-if="loading" indeterminate />
-        <VDialog v-model="dialog">
+        <VDialog v-model="dialog" :maxWidth="600">
             <Drawer @segments="onSegments" />
         </VDialog>
         <v-row>

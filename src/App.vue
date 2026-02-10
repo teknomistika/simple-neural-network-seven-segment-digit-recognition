@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from "vue";
 import Step1RawData from "./pages/Step1Dataset.vue";
+import Step2Training from "./pages/Step2Training.vue";
+import Step3Inference from "./pages/Step3Inference.vue";
 
 const steps = [
   { value: 1, title: "Dataset" },
@@ -42,33 +44,16 @@ const currentStep = ref(1)
     <v-main>
       <VWindow v-model="currentStep">
         <VWindowItem :value="1">
-          <Step1RawData />
+          <Step1RawData v-if="currentStep == 1" />
         </VWindowItem>
         <VWindowItem :value="2">
-          <v-card title="Step Two" flat>...</v-card>
+          <Step2Training v-if="currentStep == 2" />
         </VWindowItem>
         <VWindowItem :value="3">
-          <v-card title="Step Three" flat>...</v-card>
+          <Step3Inference v-if="currentStep == 3" />
         </VWindowItem>
-
-
       </VWindow>
-      <!-- <VStepper :model-value="currentStep" >
-        <VStepperWindow key="stepper-window">
-AAA
-          <VStepperWindowItem :value="1">
-            X
-            <Step1RawData />
-          </VStepperWindowItem>
-          <VStepperWindowItem :value="2">
-            <v-card title="Step Two" flat>...</v-card>
-          </VStepperWindowItem>
-          <VStepperWindowItem :value="3">
-            <v-card title="Step Three" flat>...</v-card>
-          </VStepperWindowItem>
-        </VStepperWindow>
-      </VStepper> -->
     </v-main>
-    
+
   </v-app>
 </template>
