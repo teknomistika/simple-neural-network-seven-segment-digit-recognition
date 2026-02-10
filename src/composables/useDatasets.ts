@@ -35,6 +35,18 @@ async function deleteById(id: number) {
     images.value = await deleteSample(id)
     loading.value = false
 }
+
+async function addSampleSegments(digit: number, segments: Segment[]) {
+    loading.value = true
+    const newRecord = await addSample({
+        createdAt: new Date(),
+        segments,
+        digit
+    })
+    images.value = [...images.value, newRecord]
+    loading.value = false
+}
+
 export function useDatasets() {
     let ready: Promise<Dataset[]>
     if (!sampleLoaded) {
@@ -50,6 +62,7 @@ export function useDatasets() {
         clear,
         loadImages,
         loadDefaults,
+        addSampleSegments,
         deleteById
     }
 }

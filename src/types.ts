@@ -7,9 +7,10 @@ export type SegmentScanResult = {
     confidence: string,
     segments: Segment[]
 }
-export interface Dataset extends SegmentScanResult {
+export interface Dataset {
     id: number;
-    blob: Blob;
+    digit: number;
+    segments: Segment[]
     createdAt: Date;
 }
 

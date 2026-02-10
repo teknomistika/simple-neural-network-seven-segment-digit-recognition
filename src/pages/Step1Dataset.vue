@@ -2,8 +2,8 @@
 import Drawer from "@/components/Drawer.vue";
 import SevenSegment from "@/components/SevenSegment.vue";
 import { useDatasets } from "@/composables/useDatasets";
-import { onMounted, ref } from "vue";
-import { VCardItem } from "vuetify/components";
+import type { Segment } from "@/types";
+import { ref } from "vue";
 
 const {
     images,
@@ -11,16 +11,19 @@ const {
     ready,
     loadDefaults,
     clear,
-    deleteById
+    deleteById,
+    addSampleSegments
 } = useDatasets();
 
-function blobToURL(blob: Blob): string {
-    return URL.createObjectURL(blob);
+function onSegments(digit: number, segments: Segment[]) {
+    addSampleSegments(digit, segments).then(() => {
+        dialog.value = false
+    })
 }
 
 ready.then(_ => {
     if (images.value.length > 0)
-        return
+        return console.log(images.value)
 
     // Load default samples
     if (window['_flag_db_is_just_created']) {
@@ -62,25 +65,14 @@ const dialog = ref(false)
     <v-container fluid>
         <VProgressLinear color="primary" absolute v-if="loading" indeterminate />
         <VDialog v-model="dialog">
-            <VCard title="Add new Image">
-                <VCardItem>
-                    <Drawer/>
-                </VCardItem>
-                <VCardActions>
-                    <VBtn>Add</VBtn>
-                </VCardActions>
-            </VCard>
+            <Drawer @segments="onSegments" />
         </VDialog>
         <v-row>
             <v-col v-for="(img, i) in images" :key="img.id" cols="12" sm="3" md="2">
                 <v-sheet elevation="1" class="pa-3 text-center">
                     <VBtn @click="deleteIt(img.id)" style="float: right;" variant="plain" icon="mdi-delete"
                         density="compact" color="error" />
-                    <h3>Digit: {{ img.detected }} </h3>
-                    <!-- <div class="d-flex ga-1">
-                            <VChip size="small" variant="flat" density="comfortable" label color="primary"
-                                v-for="item in img.segments" :key="item" v-text="item" />
-                        </div> -->
+                    <h3>Digit: {{ img.digit }} </h3>
                     <VImg>
                         <SevenSegment :active-segements="img.segments" />
                     </VImg>

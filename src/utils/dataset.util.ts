@@ -1,5 +1,5 @@
 import type { Dataset } from "@/types";
-import { scanSevenSegmentOnCanvas } from "./seven-segment.util";
+import { SEVEN_SEGMENT_DIGIT_MAPS } from "./seven-segment.util";
 
 const DB_NAME = "seven-segment-db";
 const DB_VERSION = 1;
@@ -89,66 +89,21 @@ export async function clearSamples(): Promise<void> {
 
         const req = store.clear()
 
-        req.onsuccess = () => {resolve(); db.close()}
-        req.onerror = () => {reject(req.error); db.close()}
+        req.onsuccess = () => { resolve(); db.close() }
+        req.onerror = () => { reject(req.error); db.close() }
     })
-}
-
-function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
-    return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-            if (!blob) throw new Error("Canvas export failed");
-            resolve(blob);
-        }, "image/png");
-    });
 }
 
 export async function importPredefined() {
-    const img = new Image()
-    const canvas = document.createElement("canvas")
-
-    const loadImage = (url: string) => new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve()
-        img.onerror = () => reject(new Error("Failed to load image"))
-        img.src = url
-    })
-    // Load default URL of image list
-    const imageUrls = Object.values(import.meta.glob('@/samples/*.png', {
-        eager: true,
-        query: '?url',
-        import: 'default'
-    }) as Record<string, string>)
-    let ctx: CanvasRenderingContext2D
+    const records = SEVEN_SEGMENT_DIGIT_MAPS.map((segments, digit) => ({
+        digit,
+        segments,
+        createdAt: new Date()
+    }))
     const db = await openDB()
-
-    for (const url of imageUrls) {
-        if (ctx) {
-            // clear
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        } else {
-            ctx = canvas.getContext("2d")
-            if (!ctx) {
-                throw new Error("Failed to get 2D canvas context")
-            }
-        }
-
-        await loadImage(url)
-        canvas.width = img.naturalWidth
-        canvas.height = img.naturalHeight
-        ctx.drawImage(img, 0, 0)
-
-        const result = scanSevenSegmentOnCanvas(ctx, img.naturalWidth, img.naturalHeight)
-        const blob = await canvasToBlob(canvas)
-        const sample = await addSample({
-            ...result,
-            createdAt: new Date(),
-            blob,
-        }, db)
-
+    for (const record of records) {
+        await addSample(record, db)
     }
-    canvas.remove()
-    img.remove()
     const samples = await getAllSamples(db)
     db.close()
     return samples

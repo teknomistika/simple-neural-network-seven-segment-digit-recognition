@@ -22,9 +22,9 @@
 import type { Segment } from '@/types';
 import { onMounted, shallowRef, watch } from 'vue';
 
-const props = defineProps<{ activeSegements: Segment[] }>()
+const props = defineProps<{ activeSegements?: Segment[] }>()
 const svg = shallowRef<SVGElement>()
-function updateSegments(value: Segment[]) {
+function updateSegments(value?: Segment[]) {
     const active = Array.isArray(value) ? value.join(' ') : ''
     svg.value?.setAttribute('class', active)
 }

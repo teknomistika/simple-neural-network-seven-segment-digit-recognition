@@ -1,38 +1,50 @@
 <template>
-    <div class="drawer">
-        <VRow>
-            <VCol class="text-center">
-                <p>Draw seven-segment digit here:</p>
-                <canvas ref="drawCanvas" width="90" height="160"></canvas>
-            </VCol>
-            <VCol class="text-center">
-                <p>Detected segments:</p>
-                <SevenSegment :active-segements="result?.segments" />
-            </VCol>
-        </VRow>
-        <VSheet class="pa-3" color="primary">
-        </VSheet>
-        <div>
-            <VBtn density="comfortable" variant="text" color="warning" @click="clearCanvas">Clear</VBtn>
-            <VBtn density="comfortable" variant="text" color="primary" @click="saveDrawing">Download</VBtn>
-        </div>
-        <pre ref="stats" class="stats"></pre>
-        <a style="display: none;" ref="link"></a>
-    </div>
+    <VCard title="Add new Sample">
+        <VCardItem class="pt-0">
+            <VRow>
+                <VCol class="text-center">
+                    <p>Draw seven-segment digit here:</p>
+                    <canvas ref="drawCanvas" width="90" height="160"></canvas>
+                    <p>
+                        Detected Digit: <code>{{ result?.detected || '?' }}</code> ({{ result?.confidence || '0' }}%)
+                    </p>
+                </VCol>
+                <VCol class="text-center">
+                    <p>Seven Segment result:</p>
+                    <SevenSegment :active-segements="result?.segments" />
+                    <p>
+                        Segments: <code>{{ result?.segments?.join() || 'n/a' }}</code>
+                    </p>
+                </VCol>
+            </VRow>
+        </VCardItem>
+        <VDivider />
+        <VCardActions>
+            <VBtn color="warning" @click="clearCanvas">Clear</VBtn>
+            <VBtn color="primary" @click="saveDrawing">Download</VBtn>
+            <VSpacer />
+            <VBtn color="success" :disabled="!result?.segments"
+                @click="emits('segments', result.detected, result.segments)" variant="tonal">Add to Dataset</VBtn>
+        </VCardActions>
+    </VCard>
+    <a style="display: none;" ref="link"></a>
 </template>
 <script setup lang="ts">
 import type { Segment, SegmentScanResult } from '@/types';
 import { scanSevenSegmentOnCanvas } from '@/utils/seven-segment.util';
-import { onBeforeUnmount, onMounted, shallowRef, type ShallowRef } from 'vue';
+import { onBeforeUnmount, onMounted, shallowRef } from 'vue';
 import SevenSegment from './SevenSegment.vue';
-
 const drawCanvas = shallowRef<HTMLCanvasElement>()
 const link = shallowRef<HTMLAnchorElement>()
-const stats = shallowRef<HTMLDivElement>()
-const result = shallowRef<SegmentScanResult>(null)
+const nullResult = {
+    confidence: '0',
+    detected: null,
+    segments: null
+}
+const result = shallowRef<SegmentScanResult>(nullResult)
 
 const emits = defineEmits<{
-    segments: [Segment[]]
+    segments: [number, Segment[]]
 }>()
 
 let ctx: CanvasRenderingContext2D
@@ -49,16 +61,11 @@ function startDrawing(e) {
 function clearCanvas() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, drawCanvas.value.width, drawCanvas.value.height);
-    emits('segments', [])
-    stats.value.innerHTML = ''
-    // updatePreview();
+    result.value = { ...nullResult }
 }
 
 function scanDigit() {
     result.value = scanSevenSegmentOnCanvas(ctx, drawCanvas.value.width, drawCanvas.value.height)
-    const { detected, segments, confidence } = result.value
-    stats.value.innerHTML = `Detected: ${detected} (${confidence}%)<br/>Segments: ${segments}`
-    emits('segments', segments)
 }
 
 function draw(e) {
@@ -70,9 +77,6 @@ function draw(e) {
     ctx.stroke();
 
     [lastX, lastY] = [e.offsetX, e.offsetY];
-
-    // Update preview in real-time
-    // updatePreview();
 }
 function handleTouch(e) {
     e.preventDefault();
@@ -105,14 +109,11 @@ function saveDrawing() {
         link.value.click();
     }, 0)
 }
+
 onMounted(() => {
     // Main drawing canvas setup
     const canvas = drawCanvas.value!
     ctx = canvas.getContext('2d', { willReadFrequently: true });
-    // const miniCanvas = document.getElementById('miniCanvas');
-    // const miniCtx = miniCanvas.getContext('2d');
-
-
 
     // Configure drawing style
     ctx.strokeStyle = '#000000';
