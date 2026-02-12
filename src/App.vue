@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import Step1RawData from "./pages/Step1Dataset.vue";
 import Step2Training from "./pages/Step2Training.vue";
 import Step3Inference from "./pages/Step3Inference.vue";
@@ -10,8 +10,14 @@ const steps = [
   { value: 3, title: "Inference" }
 ]
 
-const currentStep = ref(1)
+const currentStep = ref(
+  location.hash?.length > 1 ?
+    parseInt(location.hash.slice(1)) :
+    1)
 
+watch(currentStep, (step) => {
+  location.hash = `#${step}`
+})
 
 </script>
 

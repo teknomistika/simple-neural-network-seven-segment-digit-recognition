@@ -1,4 +1,4 @@
-import { dot, sigmoid, sigmoidDerivative } from "./helpers";
+import { dot, sigmoid, sigmoidDerivative } from "../utils/math.util";
 import type { Vector } from "../types";
 
 /**

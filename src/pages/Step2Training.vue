@@ -1,5 +1,6 @@
 <template>
-    <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom" :title="`Training (item)`" density="compact">
+    <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom"
+        :title="`Training (item)`" density="compact">
         <template v-slot:append>
             <v-btn prependIcon="mdi-database-import">Load Defaults</v-btn>
             <v-btn color="error" prependIcon="mdi-delete-sweep">Clear</v-btn>
@@ -11,15 +12,23 @@
 
         <v-row>
             <v-col>
+                <NeuralNetwork :model="model" />
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script setup lang="ts">
+import NeuralNetwork from '@/components/NeuralNetwork.vue';
+import { useModel } from '@/composables/useModel';
 import { ref } from 'vue';
 
 
 const loading = ref(false)
+const {
+    model,
+    save
+} = useModel()
+
 
 </script>

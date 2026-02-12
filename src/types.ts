@@ -29,3 +29,10 @@ export type Sample = {
     */
     y: number
 }
+
+export type MicroNNModel = {
+    weights: Vector
+    bias: number
+    learningRate: number
+    lastUpdate: Date
+}

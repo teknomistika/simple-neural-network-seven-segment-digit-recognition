@@ -1,4 +1,4 @@
-import type { Vector } from "../types";
+import type { MicroNNModel, Vector } from "../types";
 
 /**
  * Sigmoid activation
@@ -24,3 +24,4 @@ export function sigmoidDerivative(y: number) {
 export function dot(a: Vector, b: Vector) {
   return a.reduce((p, c, i) => p + c * (b[i] ?? 0), 0)
 }
+
