@@ -16,23 +16,11 @@ export interface Dataset {
 
 export type Vector = Array<number>
 
-/**
- * Training sample
-*/
-export type Sample = {
-    /**
-     * Seven segment input
-    */
-    x: Vector
-    /**
-     * Target output (digit / 10)
-    */
-    y: number
-}
-
 export type MicroNNModel = {
     weights: Vector
     bias: number
     learningRate: number
-    lastUpdate: Date
+    totalEpochs: number
+    createdAt: Date
+    updateAt: Date
 }

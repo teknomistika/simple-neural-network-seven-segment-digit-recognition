@@ -7,20 +7,36 @@
 <script setup lang="ts">
 import type { MicroNNModel } from '@/types';
 import { onMounted, onUnmounted, shallowRef } from 'vue';
-import { Svg, SVG } from '@svgdotjs/svg.js'
+import Konva from 'konva'
 
 const props = defineProps<{ model: MicroNNModel }>()
 const drawing = shallowRef<HTMLDivElement>()
-let draw: Svg
+let stage: Konva.Stage
+let layer: Konva.Layer
+const width = 600
+const height = 800
+
 
 onMounted(() => {
-    draw = SVG().addTo(drawing.value)
-    // draw pink square
-    draw.rect(100, 100).move(100, 50).fill('#f06')
+    stage = new Konva.Stage({
+        container: drawing.value,
+        width,
+        height,
+    })
+    layer = new Konva.Layer();
+    stage.add(layer)
+
+    const circle = new Konva.Circle({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 50,
+        fill: 'green',
+    });
+    layer.add(circle);
 })
 
 onUnmounted(() => {
-    draw.remove()
+    stage.remove()
 })
 
 </script>

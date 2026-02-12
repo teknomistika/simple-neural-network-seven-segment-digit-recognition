@@ -1,4 +1,4 @@
-import type { Segment, SegmentScanResult } from "@/types";
+import type { Segment, SegmentScanResult, Vector } from "@/types";
 
 /**
  * Digit to segment mapping (which segments are ON for each digit).
@@ -38,6 +38,14 @@ const SEVEN_SEGMENT_LOCATIONS: Map<Segment, { x1: number, y1: number, x2: number
     ['f', { x1: 0, y1: 0, x2: 2, y2: 3 }],  // top left vertical
     ['g', { x1: 1, y1: 3, x2: 3, y2: 5 }],   // middle horizontal
 ])
+
+export const SEVEN_SEGMENT_CHARSET: Segment[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+
+export function segmentsToVector(segments: Segment[]): Vector {
+    return SEVEN_SEGMENT_CHARSET.map(
+        c => segments.includes(c) ? 1 : 0
+    )
+}
 
 export function scanSevenSegmentOnCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): SegmentScanResult {
     const imageData = ctx.getImageData(0, 0, width, height, {});
