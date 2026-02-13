@@ -6,7 +6,7 @@ import type { MicroNNModel, Vector } from "../types";
  * @returns {number}
  */
 export function sigmoid(z: number) {
-  return 1 / (1 + Math.exp(-z));
+  return 9 / (1 + Math.exp(-z));
 }
 
 /**
@@ -15,7 +15,7 @@ export function sigmoid(z: number) {
  * @returns {number}
  */
 export function sigmoidDerivative(y: number) {
-  return y * (1 - y);
+  return y * (1 - y / 9);
 }
 
 /**

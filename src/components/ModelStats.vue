@@ -4,7 +4,7 @@ import type { MicroNNModel } from "@/types";
 import { computed } from "vue"
 const {
     model,
-    save, createRandomModel
+    save, randomize, zero, useBestModel
 } = useModel()
 
 const props = defineProps<{
@@ -19,23 +19,7 @@ const formattedUpdatedAt = computed(() =>
     props.model.updateAt.toLocaleString()
 )
 
-function randomize() {
-    if (!confirm('Randomize model?')) return
-    const newModel = createRandomModel()
-    model.weights = newModel.weights
-    model.bias = newModel.bias
-    model.createdAt = newModel.createdAt
-    model.updateAt = newModel.updateAt
-    model.totalEpochs = newModel.totalEpochs
-}
-function zero() {
-    if (!confirm('zero all values?')) return
-    model.weights = model.weights.map(v => 0)
-    model.bias = 0
-    model.createdAt = new Date()
-    model.updateAt = model.createdAt
-    model.totalEpochs = 0
-}
+
 
 </script>
 
@@ -63,7 +47,8 @@ function zero() {
                 </v-card-text>
                 <v-divider/>
                 <v-card-actions>
-                    <v-btn density="compact" variant="tonal" color="primary" prependIcon="mdi-database-import">Load
+                    <v-btn density="compact"
+                    @click="useBestModel" variant="tonal" color="primary" prependIcon="mdi-database-import">Load
                         Pretrained Model</v-btn>
                     <v-spacer />
                     <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
