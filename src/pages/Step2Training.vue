@@ -20,7 +20,7 @@
         <v-row>
             <v-col>
                 <ModelStats :model="model" />
-                <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" />
+                <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
             </v-col>
         </v-row>
         <v-card class="mt-3">
@@ -63,6 +63,7 @@ const {
 
 let samples: {
     inputs: Vector,
+    target: number/* Charcode of "0" */,
     digit: number
 }[] = []
 
@@ -80,6 +81,7 @@ ready.then(s => {
     // Tokenize
     samples = s.map(v => ({
         digit: v.digit,
+        target: (v.digit+1)/10,
         inputs: segmentsToVector(v.segments)
     }))
 })
@@ -93,10 +95,11 @@ function step() {
     const outputDigit = predict(sample.inputs)
 
     // Mean Squared Error derivative
-    const error = outputDigit - sample.digit;
+    const error = outputDigit - sample.target;
     stat = lastResults.value[sample.digit]
     stat.error = error.toFixed(3)
-    stat.isOk = Math.round(outputDigit) == sample.digit
+    
+    stat.isOk = parseFloat((outputDigit).toFixed(1)) == sample.target
     currentEpoch.value++
     model.totalEpochs++
     if (lossHistory.value.length >= 50) {
@@ -107,7 +110,7 @@ function step() {
     
     // Backprop (chain rule)
        // Backprop (chain rule)
-    const dSigmoid = sigmoidDerivative(sample.digit);
+    const dSigmoid = sigmoidDerivative(sample.target);
     const gradient = error * dSigmoid;
 
     // Update weights

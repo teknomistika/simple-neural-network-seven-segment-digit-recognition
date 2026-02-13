@@ -83,7 +83,7 @@ function zero() {
 function predict(x: Vector) {
     const z = dot(model.weights, x) + model.bias;
     // Identity (linear) activation
-    return sigmoid(z);
+    return sigmoid( z)
 }
 
 function save() {
