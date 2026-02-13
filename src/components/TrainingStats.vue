@@ -6,10 +6,6 @@ const props = defineProps<{
     currentEpoch: number
 }>()
 
-const latestLoss = computed(() => {
-    if (props.losses.length === 0) return "-"
-    return props.losses[props.losses.length - 1].toFixed(4)
-})
 
 </script>
 
@@ -27,12 +23,9 @@ const latestLoss = computed(() => {
         </v-card-subtitle>
 
         <v-card-text>
-            <v-sparkline :model-value="losses" color="blue" line-width="2" padding="8" smooth auto-draw />
+            <v-sparkline :gradient="['#f72047', '#ffd200', '#1feaea']" :model-value="losses" color="blue" line-width="2" padding="8" smooth auto-draw />
 
-            <div class="text-caption mt-2">
-                Latest loss:
-                <strong>{{ latestLoss }}</strong>
-            </div>
+            <slot/>
         </v-card-text>
     </v-card>
 </template>

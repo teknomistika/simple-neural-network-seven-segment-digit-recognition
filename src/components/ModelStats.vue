@@ -27,7 +27,14 @@ function randomize() {
     model.createdAt = newModel.createdAt
     model.updateAt = newModel.updateAt
     model.totalEpochs = newModel.totalEpochs
-
+}
+function zero() {
+    if (!confirm('zero all values?')) return
+    model.weights = model.weights.map( v => 0)
+    model.bias = 0
+    model.createdAt = new Date()
+    model.updateAt = model.createdAt
+    model.totalEpochs = 0
 }
 
 </script>
@@ -42,6 +49,8 @@ function randomize() {
                         Pretrained Model</v-btn>
                     <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
                         prependIcon="mdi-close-circle-multiple">Randomize</v-btn>
+                    <v-btn density="compact" variant="tonal" color="warning" @click="zero"
+                        prependIcon="mdi-close-circle-multiple">Reset</v-btn>
                 </template>
                 <v-card-text>
                     Weights (a–g):
@@ -54,7 +63,7 @@ function randomize() {
                 </v-card-text>
                 <v-divider />
                 <v-card-text>
-                    <v-slider label="Bias" v-model="model.bias" :max="1" :min="-1" class="align-center" hide-details>
+                    <v-slider label="Bias" v-model="model.bias" :max="5" :min="-5" class="align-center" hide-details>
                         <template v-slot:append>
                             <v-text-field v-model="model.bias" density="compact" style="width: 120px" type="number"
                                 hide-details variant="outlined" single-line></v-text-field>
