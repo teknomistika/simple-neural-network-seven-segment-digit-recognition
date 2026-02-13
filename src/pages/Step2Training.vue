@@ -58,7 +58,6 @@ const {
 
 let samples: {
     inputs: Vector,
-    target: number
     digit: number
 }[] = []
 
@@ -74,21 +73,20 @@ const { ready } = useDatasets()
 ready.then(s => {
     // Tokenize
     samples = s.map(v => ({
-        target: v.digit / 10,
         digit: v.digit,
         inputs: segmentsToVector(v.segments)
     }))
 })
 
 function step() {
-    // const sample = samples[sampleAt++]
-    const sample = samples[0] // train zero only
+    const sample = samples[sampleAt++]
+    // const sample = samples[0] // train zero only
     if (sampleAt >= samples.length)
         sampleAt = 0
-    const res = predict(sample.inputs)
-    const detectedDigit = Math.floor(res * 10);
+    const outputDigit = predict(sample.inputs)
+
     // Mean Squared Error derivative
-    const error = res - sample.target;
+    const error = outputDigit - sample.digit;
     lastResults.value[sample.digit] = error.toFixed(4)
     currentEpoch.value++
     model.totalEpochs++
@@ -97,20 +95,17 @@ function step() {
     } else {
         lossHistory.value = [...lossHistory.value, error]
     }
-
-    // console.log(sample.target, res, detectedDigit)
-
+    
     // Backprop (chain rule)
-    const dSigmoid = sigmoidDerivative(sample.target);
-    const gradient = error * dSigmoid;
+    
 
     // Update weights
     for (let i = 0; i < model.weights.length; i++) {
-        model.weights[i] -= model.learningRate * gradient * sample.inputs[i];
+        model.weights[i] -= model.learningRate * error * sample.inputs[i];
     }
 
     // Update bias
-    model.bias -= model.learningRate * gradient;
+    model.bias -= model.learningRate * error;
 }
 const bestModel = {
     "learningRate": 0.048960508130678974,

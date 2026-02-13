@@ -25,7 +25,8 @@ function createRandomModel(inputSize = 7) {
 
 function predict(x: Vector) {
     const z = dot(model.weights, x) + model.bias;
-    return sigmoid(z) * 10;
+    // Identity (linear) activation
+    return z;
 }
 
 function save() {
