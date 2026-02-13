@@ -20,14 +20,19 @@
         <v-row>
             <v-col>
                 <ModelStats :model="model" />
-                <TrainingStats :losses="lossHistory" :currentEpoch="currentEpoch"/>
+                <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" />
             </v-col>
         </v-row>
-        <v-row>
-            <v-col v-for="(loss, digit) in lastResults">
-                <b>{{ digit }}</b>: <code>{{ loss.toFixed(4) }}</code>
-            </v-col>
-        </v-row>
+        <v-card class="mt-3">
+            <v-card-item>
+                <v-row>
+                    <v-col v-for="(loss, digit) in lastResults" class="border">
+                        <div class="text-center"><b>{{ digit }}</b></div>
+                        <small><code>{{ loss }}</code></small>
+                    </v-col>
+                </v-row>
+            </v-card-item>
+        </v-card>
     </v-container>
 </template>
 
@@ -44,7 +49,7 @@ import { nextTick, ref, shallowRef, watch } from 'vue';
 const lossHistory = shallowRef<number[]>([])
 const training = ref(false)
 const currentEpoch = ref(0)
-const lastResults = ref(Array.from({ length: 10 }).map((_, i) => 0))
+const lastResults = ref(Array.from({ length: 10 }).map((_, i) => '?.????'))
 
 const {
     model,
@@ -76,15 +81,15 @@ ready.then(s => {
 })
 
 function step() {
-    const sample = samples[sampleAt++]
-    // const sample = samples[1]
+    // const sample = samples[sampleAt++]
+    const sample = samples[0] // train zero only
     if (sampleAt >= samples.length)
         sampleAt = 0
     const res = predict(sample.inputs)
     const detectedDigit = Math.floor(res * 10);
     // Mean Squared Error derivative
     const error = res - sample.target;
-    lastResults.value[sample.digit] = error
+    lastResults.value[sample.digit] = error.toFixed(4)
     currentEpoch.value++
     model.totalEpochs++
     if (lossHistory.value.length >= 50) {

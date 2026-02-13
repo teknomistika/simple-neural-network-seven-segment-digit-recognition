@@ -30,7 +30,7 @@ function randomize() {
 }
 function zero() {
     if (!confirm('zero all values?')) return
-    model.weights = model.weights.map( v => 0)
+    model.weights = model.weights.map(v => 0)
     model.bias = 0
     model.createdAt = new Date()
     model.updateAt = model.createdAt
@@ -43,17 +43,8 @@ function zero() {
     <!-- Weights -->
     <v-row>
         <v-col cols="12" sm="9">
-            <v-card density="compact" title="Model Info">
-                <template #append>
-                    <v-btn density="compact" variant="tonal" color="primary" prependIcon="mdi-database-import">Load
-                        Pretrained Model</v-btn>
-                    <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
-                        prependIcon="mdi-close-circle-multiple">Randomize</v-btn>
-                    <v-btn density="compact" variant="tonal" color="warning" @click="zero"
-                        prependIcon="mdi-close-circle-multiple">Reset</v-btn>
-                </template>
+            <v-card  density="compact" title="Model Info: Weights (a–g):">
                 <v-card-text>
-                    Weights (a–g):
                     <div class="d-flex ga-1 mt-2 justify-center">
                         <v-chip density="comfortable" variant="outlined" v-for="(weight, index) in model.weights"
                             :key="index" size="small" color="primary">
@@ -70,6 +61,16 @@ function zero() {
                         </template>
                     </v-slider>
                 </v-card-text>
+                <v-divider/>
+                <v-card-actions>
+                    <v-btn density="compact" variant="tonal" color="primary" prependIcon="mdi-database-import">Load
+                        Pretrained Model</v-btn>
+                    <v-spacer />
+                    <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
+                        prependIcon="mdi-close-circle-multiple">Randomize</v-btn>
+                    <v-btn density="compact" variant="tonal" color="warning" @click="zero"
+                        prependIcon="mdi-close-circle-multiple">Reset</v-btn>
+                </v-card-actions>
             </v-card>
 
         </v-col>
