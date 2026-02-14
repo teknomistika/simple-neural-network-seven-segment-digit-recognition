@@ -43,7 +43,7 @@ export const SEVEN_SEGMENT_CHARSET: Segment[] = ['a', 'b', 'c', 'd', 'e', 'f', '
 
 export function segmentsToVector(segments: Segment[]): Vector {
     return SEVEN_SEGMENT_CHARSET.map(
-        c => segments.includes(c) ? 1 : 0
+        c => segments.includes(c) ? 1 : -1
     )
 }
 

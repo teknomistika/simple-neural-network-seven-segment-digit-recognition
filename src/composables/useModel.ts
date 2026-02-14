@@ -81,9 +81,11 @@ function zero() {
 }
 
 function predict(x: Vector) {
+    // Addition
+    // const z = x.reduce((p, c, i) => p + c + model.weights[i], model.bias)
     const z = dot(model.weights, x) + model.bias;
     // Identity (linear) activation
-    return sigmoid( z)
+    return Math.tanh(z)
 }
 
 function save() {

@@ -26,7 +26,7 @@
         <v-card class="mt-3">
             <v-card-item>
                 <v-row>
-                    <v-col v-for="(loss, digit) in lastResults" :class="{'text-green': loss.isOk, 'bg-primary': digit == currentDigit}" class="border">
+                    <v-col v-for="(loss, digit) in lastResults" :class="{'text-green': loss.isOk, 'bg-primary': digit === currentDigit}" class="border">
                         <div class="text-center"><b>{{ digit }}</b></div>
                         <small><code>{{ loss.error  }}</code></small>
                     </v-col>
@@ -68,7 +68,7 @@ let samples: {
 }[] = []
 
 let sampleAt: number = 0
-const currentDigit = ref(0)
+const currentDigit = ref(null as number | null)
 
 watch(training, start => {
     if (start) {
@@ -81,7 +81,7 @@ ready.then(s => {
     // Tokenize
     samples = s.map(v => ({
         digit: v.digit,
-        target: (v.digit+1)/10,
+        target: v.digit/10,
         inputs: segmentsToVector(v.segments)
     }))
 })
@@ -89,17 +89,17 @@ let reduce = 0, stat: typeof lastResults.value[0]
 function step() {
     const sample = samples[sampleAt++]
     // currentDigit.value = sample.digit
-    // const sample = samples[0] // train zero only
+    // const sample = samples[5] // train zero only
     if (sampleAt >= samples.length)
         sampleAt = 0
-    const outputDigit = predict(sample.inputs)
+    const output = predict(sample.inputs)
 
     // Mean Squared Error derivative
-    const error = outputDigit - sample.target;
+    const error = output - sample.target;
     stat = lastResults.value[sample.digit]
     stat.error = error.toFixed(3)
     
-    stat.isOk = parseFloat((outputDigit).toFixed(1)) == sample.target
+    stat.isOk = Math.abs(error) < 0.1 
     currentEpoch.value++
     model.totalEpochs++
     if (lossHistory.value.length >= 50) {
@@ -110,8 +110,9 @@ function step() {
     
     // Backprop (chain rule)
        // Backprop (chain rule)
-    const dSigmoid = sigmoidDerivative(sample.target);
-    const gradient = error * dSigmoid;
+    // const totalFilled = sample.inputs.filter(Boolean).length
+    // const dSigmoid = sigmoidDerivative(sample.target);
+    const gradient =  (error) * Math.tanh(sample.target);
 
     // Update weights
     for (let i = 0; i < model.weights.length; i++) {
