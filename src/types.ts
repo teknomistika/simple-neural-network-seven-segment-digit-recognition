@@ -1,7 +1,6 @@
 
 export type Segment = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'
 
-
 export type SegmentScanResult = {
     detected: number | null,
     confidence: string,

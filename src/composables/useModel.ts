@@ -79,13 +79,43 @@ function zero() {
         totalEpochs: 0,
     })
 }
-
+const scale = 10
 function predict(x: Vector) {
     // Addition
     // const z = x.reduce((p, c, i) => p + c + model.weights[i], model.bias)
-    const z = dot(model.weights, x) + model.bias;
+
+    // Dot product of two vectors
+    const z = model.weights.reduce((p, c, i) => p + c * x[i], 0) + model.bias
+    // Regular sigmoid, scale 0-1
+    const s = 1 / (1 + Math.exp(-z));
+    // Scaled sigmoid, scale 0-9
+    // const s = scale * (1 / (1 + Math.exp(-z)));
+    // const s = Math.tanh(z);
+    // const z = dot(model.weights, x) + model.bias;
     // Identity (linear) activation
-    return Math.tanh(z)
+    // return Math.tanh(z)
+    return s * scale
+}
+
+function backprop(yHat: number, target: number, x: Vector) {
+    // Mean Squared Error derivative
+    const error = yHat - target;
+    const sigma = yHat / scale
+    // sigmoidDerivative
+    const dSigmoid = sigma * (1 - sigma)
+    // tanhDerivative
+    // const dTanh = 1 - sigma * sigma
+    // dL/dz
+    const delta = error * scale * dSigmoid
+    // const delta = error/9// * scale * dTanh
+
+    // Update weights
+    for (let i = 0; i < model.weights.length; i++) {
+        model.weights[i] -= model.learningRate * delta * x[i];
+    }
+
+    // Update bias
+    model.bias -= model.learningRate * delta;
 }
 
 function save() {
@@ -98,6 +128,7 @@ export function useModel() {
         save,
         zero,
         randomize,
+        backprop,
         useBestModel,
         predict
     }

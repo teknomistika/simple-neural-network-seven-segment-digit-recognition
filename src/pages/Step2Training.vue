@@ -1,7 +1,7 @@
 <template>
     <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom" density="compact">
         <template #title>
-            <v-slider label="Learning Rate" v-model="model.learningRate" :max="1" :min="0" class="align-center"
+            <v-slider :step="0.01" label="Learning Rate" v-model="model.learningRate" :max="1" :min="0" class="align-center"
                 hide-details>
                 <template v-slot:append>
                     <v-text-field v-model="model.learningRate" density="compact" style="width: 120px" type="number"
@@ -56,10 +56,7 @@ const lastResults = ref(Array.from({ length: 10 }).map(
     }))
 )
 
-const {
-    model,
-    predict
-} = useModel()
+const { model, predict, backprop } = useModel()
 
 let samples: {
     inputs: Vector,
@@ -81,54 +78,50 @@ ready.then(s => {
     // Tokenize
     samples = s.map(v => ({
         digit: v.digit,
-        target: v.digit/10,
+        target: v.digit,
         inputs: segmentsToVector(v.segments)
     }))
 })
 let reduce = 0, stat: typeof lastResults.value[0]
 function step() {
     const sample = samples[sampleAt++]
+    // const sample = samples[1] // train one only
     // currentDigit.value = sample.digit
-    // const sample = samples[5] // train zero only
     if (sampleAt >= samples.length)
         sampleAt = 0
     const output = predict(sample.inputs)
 
     // Mean Squared Error derivative
     const error = output - sample.target;
-    stat = lastResults.value[sample.digit]
-    stat.error = error.toFixed(3)
-    
-    stat.isOk = Math.abs(error) < 0.1 
+
+    // Update UI
     currentEpoch.value++
     model.totalEpochs++
+
+    stat = lastResults.value[sample.digit]
+    stat.error = error.toFixed(3)
+    stat.isOk = (Math.round(output)) == sample.target
+
     if (lossHistory.value.length >= 50) {
         lossHistory.value = [...lossHistory.value.slice(1), error]
     } else {
         lossHistory.value = [...lossHistory.value, error]
     }
+    backprop(output, sample.target, sample.inputs)
+    // 
     
-    // Backprop (chain rule)
-       // Backprop (chain rule)
-    // const totalFilled = sample.inputs.filter(Boolean).length
-    // const dSigmoid = sigmoidDerivative(sample.target);
-    const gradient =  error * sample.target;
-
-    // Update weights
-    for (let i = 0; i < model.weights.length; i++) {
-        reduce = model.learningRate * gradient * sample.inputs[i];
-        model.weights[i] -= reduce
-    }
-
-    // Update bias
-    model.bias -= model.learningRate * gradient;
 }
 function multistep() {
     step()
     nextTick(() => {
         if (!training.value) return
-        // nextTick(multistep)
-        setTimeout(multistep, 0)
+        // Check all OK
+        if( lastResults.value.length == lastResults.value.filter(v => v.isOk).length){
+            // Stop it have all OK
+        }else{
+            // nextTick(multistep)
+            setTimeout(multistep, 0)
+        }
     })
 }
 
