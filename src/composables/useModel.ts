@@ -34,8 +34,8 @@ function train(scores: Vector, target: Vector, inputs: Vector) {
 
 
 // HELPER FUNCTIONS
-
 const existing = localStorage.getItem('micro-nn-model')
+const randomNumber = () => Math.random() * 2 - 1 // Math.floor(Math.random() * 5) + 1;
 
 const model = shallowRef(existing ?
     JSON.parse(existing) as MicroNNModel :
@@ -44,17 +44,17 @@ const model = shallowRef(existing ?
 function createRandomModel() {
     const now = new Date()
     const model: MicroNNModel = {
-        learningRate: 0.5,
+        learningRate: 0.05,
         weights: Array.from(
             { length: outputSize },
             () => Array.from(
                 { length: inputSize },
-                () => Math.random() * 2 - 1
+                randomNumber //Math.random() * 2 - 1
             ),
         ),
         bias: Array.from(
             { length: outputSize },
-            () => Math.random() * 2 - 1
+            randomNumber//() => Math.random() * 2 - 1
         ),
         createdAt: now,
         updateAt: now,
@@ -68,7 +68,7 @@ function zero() {
     if (!confirm('zero all values?')) return
     const now = new Date()
     model.value = {
-        learningRate: 0.1,
+        learningRate: 0.05,
         weights: Array.from(
             { length: outputSize },
             () => Array(inputSize).fill(0),

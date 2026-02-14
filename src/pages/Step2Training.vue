@@ -76,7 +76,7 @@ function makeSamples(s: Dataset[]) {
         const target: Vector = Array(outputSize).fill(0)
         target[digit] = 1
         const inputs: Vector = SEVEN_SEGMENT_CHARSET.map(
-            c => segments.includes(c) ? 0.1 : 0
+            c => segments.includes(c) ? 1 : 0
         )
         return { digit, target, inputs }
     })
