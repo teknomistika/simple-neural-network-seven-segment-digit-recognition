@@ -13,11 +13,11 @@ export interface Dataset {
     createdAt: Date;
 }
 
-export type Vector = Array<number>
-
+export type Vector = number[]
+export type Matrix = number[][]
 export type MicroNNModel = {
-    weights: Vector
-    bias: number
+    weights: Matrix
+    bias: Vector
     learningRate: number
     totalEpochs: number
     createdAt: Date

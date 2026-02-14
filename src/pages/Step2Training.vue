@@ -1,8 +1,8 @@
 <template>
     <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom" density="compact">
         <template #title>
-            <v-slider :step="0.01" label="Learning Rate" v-model="model.learningRate" :max="1" :min="0" class="align-center"
-                hide-details>
+            <v-slider :step="0.01" label="Learning Rate" v-model="model.learningRate" :max="1" :min="0"
+                class="align-center" hide-details>
                 <template v-slot:append>
                     <v-text-field v-model="model.learningRate" density="compact" style="width: 120px" type="number"
                         hide-details variant="outlined" single-line></v-text-field>
@@ -19,16 +19,17 @@
         <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
         <v-row>
             <v-col>
-                <ModelStats :model="model" />
+                <!-- <ModelStats :model="model" /> -->
                 <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
             </v-col>
         </v-row>
         <v-card class="mt-3">
             <v-card-item>
                 <v-row>
-                    <v-col v-for="(loss, digit) in lastResults" :class="{'text-green': loss.isOk, 'bg-primary': digit === currentDigit}" class="border">
+                    <v-col v-for="(loss, digit) in lastResults"
+                        :class="{ 'text-green': loss.isOk, 'bg-primary': digit === currentDigit }" class="border">
                         <div class="text-center"><b>{{ digit }}</b></div>
-                        <small><code>{{ loss.error  }}</code></small>
+                        <small><code>{{ loss.predicted }}</code></small>
                     </v-col>
                 </v-row>
             </v-card-item>
@@ -42,8 +43,7 @@ import TrainingStats from '@/components/TrainingStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
 import type { Dataset, Vector } from '@/types';
-import { sigmoidDerivative } from '@/utils/math.util';
-import { segmentsToVector } from '@/utils/seven-segment.util';
+import { SEVEN_SEGMENT_CHARSET } from '@/utils/seven-segment.util';
 import { nextTick, ref, shallowRef, watch } from 'vue';
 
 const lossHistory = shallowRef<number[]>([])
@@ -51,20 +51,18 @@ const training = ref(false)
 const currentEpoch = ref(0)
 const lastResults = ref(Array.from({ length: 10 }).map(
     (_, i) => ({
-        error: '?.???',
+        errors: Array(10).fill('?.???'),
+        scores: Array(10).fill('?.???'),
+        predicted: '?' as any,
         isOk: false
     }))
 )
 
-const { model, predict, backprop } = useModel()
+const { model, predict, train, inputSize, outputSize } = useModel()
 
-let samples: {
-    inputs: Vector,
-    target: number/* Charcode of "0" */,
-    digit: number
-}[] = []
-
+let samples: ReturnType<typeof makeSamples> = []
 let sampleAt: number = 0
+
 const currentDigit = ref(null as number | null)
 
 watch(training, start => {
@@ -72,53 +70,58 @@ watch(training, start => {
         multistep()
     }
 })
+function makeSamples(s: Dataset[]) {
+    return s.map(({ digit, segments }) => {
+        // Create target vector, only one output is set at the index
+        const target: Vector = Array(outputSize).fill(0)
+        target[digit] = 1
+        const inputs: Vector = SEVEN_SEGMENT_CHARSET.map(
+            c => segments.includes(c) ? 0.1 : 0
+        )
+        return { digit, target, inputs }
+    })
 
+}
 const { ready } = useDatasets()
-ready.then(s => {
-    // Tokenize
-    samples = s.map(v => ({
-        digit: v.digit,
-        target: v.digit,
-        inputs: segmentsToVector(v.segments)
-    }))
-})
-let reduce = 0, stat: typeof lastResults.value[0]
+ready.then(s => samples = makeSamples(s))
+
 function step() {
     const sample = samples[sampleAt++]
     // const sample = samples[1] // train one only
     // currentDigit.value = sample.digit
     if (sampleAt >= samples.length)
         sampleAt = 0
-    const output = predict(sample.inputs)
 
-    // Mean Squared Error derivative
-    const error = output - sample.target;
+    const scores = predict(sample.inputs)
+
+    const { predicted, errors } = train(scores, sample.target, sample.inputs)
 
     // Update UI
     currentEpoch.value++
-    model.totalEpochs++
+    model.value.totalEpochs++
 
-    stat = lastResults.value[sample.digit]
-    stat.error = error.toFixed(3)
-    stat.isOk = (Math.round(output)) == sample.target
-
+    const stat = lastResults.value[sample.digit]
+    stat.errors = errors
+    stat.scores = scores
+    stat.isOk = predicted == sample.digit
+    stat.predicted = errors[sample.digit].toFixed(4)
+    const error = lastResults.value.length - lastResults.value.filter( v => v.isOk).length
     if (lossHistory.value.length >= 50) {
         lossHistory.value = [...lossHistory.value.slice(1), error]
     } else {
         lossHistory.value = [...lossHistory.value, error]
     }
-    backprop(output, sample.target, sample.inputs)
-    // 
-    
+
+
 }
 function multistep() {
     step()
     nextTick(() => {
         if (!training.value) return
         // Check all OK
-        if( lastResults.value.length == lastResults.value.filter(v => v.isOk).length){
+        if (lastResults.value.length == lastResults.value.filter(v => v.isOk).length) {
             // Stop it have all OK
-        }else{
+        } else {
             // nextTick(multistep)
             setTimeout(multistep, 0)
         }

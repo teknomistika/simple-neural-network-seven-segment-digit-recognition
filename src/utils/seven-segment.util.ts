@@ -41,12 +41,6 @@ const SEVEN_SEGMENT_LOCATIONS: Map<Segment, { x1: number, y1: number, x2: number
 
 export const SEVEN_SEGMENT_CHARSET: Segment[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
 
-export function segmentsToVector(segments: Segment[]): Vector {
-    return SEVEN_SEGMENT_CHARSET.map(
-        c => segments.includes(c) ? 0.1 : -0.1
-    )
-}
-
 export function scanSevenSegmentOnCanvas(ctx: CanvasRenderingContext2D, width: number, height: number): SegmentScanResult {
     const imageData = ctx.getImageData(0, 0, width, height, {});
 
