@@ -112,7 +112,7 @@ function step() {
        // Backprop (chain rule)
     // const totalFilled = sample.inputs.filter(Boolean).length
     // const dSigmoid = sigmoidDerivative(sample.target);
-    const gradient =  (error) * Math.tanh(sample.target);
+    const gradient =  error * sample.target;
 
     // Update weights
     for (let i = 0; i < model.weights.length; i++) {
