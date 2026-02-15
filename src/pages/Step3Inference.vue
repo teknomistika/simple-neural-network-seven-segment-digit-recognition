@@ -11,15 +11,21 @@
 
         <v-row>
             <v-col>
+                <VSheet theme="light">
+                    <NeuralNetwork :model="model" />
+                </VSheet>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script setup lang="ts">
+import NeuralNetwork from '@/components/NeuralNetwork.vue';
+import { useModel } from '@/composables/useModel';
 import { ref } from 'vue';
 // https://codesandbox.io/p/sandbox/flamboyant-hypatia-k6dnp7
 
 const loading = ref(false)
+const { model } = useModel()
 
 </script>
