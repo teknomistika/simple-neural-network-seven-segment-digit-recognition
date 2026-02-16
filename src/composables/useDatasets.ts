@@ -1,68 +1,52 @@
 import type { Dataset, Segment } from "@/types";
-import { addSample, clearSamples, deleteSample, getAllSamples, importPredefined } from "@/utils/dataset.util";
-import { ref, type Ref } from "vue";
+import { ref, watch, type Ref } from "vue";
 
-/**
- * Seven-segment image record
- */
+const STORAGE_KEY = "dataset";
+const datasets = ref<Dataset[]>((() => {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+        const storedDatasets = (JSON.parse(raw) as any[])
+        storedDatasets.forEach(r => {
+            if (typeof r.createdAt == 'string')
+                r.createdAt = new Date(r.createdAt)
+        })
+        return storedDatasets
+    } else {
+        window['_flag_db_is_just_created'] = 1
+        return []
+    }
+})())
 
-const images = ref<Dataset[]>([])
-const loading = ref(false)
-let sampleLoaded = false
+watch(datasets, (changed) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(changed.map(v => ({
+        ...v,
+        createdAt: v.createdAt.toString(),
+    }))))
+}, { deep: true })
 
-async function loadImages() {
-    loading.value = true;
-    images.value = await getAllSamples(); // from your IndexedDB helper
-    loading.value = false;
-    return images.value
+function del(id: number) {
+    const idx = datasets.value.findIndex(v => v.id == id)
+    if (idx) {
+        datasets.value.splice(idx, 1)
+    }
+    return datasets
 }
 
-async function loadDefaults() {
-    loading.value = true
-    images.value = await importPredefined()
-    loading.value = false
-}
-
-async function clear() {
-    loading.value = true
-    await clearSamples()
-    images.value = []
-    loading.value = false
-}
-
-async function deleteById(id: number) {
-    loading.value = true
-    images.value = await deleteSample(id)
-    loading.value = false
-}
-
-async function addSampleSegments(digit: number, segments: Segment[]) {
-    loading.value = true
-    const newRecord = await addSample({
+function add(digit: number, segments: Segment[]) {
+    const id = Math.max(0, ...datasets.value.map(v => v.id)) + 1
+    const row: Dataset = {
+        id,
         createdAt: new Date(),
         segments,
         digit
-    })
-    images.value = [...images.value, newRecord]
-    loading.value = false
+    }
+    datasets.value.push(row)
 }
 
 export function useDatasets() {
-    let ready: Promise<Dataset[]>
-    if (!sampleLoaded) {
-        sampleLoaded = true
-        ready = loadImages()
-    } else {
-        ready = Promise.resolve(images.value)
-    }
     return {
-        images,
-        loading,
-        ready,
-        clear,
-        loadImages,
-        loadDefaults,
-        addSampleSegments,
-        deleteById
+        datasets,
+        add,
+        del
     }
 }

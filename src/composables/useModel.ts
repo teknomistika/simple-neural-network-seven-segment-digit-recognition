@@ -12,7 +12,7 @@ const model = reactive(
 function createRandomModel(inputSize = 7) {
     const now = new Date()
     const model: MicroNNModel = {
-        learningRate: 0.1,
+        learningRate: 0.01,
         weights: Array.from({ length: inputSize }, () => Math.random() * 2 - 1),
         bias: Math.random() * 2 - 1,
         createdAt: now,
@@ -79,7 +79,7 @@ function zero() {
         totalEpochs: 0,
     })
 }
-const scale = 10
+const scale = 4.5
 function predict(x: Vector) {
     // Addition
     // const z = x.reduce((p, c, i) => p + c + model.weights[i], model.bias)
@@ -87,10 +87,10 @@ function predict(x: Vector) {
     // Dot product of two vectors
     const z = model.weights.reduce((p, c, i) => p + c * x[i], 0) + model.bias
     // Regular sigmoid, scale 0-1
-    const s = 1 / (1 + Math.exp(-z));
+    // const s = 1 / (1 + Math.exp(-z));
     // Scaled sigmoid, scale 0-9
     // const s = scale * (1 / (1 + Math.exp(-z)));
-    // const s = Math.tanh(z);
+    const s = Math.tanh(z);
     // const z = dot(model.weights, x) + model.bias;
     // Identity (linear) activation
     // return Math.tanh(z)
@@ -102,12 +102,12 @@ function backprop(yHat: number, target: number, x: Vector) {
     const error = yHat - target;
     const sigma = yHat / scale
     // sigmoidDerivative
-    const dSigmoid = sigma * (1 - sigma)
+    // const dSigmoid = sigma * (1 - sigma)
     // tanhDerivative
-    // const dTanh = 1 - sigma * sigma
+    const dTanh = 1 - sigma * sigma
     // dL/dz
-    const delta = error * scale * dSigmoid
-    // const delta = error/9// * scale * dTanh
+    // const delta = error * scale * dSigmoid
+    const delta = error * scale * dTanh
 
     // Update weights
     for (let i = 0; i < model.weights.length; i++) {

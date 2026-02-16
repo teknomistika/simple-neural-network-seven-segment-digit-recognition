@@ -1,3 +1,8 @@
+import type { Ref } from "vue";
+
+export type MapValue<M> = M extends Map<any, infer V> ? V : never;
+export type RefValue<M> = M extends Ref<any, infer V> ? V : never;
+// export type RefMapValue<M> = M extends RefValue<MapValue<infer V>> ? V : never;
 
 export type Segment = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'
 

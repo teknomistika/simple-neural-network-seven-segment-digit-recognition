@@ -1,18 +1,22 @@
 <template>
     <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom" density="compact">
         <template #title>
-            <v-slider :step="0.01" label="Learning Rate" v-model="model.learningRate" :max="1" :min="0" class="align-center"
-                hide-details>
+            <v-slider :step="0.01" label="Learning Rate" density="compact" v-model="model.learningRate" :max="1"
+                :min="0" class="align-center" hide-details>
                 <template v-slot:append>
-                    <v-text-field v-model="model.learningRate" density="compact" style="width: 120px" type="number"
-                        hide-details variant="outlined" single-line></v-text-field>
+                    <v-text-field step="0.01" v-model="model.learningRate" density="compact" style="width: 90px"
+                        type="number" hide-details variant="outlined" single-line></v-text-field>
                 </template>
             </v-slider>
         </template>
         <template v-slot:append>
-            <v-btn @click="stop" color="error" v-show="training" prependIcon="mdi-stop">Stop</v-btn>
-            <v-btn @click="step" color="primary" v-show="!training" prependIcon="mdi-play">One Step</v-btn>
-            <v-btn @click="start" color="success" v-show="!training" prependIcon="mdi-play">START</v-btn>
+            <v-select :disabled="training" :items="trainDigitOptions" v-model="currentDigit" variant="outlined"
+                hide-details density="compact" />
+            <v-btn @click="step" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
+            <v-btn style="width: 105px;" @click="stop" color="error" v-show="training"
+                prependIcon="mdi-stop">Stop</v-btn>
+            <v-btn style="width: 105px;" @click="start" color="success" v-show="!training"
+                prependIcon="mdi-play">START</v-btn>
         </template>
     </VAppBar>
     <v-container fluid>
@@ -26,9 +30,9 @@
         <v-card class="mt-3">
             <v-card-item>
                 <v-row>
-                    <v-col v-for="(loss, digit) in lastResults" :class="{'text-green': loss.isOk, 'bg-primary': digit === currentDigit}" class="border">
-                        <div class="text-center"><b>{{ digit }}</b></div>
-                        <small><code>{{ loss.error  }}</code></small>
+                    <v-col v-for="([digit, loss]) in sampleStats" class="border text-center">
+                        <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
+                        <small><code :class="{ 'text-green': loss.isOk }">{{ loss.error }}</code></small>
                     </v-col>
                 </v-row>
             </v-card-item>
@@ -38,34 +42,32 @@
 
 <script setup lang="ts">
 import ModelStats from '@/components/ModelStats.vue';
-import TrainingStats from '@/components/TrainingStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
-import type { Dataset, Vector } from '@/types';
-import { sigmoidDerivative } from '@/utils/math.util';
-import { segmentsToVector } from '@/utils/seven-segment.util';
+import type { MapValue, Vector } from '@/types';
+import { SEVEN_SEGMENT_CHARSET } from '@/utils/seven-segment.util';
 import { nextTick, ref, shallowRef, watch } from 'vue';
+
+const { datasets: { value: datasets } } = useDatasets()
+const { model, predict, backprop } = useModel()
+const samples = datasets.map(v => ({
+    digit: v.digit,
+    target: v.digit,
+    inputs: SEVEN_SEGMENT_CHARSET.map(
+        c => v.segments.includes(c) ? 1 : 0
+    ) as Vector
+}))
 
 const lossHistory = shallowRef<number[]>([])
 const training = ref(false)
-const currentEpoch = ref(0)
-const lastResults = ref(Array.from({ length: 10 }).map(
-    (_, i) => ({
-        error: '?.???',
-        isOk: false
-    }))
-)
-
-const { model, predict, backprop } = useModel()
-
-let samples: {
-    inputs: Vector,
-    target: number/* Charcode of "0" */,
-    digit: number
-}[] = []
+const sampleStats = ref(new Map(samples.map(v => [v.digit, {
+    error: '?.???',
+    isOk: false
+}])))
 
 let sampleAt: number = 0
 const currentDigit = ref(null as number | null)
+const trainDigitOptions = ref([{ value: null, title: 'All' }])
 
 watch(training, start => {
     if (start) {
@@ -73,20 +75,19 @@ watch(training, start => {
     }
 })
 
-const { ready } = useDatasets()
-ready.then(s => {
-    // Tokenize
-    samples = s.map(v => ({
-        digit: v.digit,
-        target: v.digit,
-        inputs: segmentsToVector(v.segments)
-    }))
-})
-let reduce = 0, stat: typeof lastResults.value[0]
+
+trainDigitOptions.value.push(...samples.map(v => ({ value: v.digit, title: v.digit.toString() })))
+
+
+let reduce = 0, stat: MapValue<typeof sampleStats.value>, sample: typeof samples[0]
 function step() {
-    const sample = samples[sampleAt++]
-    // const sample = samples[1] // train one only
-    // currentDigit.value = sample.digit
+    if (currentDigit.value === null) {
+        sample = samples[sampleAt++]
+        currentDigit.value = sample.digit
+    } else {
+        sample = samples[currentDigit.value]
+    }
+    // const sample = samples[sampleAt] // train one only
     if (sampleAt >= samples.length)
         sampleAt = 0
     const output = predict(sample.inputs)
@@ -95,10 +96,9 @@ function step() {
     const error = output - sample.target;
 
     // Update UI
-    currentEpoch.value++
     model.totalEpochs++
 
-    stat = lastResults.value[sample.digit]
+    stat = sampleStats.value[sample.digit]
     stat.error = error.toFixed(3)
     stat.isOk = (Math.round(output)) == sample.target
 
@@ -108,29 +108,29 @@ function step() {
         lossHistory.value = [...lossHistory.value, error]
     }
     backprop(output, sample.target, sample.inputs)
-    // 
-    
+    //
 }
 function multistep() {
     step()
     nextTick(() => {
         if (!training.value) return
         // Check all OK
-        if( lastResults.value.length == lastResults.value.filter(v => v.isOk).length){
-            // Stop it have all OK
-        }else{
-            // nextTick(multistep)
-            setTimeout(multistep, 0)
+        for (const [i, v] of sampleStats.value) {
+            if (!v.isOk) {
+                // nextTick
+                setTimeout(multistep, 0)
+                break
+            }
         }
+        // Stop it have all OK
     })
 }
 
 function start() {
     sampleAt = 0
-    currentEpoch.value = 0
     lossHistory.value = []
     training.value = true
-    console.log(model, lastResults.value)
+    console.log(model, sampleStats.value)
 }
 
 function stop() {
