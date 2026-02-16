@@ -1,6 +1,6 @@
 import type { MicroNNModel, Vector } from "@/types";
 import { dot, sigmoid } from "@/utils/math.util";
-import { reactive, shallowRef, type ShallowRef } from "vue";
+import { reactive, ref, shallowRef, type ShallowRef } from "vue";
 
 const existing = localStorage.getItem('micro-nn-model')
 const model = reactive(
@@ -9,12 +9,15 @@ const model = reactive(
         createRandomModel()
 )
 
+const weightChanges = ref(model.weights.map(_ => 0))
+const biasChanges = ref(0)
+
 function createRandomModel(inputSize = 7) {
     const now = new Date()
     const model: MicroNNModel = {
         learningRate: 0.01,
         weights: Array.from({ length: inputSize }, () => Math.random() * 2 - 1),
-        bias: Math.random() * 2 - 1,
+        bias: 0,
         createdAt: now,
         updateAt: now,
         totalEpochs: 0
@@ -79,43 +82,51 @@ function zero() {
         totalEpochs: 0,
     })
 }
-const scale = 4.5
+const scale = 9
+
+function dotSigmoid(x: Vector) {
+    // Dot product of two vectors
+    const z = model.weights.reduce((p, c, i) => p + c * x[i], 0) + model.bias
+    // Regular sigmoid, scale 0-1
+    return 1 / (1 + Math.exp(-z));
+}
+
 function predict(x: Vector) {
     // Addition
     // const z = x.reduce((p, c, i) => p + c + model.weights[i], model.bias)
 
-    // Dot product of two vectors
-    const z = model.weights.reduce((p, c, i) => p + c * x[i], 0) + model.bias
-    // Regular sigmoid, scale 0-1
-    // const s = 1 / (1 + Math.exp(-z));
     // Scaled sigmoid, scale 0-9
     // const s = scale * (1 / (1 + Math.exp(-z)));
-    const s = Math.tanh(z);
+    // const s = Math.tanh(z);
     // const z = dot(model.weights, x) + model.bias;
     // Identity (linear) activation
     // return Math.tanh(z)
-    return s * scale
+    return dotSigmoid(x) * scale
 }
-
-function backprop(yHat: number, target: number, x: Vector) {
+let adjustment = 0
+function train(target: number, x: Vector) {
     // Mean Squared Error derivative
-    const error = yHat - target;
-    const sigma = yHat / scale
+    const sigma = dotSigmoid(x)
+    const output = sigma * scale
+    const error = output - target;
     // sigmoidDerivative
-    // const dSigmoid = sigma * (1 - sigma)
+    const dSigmoid = sigma * (1 - sigma)
     // tanhDerivative
-    const dTanh = 1 - sigma * sigma
+    // const dTanh = 1 - sigma * sigma
     // dL/dz
     // const delta = error * scale * dSigmoid
-    const delta = error * scale * dTanh
+    const delta = error * scale * dSigmoid
+
+    adjustment = model.learningRate * delta
 
     // Update weights
     for (let i = 0; i < model.weights.length; i++) {
-        model.weights[i] -= model.learningRate * delta * x[i];
+        model.weights[i] -= weightChanges.value[i] = adjustment * x[i];
     }
-
     // Update bias
-    model.bias -= model.learningRate * delta;
+    biasChanges.value = adjustment
+    // model.bias -= adjustment;
+    return { output, error }
 }
 
 function save() {
@@ -128,7 +139,9 @@ export function useModel() {
         save,
         zero,
         randomize,
-        backprop,
+        train,
+        weightChanges,
+        biasChanges,
         useBestModel,
         predict
     }

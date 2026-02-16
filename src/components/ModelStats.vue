@@ -4,7 +4,7 @@ import type { MicroNNModel } from "@/types";
 import { computed } from "vue"
 const {
     model,
-    save, randomize, zero, useBestModel
+    save, randomize, zero, useBestModel, weightChanges
 } = useModel()
 
 const props = defineProps<{
@@ -27,15 +27,23 @@ const formattedUpdatedAt = computed(() =>
     <!-- Weights -->
     <v-row>
         <v-col cols="12" sm="9">
-            <v-card  density="compact" title="Model Info: Weights (a–g):">
-                <v-card-text>
-                    <div class="d-flex ga-1 mt-2 justify-center">
-                        <v-chip density="comfortable" variant="outlined" v-for="(weight, index) in model.weights"
-                            :key="index" size="small" color="primary">
-                            {{ weight.toFixed(4) }}
-                        </v-chip>
-                    </div>
-                </v-card-text>
+            <v-card density="compact" title="Model Info: Weights (a–g):">
+                <table style="width: 100%; border-collapse: collapse;" class="border-t text-body-2">
+                    <tr>
+                        <td :class="{'border-s': !!index}" class="text-center" v-for="(weight, index) in model.weights" :key="index">
+                            <code>{{ weight.toFixed(4) }}</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  :class="{'border-s': !!index}" class="text-center" v-for="(changes, index) in weightChanges" :key="index">
+                            <span v-if="changes > 0" class="ml-1 text-success">+{{
+                                changes.toFixed(3) }}</span>
+                            <span v-else-if="changes < 0" class="ml-1 text-error">{{
+                                changes.toFixed(3) }}</span>
+                            <span v-else class="ml-1 text-disabled">&mdash;</span>
+                        </td>
+                    </tr>
+                </table>
                 <v-divider />
                 <v-card-text>
                     <v-slider label="Bias" v-model="model.bias" :max="5" :min="-5" class="align-center" hide-details>
@@ -45,10 +53,10 @@ const formattedUpdatedAt = computed(() =>
                         </template>
                     </v-slider>
                 </v-card-text>
-                <v-divider/>
+                <v-divider />
                 <v-card-actions>
-                    <v-btn density="compact"
-                    @click="useBestModel" variant="tonal" color="primary" prependIcon="mdi-database-import">Load
+                    <v-btn density="compact" @click="useBestModel" variant="tonal" color="primary"
+                        prependIcon="mdi-database-import">Load
                         Pretrained Model</v-btn>
                     <v-spacer />
                     <v-btn density="compact" variant="tonal" color="warning" @click="randomize"

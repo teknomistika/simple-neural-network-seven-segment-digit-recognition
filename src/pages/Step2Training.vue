@@ -27,16 +27,24 @@
                 <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
             </v-col>
         </v-row>
-        <v-card class="mt-3">
-            <v-card-item>
-                <v-row>
-                    <v-col v-for="([digit, loss]) of sampleStats" class="border text-center">
+        <v-sheet class="mt-3 py-2 rounded">
+            <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
+                <tr>
+                    <td :class="{ 'border-s': !!index }" class="text-center" v-for="([digit, v], index) of sampleStats"
+                        :key="digit">
                         <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
-                        <small><code :class="{ 'text-green': loss.isOk }">{{ loss.error }}</code></small>
-                    </v-col>
-                </v-row>
-            </v-card-item>
-        </v-card>
+                        <code :class="{ 'text-green': v.isOk }">{{ v.error.toFixed(3) }}</code><br />
+                        <small>
+                            <code v-if="v.changes > 0" class="ml-1 text-success">+{{
+                                v.changes.toFixed(3) }}</code>
+                            <code v-else-if="v.changes < 0" class="ml-1 text-error">{{
+                                v.changes.toFixed(3) }}</code>
+                            <code v-else class="ml-1 text-disabled">&mdash;</code>
+                        </small>
+                    </td>
+                </tr>
+            </table>
+        </v-sheet>
     </v-container>
 </template>
 
@@ -49,7 +57,7 @@ import { SEVEN_SEGMENT_CHARSET } from '@/utils/seven-segment.util';
 import { nextTick, ref, shallowRef, watch } from 'vue';
 
 const { datasets: { value: datasets } } = useDatasets()
-const { model, predict, backprop } = useModel()
+const { model, predict, train, weightChanges, biasChanges } = useModel()
 
 const lossHistory = shallowRef<number[]>([])
 const training = ref(false)
@@ -58,14 +66,15 @@ const samples = datasets.map(v => ({
     digit: v.digit,
     target: v.digit,
     inputs: SEVEN_SEGMENT_CHARSET.map(
-        c => v.segments.includes(c) ? 1 : 0
+        c => v.segments.includes(c) ? 1.0 : 0.5
     ) as Vector
 }))
 
 /** unique digits */
 const digits = [...new Set(datasets.map(v => v.digit))]
 const sampleStats = ref(new Map(digits.map(v => [v, {
-    error: '?.???',
+    error: NaN,
+    changes: 0,
     isOk: false
 }])))
 
@@ -88,16 +97,14 @@ function step() {
     }
     currentDigit.value = sample.digit
     // const sample = samples[currentDigit.value] // train one only
-    const output = predict(sample.inputs)
-
-    // Mean Squared Error derivative
-    const error = output - sample.target;
+    const { output, error } = train(sample.target, sample.inputs)
 
     // Update UI
     model.totalEpochs++
 
     stat = sampleStats.value.get(sample.digit)
-    stat.error = error.toFixed(3)
+    stat.changes = (stat.error - error)
+    stat.error = error
     stat.isOk = (Math.round(output)) == sample.target
 
     if (lossHistory.value.length >= 50) {
@@ -105,9 +112,8 @@ function step() {
     } else {
         lossHistory.value = [...lossHistory.value, error]
     }
-    backprop(output, sample.target, sample.inputs)
-    //
 }
+
 function multistep() {
     step()
     nextTick(() => {
