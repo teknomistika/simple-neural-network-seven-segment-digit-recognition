@@ -30,10 +30,10 @@
         <v-sheet class="mt-3 py-2 rounded">
             <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
                 <tr>
-                    <td :class="{ 'border-s': !!index }" class="text-center" v-for="([digit, v], index) of sampleStats"
+                    <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center" v-for="([digit, v], index) of sampleStats"
                         :key="digit">
                         <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
-                        <code :class="{ 'text-green': v.isOk }">{{ v.error.toFixed(3) }}</code><br />
+                        <code>{{ v.error.toFixed(3) }}</code><br />
                         <small>
                             <code v-if="v.changes > 0" class="ml-1 text-success">+{{
                                 v.changes.toFixed(3) }}</code>
@@ -66,7 +66,7 @@ const samples = datasets.map(v => ({
     digit: v.digit,
     target: v.digit,
     inputs: SEVEN_SEGMENT_CHARSET.map(
-        c => v.segments.includes(c) ? 1.0 : 0.5
+        c => v.segments.includes(c) ? 1.0 : 0.0
     ) as Vector
 }))
 

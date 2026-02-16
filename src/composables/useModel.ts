@@ -125,7 +125,7 @@ function train(target: number, x: Vector) {
     }
     // Update bias
     biasChanges.value = adjustment
-    // model.bias -= adjustment;
+    model.bias -= adjustment;
     return { output, error }
 }
 
