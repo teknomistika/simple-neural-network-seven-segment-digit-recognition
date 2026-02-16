@@ -5,9 +5,10 @@ import Step2Training from "./pages/Step2Training.vue";
 import Step3Inference from "./pages/Step3Inference.vue";
 
 const steps = [
-  { value: 1, title: "Dataset" },
-  { value: 2, title: "Training" },
-  { value: 3, title: "Inference" }
+  { value: 1, title: "Problem" },
+  { value: 2, title: "Dataset" },
+  { value: 3, title: "Training" },
+  { value: 4, title: "Inference" }
 ]
 
 const currentStep = ref(
@@ -31,7 +32,7 @@ watch(currentStep, (step) => {
         <VBtn :disabled="currentStep == steps.length" @click="++currentStep" append-icon="mdi-arrow-right">Next</VBtn>
       </template>
       <v-app-bar-title>
-        <h1 class="text-h6 text-center text-disabled text-truncate">Single-Neuron Seven-Segment Neural Network</h1>
+        <h1 class="text-h6 text-center text-disabled text-truncate">A Simple Neural Network for Traffic Light Decisions</h1>
       </v-app-bar-title>
       <template #extension>
         <div class="d-flex flex-column w-100">
