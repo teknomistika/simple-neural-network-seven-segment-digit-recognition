@@ -82,7 +82,7 @@ function zero() {
         totalEpochs: 0,
     })
 }
-const scale = 9
+const scale = 10
 
 function dotSigmoid(x: Vector) {
     // Dot product of two vectors

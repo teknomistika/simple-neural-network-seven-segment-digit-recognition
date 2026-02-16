@@ -35,9 +35,9 @@
                         <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
                         <code>{{ v.error.toFixed(3) }}</code><br />
                         <small>
-                            <code v-if="v.changes > 0" class="ml-1 text-success">+{{
+                            <code v-if="v.changes > 0" class="ml-1 text-error">+{{
                                 v.changes.toFixed(3) }}</code>
-                            <code v-else-if="v.changes < 0" class="ml-1 text-error">{{
+                            <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
                                 v.changes.toFixed(3) }}</code>
                             <code v-else class="ml-1 text-disabled">&mdash;</code>
                         </small>
