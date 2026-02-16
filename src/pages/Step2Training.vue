@@ -10,7 +10,7 @@
             </v-slider>
         </template>
         <template v-slot:append>
-            <v-select :disabled="training" :items="trainDigitOptions" v-model="currentDigit" variant="outlined"
+            <v-select :disabled="training" :items="selectSampleOptions" v-model="selectedSample" variant="outlined"
                 hide-details density="compact" />
             <v-btn @click="step" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
             <v-btn style="width: 105px;" @click="stop" color="error" v-show="training"
@@ -30,7 +30,7 @@
         <v-card class="mt-3">
             <v-card-item>
                 <v-row>
-                    <v-col v-for="([digit, loss]) in sampleStats" class="border text-center">
+                    <v-col v-for="([digit, loss]) of sampleStats" class="border text-center">
                         <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
                         <small><code :class="{ 'text-green': loss.isOk }">{{ loss.error }}</code></small>
                     </v-col>
@@ -50,6 +50,10 @@ import { nextTick, ref, shallowRef, watch } from 'vue';
 
 const { datasets: { value: datasets } } = useDatasets()
 const { model, predict, backprop } = useModel()
+
+const lossHistory = shallowRef<number[]>([])
+const training = ref(false)
+
 const samples = datasets.map(v => ({
     digit: v.digit,
     target: v.digit,
@@ -58,38 +62,32 @@ const samples = datasets.map(v => ({
     ) as Vector
 }))
 
-const lossHistory = shallowRef<number[]>([])
-const training = ref(false)
-const sampleStats = ref(new Map(samples.map(v => [v.digit, {
+/** unique digits */
+const digits = [...new Set(datasets.map(v => v.digit))]
+const sampleStats = ref(new Map(digits.map(v => [v, {
     error: '?.???',
     isOk: false
 }])))
 
-let sampleAt: number = 0
-const currentDigit = ref(null as number | null)
-const trainDigitOptions = ref([{ value: null, title: 'All' }])
+let sampleIndex = 0
+const currentDigit = ref(samples[sampleIndex].digit)
+const selectedSample = ref(null as number | null)
+const selectSampleOptions = ref([
+    { value: null, title: 'All' },
+    ...samples.map((v, i) => ({ value: i, title: v.digit.toString() }))
+])
 
-watch(training, start => {
-    if (start) {
-        multistep()
-    }
-})
-
-
-trainDigitOptions.value.push(...samples.map(v => ({ value: v.digit, title: v.digit.toString() })))
-
-
-let reduce = 0, stat: MapValue<typeof sampleStats.value>, sample: typeof samples[0]
+let stat: MapValue<typeof sampleStats.value>, sample: typeof samples[0]
 function step() {
-    if (currentDigit.value === null) {
-        sample = samples[sampleAt++]
-        currentDigit.value = sample.digit
+    if (selectedSample.value === null) {
+        sample = samples[sampleIndex++]
+        if (sampleIndex >= samples.length)
+            sampleIndex = 0
     } else {
-        sample = samples[currentDigit.value]
+        sample = samples[selectedSample.value]
     }
-    // const sample = samples[sampleAt] // train one only
-    if (sampleAt >= samples.length)
-        sampleAt = 0
+    currentDigit.value = sample.digit
+    // const sample = samples[currentDigit.value] // train one only
     const output = predict(sample.inputs)
 
     // Mean Squared Error derivative
@@ -98,7 +96,7 @@ function step() {
     // Update UI
     model.totalEpochs++
 
-    stat = sampleStats.value[sample.digit]
+    stat = sampleStats.value.get(sample.digit)
     stat.error = error.toFixed(3)
     stat.isOk = (Math.round(output)) == sample.target
 
@@ -127,10 +125,10 @@ function multistep() {
 }
 
 function start() {
-    sampleAt = 0
     lossHistory.value = []
     training.value = true
     console.log(model, sampleStats.value)
+    multistep()
 }
 
 function stop() {
