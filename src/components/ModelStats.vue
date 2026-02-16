@@ -29,20 +29,25 @@ const formattedUpdatedAt = computed(() =>
         <v-col cols="12" sm="9">
             <v-card density="compact" title="Model Info: Weights (a–g):">
                 <table style="width: 100%; border-collapse: collapse;" class="border-t text-body-2">
-                    <tr>
-                        <td :class="{'border-s': !!index}" class="text-center" v-for="(weight, index) in model.weights" :key="index">
-                            <code>{{ weight.toFixed(4) }}</code>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td  :class="{'border-s': !!index}" class="text-center" v-for="(changes, index) in weightChanges" :key="index">
-                            <span v-if="changes > 0" class="ml-1 text-success">+{{
-                                changes.toFixed(3) }}</span>
-                            <span v-else-if="changes < 0" class="ml-1 text-error">{{
-                                changes.toFixed(3) }}</span>
-                            <span v-else class="ml-1 text-disabled">&mdash;</span>
-                        </td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <td :class="{ 'border-s': !!index }" class="text-center"
+                                v-for="(weight, index) in model.weights" :key="index">
+                                <code>{{ weight.toFixed(4) }}</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td :class="{ 'border-s': !!index }" class="text-center"
+                                v-for="(changes, index) in weightChanges" :key="index">
+                                <span v-if="changes > 0" class="ml-1 text-success">+{{
+                                    changes.toFixed(3) }}</span>
+                                <span v-else-if="changes < 0" class="ml-1 text-error">{{
+                                    changes.toFixed(3) }}</span>
+                                <span v-else class="ml-1 text-disabled">&mdash;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+
                 </table>
                 <v-divider />
                 <v-card-text>

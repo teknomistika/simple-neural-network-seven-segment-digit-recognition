@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from "vue";
-import Step1RawData from "./pages/Step1Dataset.vue";
-import Step2Training from "./pages/Step2Training.vue";
-import Step3Inference from "./pages/Step3Inference.vue";
+import { ref, watch } from "vue";
 
-const steps = [
-  { value: 1, title: "Problem" },
-  { value: 2, title: "Dataset" },
-  { value: 3, title: "Training" },
-  { value: 4, title: "Inference" }
-]
+const steps = Object.entries(import.meta.glob('./pages/*.vue', {
+  eager: true,
+  import: 'default'
+})).map(([k, v], i) => (console.log(v), {
+  value: i+1,
+  title: k.match(/\/.+\d+(?<name>.+)\./).groups.name,
+  is: v
+}))
 
-const currentStep = ref(
-  location.hash?.length > 1 ?
-    parseInt(location.hash.slice(1)) :
-    1)
+const currentStep = ref(parseInt(location.hash?.slice(1) || "1"))
 
 watch(currentStep, (step) => {
   location.hash = `#${step}`
@@ -26,13 +22,14 @@ watch(currentStep, (step) => {
   <v-app theme="dark">
     <v-app-bar elevation="2" extended density="compact">
       <template #prepend>
-        <VBtn :disabled="currentStep == 1" @click="--currentStep" prepend-icon="mdi-arrow-left">Prev</VBtn>
+        <VBtn :disabled="!currentStep" @click="--currentStep" prepend-icon="mdi-arrow-left">Prev</VBtn>
       </template>
       <template #append>
         <VBtn :disabled="currentStep == steps.length" @click="++currentStep" append-icon="mdi-arrow-right">Next</VBtn>
       </template>
       <v-app-bar-title>
-        <h1 class="text-h6 text-center text-disabled text-truncate">A Simple Neural Network for Traffic Light Decisions</h1>
+        <h1 class="text-h6 text-center text-disabled text-truncate">A Simple Neural Network for Traffic Light Decisions
+        </h1>
       </v-app-bar-title>
       <template #extension>
         <div class="d-flex flex-column w-100">
@@ -50,14 +47,8 @@ watch(currentStep, (step) => {
     <!-- Main Content -->
     <v-main>
       <VWindow v-model="currentStep">
-        <VWindowItem :value="1">
-          <Step1RawData v-if="currentStep == 1" />
-        </VWindowItem>
-        <VWindowItem :value="2">
-          <Step2Training v-if="currentStep == 2" />
-        </VWindowItem>
-        <VWindowItem :value="3">
-          <Step3Inference v-if="currentStep == 3" />
+        <VWindowItem :value="step.value" v-for="(step, i) of steps" :key="step.value">
+          <Component v-if="currentStep == step.value" :is="step.is" />
         </VWindowItem>
       </VWindow>
     </v-main>
