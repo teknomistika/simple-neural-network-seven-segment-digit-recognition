@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 const steps = Object.entries(import.meta.glob('./pages/*.vue', {
   eager: true,
   import: 'default'
-})).map(([k, v], i) => (console.log(v), {
+})).map(([k, v], i) => ({
   value: i+1,
   title: k.match(/\/.+\d+(?<name>.+)\./).groups.name,
   is: v
