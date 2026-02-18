@@ -1,29 +1,24 @@
 <template>
 
-    <VDialog v-model="dialog" :maxWidth="600">
+    <VDialog v-model="dialog" :maxWidth="500">
         <template v-slot:activator="{ props }">
             <slot v-bind="{ props }"></slot>
         </template>
         <VCard title="Add new Sample">
             <VDivider />
-            <VCardItem class="pt-0">
-                <VRow>
-                    <VCol class="text-center">
-                        <p>Lights state:</p>
-                        <TrafficLight with-sliders v-model="lights" />
-                    </VCol>
-                    <VCol class="text-center">
-                        <p>Gas pedal pressure :</p>
-                        <SliderValue v-model="pressure" />
-                        <!-- <v-slider v-model="pressure" min="0" max="1" /> -->
-                    </VCol>
-                </VRow>
+            <VCardItem>
+                <p>Lights State:</p>
+                <TrafficLight with-sliders v-model="lights" />
+            </VCardItem>
+            <VCardItem>
+                <p>Gas Pedal Pressure :</p>
+                <SliderValue class="ml-5" v-model="pressure" />
             </VCardItem>
             <VCardActions>
                 <!-- <VBtn color="warning" @click="clearCanvas">Clear</VBtn>
                <VBtn color="primary" @click="saveDrawing">Download</VBtn> -->
                 <VSpacer />
-                <VBtn color="success" @click="addToDataset" variant="tonal">Add to Dataset</VBtn>
+                <VBtn color="success" @click="onOk" variant="tonal">OK</VBtn>
             </VCardActions>
         </VCard>
     </VDialog>
@@ -32,15 +27,29 @@
 
 import { ref, unref } from 'vue';
 import TrafficLight from './TrafficLight.vue';
-import { useDatasets } from '@/composables/useDatasets';
 import SliderValue from './SliderValue.vue';
-const { add } = useDatasets()
+import type { Dataset } from '@/types';
+
 const dialog = ref(false)
 const lights = ref([0, 0, 0])
 const pressure = ref(0)
+const emits = defineEmits<{ dataset: [Dataset] }>()
 
-function addToDataset() {
-    add(unref(pressure), unref(lights))
+defineExpose({
+    edit(dataset: Dataset) {
+        lights.value = unref(dataset.lights)
+        pressure.value = unref(dataset.pressure)
+        dialog.value = true
+    },
+    add() {
+        lights.value = [0, 0, 0]
+        pressure.value = 0
+        dialog.value = true
+    }
+})
+
+function onOk() {
+    emits('dataset', { pressure: unref(pressure), lights: unref(lights) })
     dialog.value = false
 }
 

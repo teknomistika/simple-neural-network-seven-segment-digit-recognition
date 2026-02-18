@@ -6,7 +6,6 @@ export type RefValue<M> = M extends Ref<any, infer V> ? V : never;
 
 
 export interface Dataset {
-    id: number;
     pressure: number;
     lights: Vector
 }

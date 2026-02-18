@@ -10,16 +10,11 @@
                 </div>
             </div>
             <div class="light-slider d-flex align-center">
-                <VSlider v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" hide-details :min="0"
-                    :max="1" :step="0.1" v-model="values[i]">
-                    <template v-slot:append>
-                        <v-text-field :step="0.1" :min="0" :max="1" v-model="values[i]" density="compact"
-                            style="width: 80px" type="number" hide-details variant="outlined"
-                            single-line></v-text-field>
-                    </template>
-                </VSlider>
+                <SliderValue v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" hide-details :min="0" :max="1"
+                    :step="0.1" v-model="values[i]" />
                 <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
-                    <code>{{ v.toFixed(1) }}</code></VChip>
+                    <code>{{ v.toFixed(1) }}</code>
+                </VChip>
             </div>
         </div>
     </VSheet>
@@ -43,8 +38,8 @@ function getStyle(brightness: number, colorIndex: number) {
     }
 
     const [r, g, bl] = lightGlows[colorIndex];
-    const glowRadius = Math.round(20 + brightness * 5);
-    const spread = Math.round(brightness * 1);
+    const glowRadius = Math.round(5 + brightness * 5);
+    const spread = Math.round(brightness);
 
     return {
         background: `radial-gradient(circle at 40% 35%,
@@ -63,6 +58,7 @@ function getStyle(brightness: number, colorIndex: number) {
 </script>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import SliderValue from './SliderValue.vue';
 const model = defineModel<number[]>({
     default: [0, 0, 1]
 })
@@ -74,8 +70,8 @@ watch(values, (changes) => {
     // changes.forEach((v, i) => {
     //     styles[i] = getStyle(v, i)
     // })
-    // model.value = changes
-}, { deep: true })
+    model.value = changes
+})
 </script>
 
 <style>
@@ -83,6 +79,7 @@ watch(values, (changes) => {
 .light-slider:has(.v-slider) {
     flex: 1;
 }
+
 .light-socket {
     position: relative;
     display: flex;
