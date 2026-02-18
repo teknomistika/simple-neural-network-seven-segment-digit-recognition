@@ -1,5 +1,5 @@
 <template>
-    <VSheet class="pa-2">
+    <VSheet class="py-2">
         <!-- RED -->
         <div v-for="(v, i) in model" :key="i" class="d-flex ga-2 justify-center">
             <div class="light-socket py-1">
@@ -10,8 +10,7 @@
                 </div>
             </div>
             <div class="light-slider d-flex align-center">
-                <SliderValue v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" hide-details :min="0" :max="1"
-                    :step="0.1" v-model="model[i]" />
+                <SliderValue v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" v-model="model[i]" />
                 <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
                     <code>{{ v.toFixed(1) }}</code>
                 </VChip>

@@ -7,17 +7,16 @@
         <VCard>
             <template #title>
                 <VBtn class="float-right" variant="plain" color="error" density="compact" @click="dialog = false" icon="mdi-close"/>
-                Add new Sample
+                {{ mode == 'add' ? 'Add New' : 'Modify' }} Sample
             </template>
             <VDivider />
             <VCardItem>
                 <p>Lights State:</p>
-                <TrafficLight with-sliders v-model="dataset.lights" />
-            </VCardItem>
-            <VCardItem>
+                <TrafficLight class="ml-3" with-sliders v-model="dataset.lights" />
                 <p>Gas Pedal Pressure :</p>
-                <SliderValue class="ml-5" v-model="dataset.pressure" />
+                <GasPedal with-sliders v-model="dataset.pressure" />
             </VCardItem>
+            <VDivider />
             <VCardActions>
                 <VBtn color="warning" @click="setAll(0)">Zero</VBtn>
                 <VBtn color="primary" @click="setAll(null)">Random</VBtn>
@@ -35,6 +34,7 @@ import TrafficLight from './TrafficLight.vue';
 import SliderValue from './SliderValue.vue';
 import type { Dataset } from '@/types';
 import { useDatasets } from '@/composables/useDatasets';
+import GasPedal from './GasPedal.vue';
 
 const { datasets } = useDatasets()
 

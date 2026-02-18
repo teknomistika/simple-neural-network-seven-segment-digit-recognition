@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DatasetDialog from "@/components/DatasetDialog.vue";
+import GasPedal from "@/components/GasPedal.vue";
 import TrafficLight from "@/components/TrafficLight.vue";
 import { useDatasets } from "@/composables/useDatasets";
 import type { Dataset, Vector } from "@/types";
@@ -42,7 +43,7 @@ function loadDefaultSample() {
         </template>
     </VAppBar>
     <DatasetDialog ref="dialog" />
-    <v-row>
+    <v-row class="justify-center">
         <v-col v-for="(item, i) in datasets" :key="i" cols="6" sm="4" md="3" lg="2">
             <v-sheet elevation="1" class="text-center rounded elevated">
                 <div class="d-flex ga-1 pa-2">
@@ -56,8 +57,11 @@ function loadDefaultSample() {
                 </div>
                 <v-divider />
                 <div class="pa-2">
+                    <p>Light States:</p>
                     <TrafficLight readonly :model-value="item.lights" />
-                    <h3>Pressure: {{ item.pressure?.toFixed(1) }} </h3>
+                    <V-divider class="mb-2" />
+                    <p>Gas Pedal:</p>
+                    <GasPedal :model-value="item.pressure" />
                 </div>
             </v-sheet>
         </v-col>
