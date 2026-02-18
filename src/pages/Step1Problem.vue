@@ -5,7 +5,7 @@ import TrafficLight from '@/components/TrafficLight.vue';
 import { onUnmounted, ref } from 'vue';
 const lights = ref([0, 0, 0])
 const pressure = ref(0)
-const pressures = [0.0, 0.3, 1.0]
+const pressures = [0.0, 0.5, 1.0]
 
 let idx = 0
 let timer = setInterval(() => {
@@ -80,19 +80,19 @@ onUnmounted(() => {
                             <tr>
                                 <td>Red</td>
                                 <td>Do not press </td>
-                                <td><code> < 0.3</code></td>
+                                <td><code> < 0.25</code></td>
                                 <td>STOP</td>
                             </tr>
                             <tr>
                                 <td>Yellow</td>
                                 <td>Press slightly </td>
-                                <td><code> < 0.6</code></td>
+                                <td><code> < 0.75</code></td>
                                 <td>WAIT</td>
                             </tr>
                             <tr>
                                 <td>Green</td>
                                 <td>Press fully </td>
-                                <td><code>>= 0.6</code></td>
+                                <td><code>>= 0.75</code></td>
                                 <td>GO</td>
                             </tr>
                         </tbody>

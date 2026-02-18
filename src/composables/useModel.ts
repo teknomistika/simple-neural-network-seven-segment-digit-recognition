@@ -36,7 +36,18 @@ function setModel(newModel: Partial<MicroNNModel>) {
 }
 
 function useBestModel() {
-    setModel({})
+    setModel({
+        learningRate: 0.1,
+        weights: [
+            -0.06693388208923057,
+            0.23306611791077203,
+            0.9330661179107671
+        ],
+        bias: 0.06693388208923058,
+        createdAt: new Date("2026-02-18T20:49:27.122Z"),
+        updateAt: new Date("2026-02-18T20:49:27.122Z"),
+        totalEpochs: 4272
+    })
 }
 
 function randomize() {

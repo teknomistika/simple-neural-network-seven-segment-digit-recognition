@@ -27,7 +27,7 @@ const formattedUpdatedAt = computed(() =>
     <!-- Weights -->
     <v-row>
         <v-col cols="12" sm="9">
-            <v-card density="compact" title="Model Info: Weights (a–g):">
+            <v-card density="compact" title="Model Weights">
                 <table style="width: 100%; border-collapse: collapse;" class="border-t text-body-2">
                     <tbody>
                         <tr>

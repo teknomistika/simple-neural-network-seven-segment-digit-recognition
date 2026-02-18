@@ -23,7 +23,7 @@
     <v-row>
         <v-col>
             <ModelStats :model="model" />
-            <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
+            <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="model.totalEpochs" />
         </v-col>
     </v-row>
     <v-sheet class="mt-3 py-2 rounded">
@@ -33,8 +33,10 @@
                     <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
                         v-for="([action, v], index) of sampleStats" :key="action">
                         <div>
-                            <b :class="{ 'text-primary': action === currentDigit }">{{ Action[action] }}</b>
+                            <b :class="{ 'text-primary': action === currentDigit }">{{ ActionLabel[action] }}</b>
                         </div>
+                        <code>Target: {{ v.target.toFixed(3) }}</code><br />
+                        <code>Predicted: {{ v.predicted.toFixed(3) }}</code><br />
                         <code>Error: {{ v.error.toFixed(3) }}</code><br />
                         <small>
                             <code v-if="v.changes > 0" class="ml-1 text-error">+{{
@@ -53,10 +55,11 @@
 <script setup lang="ts">
 import ActionChip from '@/components/ActionChip.vue';
 import ModelStats from '@/components/ModelStats.vue';
+import TrainingStats from '@/components/TrainingStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
 import type { MapValue, Vector } from '@/types';
-import { Action, getActionCategory } from '@/utils/traffic-light.util';
+import { Action, ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
 import { nextTick, ref, shallowRef, watch } from 'vue';
 
 const { datasets } = useDatasets()
@@ -75,6 +78,8 @@ const samples = datasets.map(v => ({
 const actions = [...new Set(samples.map(v => v.action))]
 const sampleStats = ref(new Map(actions.map(v => [v, {
     error: NaN,
+    predicted: NaN,
+    target: samples.find(s => s.action == v)?.target,
     changes: 0,
     isOk: false
 }])))
@@ -106,12 +111,13 @@ function step() {
     stat = sampleStats.value.get(sample.action)
     stat.changes = (stat.error - error)
     stat.error = error
-    stat.isOk = (Math.round(output)) == sample.target
+    stat.predicted = output
+    stat.isOk = getActionCategory(output) == sample.action
 
     if (lossHistory.value.length >= 50) {
-        lossHistory.value = [...lossHistory.value.slice(1), error]
+        lossHistory.value = [...lossHistory.value.slice(1), Math.abs(error)]
     } else {
-        lossHistory.value = [...lossHistory.value, error]
+        lossHistory.value = [...lossHistory.value, Math.abs(error)]
     }
 }
 
