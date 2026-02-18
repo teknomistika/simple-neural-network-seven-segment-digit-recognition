@@ -58,7 +58,7 @@ function loadDefaultSample() {
                 <v-divider />
                 <div class="pa-2">
                     <p>Light States:</p>
-                    <TrafficLight readonly :model-value="item.lights" />
+                    <TrafficLight :model-value="item.lights" />
                     <V-divider class="mb-2" />
                     <p>Gas Pedal:</p>
                     <GasPedal :model-value="item.pressure" />

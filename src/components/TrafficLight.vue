@@ -3,14 +3,15 @@
         <!-- RED -->
         <div v-for="(v, i) in model" :key="i" class="d-flex ga-2 justify-center">
             <div class="light-socket py-1">
-                <div class="bezel" @click="model[i] = model[i] ? 0 : 1">
-                    <div class="bulb" :style="getStyle(v, i)">
+                <div class="bezel" @click="toggle(i)">
+                    <div class="bulb" :class="{ readonly }" :style="getStyle(v, i)">
                         <!-- <code>{{ v.toFixed(1) }}</code> -->
                     </div>
                 </div>
             </div>
             <div class="light-slider d-flex align-center">
-                <SliderValue v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" v-model="model[i]" />
+                <SliderValue :readonly="readonly" v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'"
+                    v-model="model[i]" />
                 <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
                     <code>{{ v.toFixed(1) }}</code>
                 </VChip>
@@ -61,8 +62,12 @@ import SliderValue from './SliderValue.vue';
 const model = defineModel<number[]>({
     default: [0, 0, 1]
 })
-defineProps<{ withSliders?: boolean }>()
+const props = defineProps<{ withSliders?: boolean, readonly?: boolean }>()
+function toggle(i: number) {
+    if (props.readonly) return
 
+    model.value[i] = model.value[i] ? 0 : 1
+}
 </script>
 
 <style>
@@ -92,14 +97,15 @@ defineProps<{ withSliders?: boolean }>()
         inset 0 -2px 4px rgba(255, 255, 255, 0.03),
         0 0 0 2px #1a1d24;
 }
-
+.bulb:not(.readonly){
+    cursor: pointer;
+}
 .bulb {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    cursor: pointer;
     flex-shrink: 0;
 }
 

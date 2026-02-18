@@ -1,4 +1,25 @@
 <script setup lang="ts">
+import GasPedal from '@/components/GasPedal.vue';
+import TrafficLight from '@/components/TrafficLight.vue';
+import { onUnmounted, ref } from 'vue';
+const lights = ref([0, 0, 0])
+const pressure = ref(0)
+const pressures = [0.0, 0.3, 1.0]
+
+let idx = 0
+let timer = setInterval(() => {
+
+    lights.value.forEach((v, i) => lights.value[i] = 0)
+    pressure.value = pressures[idx]
+    lights.value[idx++] = 1
+
+    if (idx >= lights.value.length) idx = 0
+
+}, 1000)
+
+onUnmounted(() => {
+    clearInterval(timer)
+})
 
 </script>
 
@@ -27,38 +48,46 @@
             <h2>The Problem</h2>
             <br />
             <p>A traffic light has three possible signals:</p>
-            <ul>
+            <TrafficLight readonly :model-value="lights" class="py-4" />
+            <!-- <ul>
                 <li>🔴 <strong>Red</strong></li>
                 <li>🟡 <strong>Yellow</strong></li>
                 <li>🟢 <strong>Green</strong></li>
-            </ul>
+            </ul> -->
 
-            <p>At any moment, <strong>only one light is on</strong>.</p>
+            <p>At any moment, <strong>must be only one light is on</strong>.</p>
 
             <p>A driver reacts to these signals by adjusting the gas pedal:</p>
-
-            <table border="1" style="border-collapse: collapse;" class="my-3 border">
-                <thead>
-                    <tr>
-                        <th>Traffic Light</th>
-                        <th>Gas Pedal Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Red</td>
-                        <td>Do not press (0.0)</td>
-                    </tr>
-                    <tr>
-                        <td>Yellow</td>
-                        <td>Press slightly (0.1)</td>
-                    </tr>
-                    <tr>
-                        <td>Green</td>
-                        <td>Press fully (1.0)</td>
-                    </tr>
-                </tbody>
-            </table>
+            <VRow>
+                <VCol>
+                    <table style="border-collapse: collapse;" class="my-3 border">
+                        <thead>
+                            <tr>
+                                <th>Traffic Light</th>
+                                <th>Gas Pedal Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Red</td>
+                                <td>Do not press (0.0)</td>
+                            </tr>
+                            <tr>
+                                <td>Yellow</td>
+                                <td>Press slightly (0.3)</td>
+                            </tr>
+                            <tr>
+                                <td>Green</td>
+                                <td>Press fully (1.0)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </VCol>
+                <VCol class="d-flex flex-column text-center justify-center">
+                    Gas Pedal Pressure:
+                    <GasPedal :model-value="pressure" />
+                </VCol>
+            </VRow>
 
             <p>The goal of this project is to teach a neural network to <strong>learn this behavior
                     automatically</strong> from examples, instead of hard-coding the rules.</p>
