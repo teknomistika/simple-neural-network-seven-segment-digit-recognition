@@ -5,7 +5,7 @@ const steps = Object.entries(import.meta.glob('./pages/*.vue', {
   eager: true,
   import: 'default'
 })).map(([k, v], i) => ({
-  value: i+1,
+  value: i + 1,
   title: k.match(/\/.+\d+(?<name>.+)\./).groups.name,
   is: v
 }))
@@ -28,7 +28,8 @@ watch(currentStep, (step) => {
         <VBtn :disabled="currentStep == steps.length" @click="++currentStep" append-icon="mdi-arrow-right">Next</VBtn>
       </template>
       <v-app-bar-title>
-        <h1 class="text-h6 text-center text-disabled text-truncate">A Simple Neural Network for Traffic Light Decisions
+        <h1 class="text-h6 text-center text-disabled text-truncate">A Simple Neural Network for Traffic Light
+          Decisions
         </h1>
       </v-app-bar-title>
       <template #extension>
@@ -37,7 +38,7 @@ watch(currentStep, (step) => {
             <VStepperHeader key="stepper-header">
               <template v-for="(step, i) of steps" :key="step.value">
                 <VDivider v-if="!!i" />
-                <VStepperItem color="primary" class="py-0" v-bind="step"></VStepperItem>
+                <VStepperItem color="primary" class="py-0" v-bind="step" />
               </template>
             </VStepperHeader>
           </VStepper>
@@ -52,6 +53,5 @@ watch(currentStep, (step) => {
         </VWindowItem>
       </VWindow>
     </v-main>
-
   </v-app>
 </template>

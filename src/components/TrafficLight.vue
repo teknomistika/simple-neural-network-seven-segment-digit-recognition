@@ -1,7 +1,7 @@
 <template>
-    <VSheet class="pa-2 border ">
+    <VSheet class="pa-2 border">
         <!-- RED -->
-        <div v-for="(v, i) in values" :key="i" class="d-flex ga-2">
+        <div v-for="(v, i) in values" :key="i" class="d-flex ga-2 justify-center">
             <div class="light-socket py-1">
                 <div class="bezel" @click="values[i] = values[i] ? 0 : 1">
                     <div class="bulb" :style="getStyle(v, i)">
@@ -10,14 +10,16 @@
                 </div>
             </div>
             <div class="light-slider d-flex align-center">
-                <VSlider v-if="sliders" hide-details :min="0" :max="1" :step="0.1" v-model="values[i]">
+                <VSlider v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" hide-details :min="0"
+                    :max="1" :step="0.1" v-model="values[i]">
                     <template v-slot:append>
                         <v-text-field :step="0.1" :min="0" :max="1" v-model="values[i]" density="compact"
                             style="width: 80px" type="number" hide-details variant="outlined"
                             single-line></v-text-field>
                     </template>
                 </VSlider>
-                <VChip v-else  class="" :color="v > 0 ? lightColors[i] : 'grey'"  :value="true" label><code>{{ v.toFixed(1) }}</code></VChip>
+                <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
+                    <code>{{ v.toFixed(1) }}</code></VChip>
             </div>
         </div>
     </VSheet>
@@ -33,8 +35,6 @@ const offMap = [
   /* green */ 'radial-gradient(circle at 40% 35%, #0e2a18, #061208)',
 ]
 function getStyle(brightness: number, colorIndex: number) {
-    console.log('VALV', brightness, colorIndex);
-
     if (!brightness || brightness <= 0.09) {
         return {
             background: offMap[colorIndex],
@@ -66,7 +66,7 @@ import { computed, ref, watch } from 'vue';
 const model = defineModel<number[]>({
     default: [0, 0, 1]
 })
-defineProps<{ sliders?: boolean }>()
+defineProps<{ withSliders?: boolean }>()
 
 const values = ref(Array(3).fill(0).map((_, i) => model.value[i] ?? 0))
 // const styles = ref(Array(3).fill(0).map((_, i) => getStyle(values.value[i], i)))
@@ -80,10 +80,9 @@ watch(values, (changes) => {
 
 <style>
 /* TRAFFIC LIGHT HOUSING */
-.light-slider {
+.light-slider:has(.v-slider) {
     flex: 1;
 }
-
 .light-socket {
     position: relative;
     display: flex;
