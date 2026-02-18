@@ -6,14 +6,11 @@
             <v-btn color="success" prependIcon="mdi-image-plus">Add</v-btn>
         </template> -->
     </VAppBar>
-    <v-container fluid>
-        <VProgressLinear color="primary" absolute v-if="loading" indeterminate />
-
-        <v-row>
-            <v-col>
-            </v-col>
-        </v-row>
-    </v-container>
+    <!-- <VProgressLinear color="primary" absolute v-if="loading" indeterminate /> -->
+    <v-row>
+        <v-col>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">

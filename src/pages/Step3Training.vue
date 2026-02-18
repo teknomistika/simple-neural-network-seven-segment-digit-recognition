@@ -19,35 +19,33 @@
                 prependIcon="mdi-play">START</v-btn>
         </template>
     </VAppBar>
-    <v-container fluid>
-        <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
-        <v-row>
-            <v-col>
-                <ModelStats :model="model" />
-                <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
-            </v-col>
-        </v-row>
-        <v-sheet class="mt-3 py-2 rounded">
-            <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
-                <tbody>
-                    <tr>
-                        <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
-                            v-for="([digit, v], index) of sampleStats" :key="digit">
-                            <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
-                            <code>{{ v.error.toFixed(3) }}</code><br />
-                            <small>
-                                <code v-if="v.changes > 0" class="ml-1 text-error">+{{
-                                    v.changes.toFixed(3) }}</code>
-                                <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
-                                    v.changes.toFixed(3) }}</code>
-                                <code v-else class="ml-1 text-disabled">&mdash;</code>
-                            </small>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </v-sheet>
-    </v-container>
+    <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
+    <v-row>
+        <v-col>
+            <ModelStats :model="model" />
+            <!-- <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="currentEpoch" /> -->
+        </v-col>
+    </v-row>
+    <v-sheet class="mt-3 py-2 rounded">
+        <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
+            <tbody>
+                <tr>
+                    <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
+                        v-for="([digit, v], index) of sampleStats" :key="digit">
+                        <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
+                        <code>{{ v.error.toFixed(3) }}</code><br />
+                        <small>
+                            <code v-if="v.changes > 0" class="ml-1 text-error">+{{
+                                v.changes.toFixed(3) }}</code>
+                            <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
+                                v.changes.toFixed(3) }}</code>
+                            <code v-else class="ml-1 text-disabled">&mdash;</code>
+                        </small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </v-sheet>
 </template>
 
 <script setup lang="ts">

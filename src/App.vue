@@ -22,7 +22,7 @@ watch(currentStep, (step) => {
   <v-app theme="dark">
     <v-app-bar elevation="2" extended density="compact">
       <template #prepend>
-        <VBtn :disabled="!currentStep" @click="--currentStep" prepend-icon="mdi-arrow-left">Prev</VBtn>
+        <VBtn :disabled="currentStep <= 1" @click="--currentStep" prepend-icon="mdi-arrow-left">Prev</VBtn>
       </template>
       <template #append>
         <VBtn :disabled="currentStep == steps.length" @click="++currentStep" append-icon="mdi-arrow-right">Next</VBtn>
@@ -47,11 +47,18 @@ watch(currentStep, (step) => {
     </v-app-bar>
     <!-- Main Content -->
     <v-main>
-      <VWindow v-model="currentStep">
-        <VWindowItem :value="step.value" v-for="(step, i) of steps" :key="step.value">
-          <Component v-if="currentStep == step.value" :is="step.is" />
-        </VWindowItem>
-      </VWindow>
+      <v-container fluid style="height: calc(100vh - var(--v-layout-bottom) - var(--v-layout-top)); overflow-y: auto;">
+        <VWindow v-model="currentStep">
+          <VWindowItem :value="step.value" v-for="(step, i) of steps" :key="step.value">
+            <Component v-if="currentStep == step.value" :is="step.is" />
+          </VWindowItem>
+        </VWindow>
+      </v-container>
     </v-main>
   </v-app>
 </template>
+<style>
+html {
+  overflow-y: hidden !important;
+}
+</style>

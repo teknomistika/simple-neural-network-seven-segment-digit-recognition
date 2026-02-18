@@ -59,21 +59,20 @@ const dialog = ref(false)
             <v-btn color="success" @click="dialog = true" prependIcon="mdi-image-plus">Add</v-btn>
         </template>
     </VAppBar>
-    <v-container fluid>
-        <VDialog v-model="dialog" :maxWidth="600">
-            <Drawer @segments="onSegments" />
-        </VDialog>
-        <v-row>
-            <v-col v-for="(img, i) in datasets" :key="img.id" cols="12" sm="3" md="2">
-                <v-sheet elevation="1" class="pa-3 text-center">
-                    <VBtn @click="deleteIt(img.id)" style="float: right;" variant="plain" icon="mdi-delete"
-                        density="compact" color="error" />
-                    <h3>Digit: {{ img.digit }} </h3>
-                    <VImg>
-                        <SevenSegment :active-segements="img.segments" />
-                    </VImg>
-                </v-sheet>
-            </v-col>
-        </v-row>
-    </v-container>
+
+    <VDialog v-model="dialog" :maxWidth="600">
+        <Drawer @segments="onSegments" />
+    </VDialog>
+    <v-row>
+        <v-col v-for="(img, i) in datasets" :key="img.id" cols="12" sm="3" md="2">
+            <v-sheet elevation="1" class="pa-3 text-center">
+                <VBtn @click="deleteIt(img.id)" style="float: right;" variant="plain" icon="mdi-delete"
+                    density="compact" color="error" />
+                <h3>Digit: {{ img.digit }} </h3>
+                <VImg>
+                    <SevenSegment :active-segements="img.segments" />
+                </VImg>
+            </v-sheet>
+        </v-col>
+    </v-row>
 </template>
