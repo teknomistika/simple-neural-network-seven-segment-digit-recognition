@@ -1,5 +1,5 @@
 <template>
-    <VSheet class="pa-2 border">
+    <VSheet class="pa-2">
         <!-- RED -->
         <div v-for="(v, i) in values" :key="i" class="d-flex ga-2 justify-center">
             <div class="light-socket py-1">

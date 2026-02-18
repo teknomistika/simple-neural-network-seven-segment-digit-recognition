@@ -53,7 +53,7 @@ import ModelStats from '@/components/ModelStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
 import type { MapValue, Vector } from '@/types';
-import { SEVEN_SEGMENT_CHARSET } from '@/utils/seven-segment.util';
+const SEVEN_SEGMENT_CHARSET  = []
 import { nextTick, ref, shallowRef, watch } from 'vue';
 
 const { datasets: { value: datasets } } = useDatasets()
@@ -63,15 +63,15 @@ const lossHistory = shallowRef<number[]>([])
 const training = ref(false)
 
 const samples = datasets.map(v => ({
-    digit: v.digit,
-    target: v.digit,
+    digit: v.pressure,
+    target: v.pressure,
     inputs: SEVEN_SEGMENT_CHARSET.map(
-        c => v.segments.includes(c) ? 1.0 : 0.0
+        c => v.lights.includes(c) ? 1.0 : 0.0
     ) as Vector
 }))
 
 /** unique digits */
-const digits = [...new Set(datasets.map(v => v.digit))]
+const digits = [...new Set(datasets.map(v => v.pressure))]
 const sampleStats = ref(new Map(digits.map(v => [v, {
     error: NaN,
     changes: 0,
