@@ -11,44 +11,24 @@ const {
 } = useDatasets();
 const dialog = shallowRef<InstanceType<typeof DatasetDialog>>()
 
-function datasetDialogOk(item: Dataset) {
-    if (selected) {
-        datasets.value[selected].lights = item.lights
-        datasets.value[selected].pressure = item.pressure
-        selected = null
-    } else {
-        datasets.value.push(item)
-    }
-}
-
 function clearAll() {
     if (!confirm('Delete all?'))
         return
-    datasets.value = []
+    datasets.splice(0)
 }
 
 function deleteIt(idx: number) {
     if (!confirm('Delete this?'))
         return
-    datasets.value.splice(idx, 1)
+    datasets.splice(idx, 1)
 }
 
-let selected: number
-
-function showAdd() {
-    selected = null
-    dialog.value.add()
-}
-
-function editIt(idx: number) {
-    selected = idx
-    dialog.value.edit(datasets.value[idx])
-}
 
 function loadDefaultSample() {
     if (!confirm('Add default samples?'))
         return
-    prefined.forEach(datasetDialogOk)
+
+    datasets.push(...prefined)
 }
 
 </script>
@@ -56,19 +36,19 @@ function loadDefaultSample() {
 <template>
     <VAppBar elevation="2" location="bottom" :title="`Dataset (${datasets.length} item)`" density="compact">
         <template v-slot:append>
-            <v-btn @click="loadDefaultSample" prependIcon="mdi-database-import">Load Defaults</v-btn>
+            <v-btn @click="loadDefaultSample" prependIcon="mdi-database-import">Add Predefined</v-btn>
             <v-btn color="error" @click="clearAll" prependIcon="mdi-delete-sweep">Clear</v-btn>
-            <v-btn color="success" @click="showAdd" prependIcon="mdi-image-plus">Add</v-btn>
+            <v-btn color="success" @click="dialog.add()" prependIcon="mdi-plus">Add</v-btn>
         </template>
     </VAppBar>
-    <DatasetDialog ref="dialog" @dataset="datasetDialogOk" />
+    <DatasetDialog ref="dialog" />
     <v-row>
-        <v-col v-for="(item, i) in datasets" :key="i" cols="12" sm="3" md="2">
+        <v-col v-for="(item, i) in datasets" :key="i" cols="6" sm="4" md="3" lg="2">
             <v-sheet elevation="1" class="text-center rounded elevated">
                 <div class="d-flex ga-1 pa-2">
                     <span class="text-disabled">#{{ i + 1 }}</span>
                     <v-spacer />
-                    <VBtn @click="editIt(i)" variant="plain" icon="mdi-pencil" density="compact" size="small"
+                    <VBtn @click="dialog.edit(i)" variant="plain" icon="mdi-pencil" density="compact" size="small"
                         color="warning" />
 
                     <VBtn @click="deleteIt(i)" variant="plain" icon="mdi-delete" density="compact" size="small"

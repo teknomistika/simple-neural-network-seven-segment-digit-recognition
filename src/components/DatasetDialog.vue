@@ -1,55 +1,73 @@
 <template>
 
-    <VDialog v-model="dialog" :maxWidth="500">
+    <VDialog v-model="dialog" :maxWidth="500" :persistent="mode == 'add'">
         <template v-slot:activator="{ props }">
             <slot v-bind="{ props }"></slot>
         </template>
-        <VCard title="Add new Sample">
+        <VCard>
+            <template #title>
+                <VBtn class="float-right" variant="plain" color="error" density="compact" @click="dialog = false" icon="mdi-close"/>
+                Add new Sample
+            </template>
             <VDivider />
             <VCardItem>
                 <p>Lights State:</p>
-                <TrafficLight with-sliders v-model="lights" />
+                <TrafficLight with-sliders v-model="dataset.lights" />
             </VCardItem>
             <VCardItem>
                 <p>Gas Pedal Pressure :</p>
-                <SliderValue class="ml-5" v-model="pressure" />
+                <SliderValue class="ml-5" v-model="dataset.pressure" />
             </VCardItem>
             <VCardActions>
-                <!-- <VBtn color="warning" @click="clearCanvas">Clear</VBtn>
-               <VBtn color="primary" @click="saveDrawing">Download</VBtn> -->
+                <VBtn color="warning" @click="setAll(0)">Zero</VBtn>
+                <VBtn color="primary" @click="setAll(null)">Random</VBtn>
                 <VSpacer />
-                <VBtn color="success" @click="onOk" variant="tonal">OK</VBtn>
+                <VBtn color="error" v-if="mode == 'add'" @click="dialog = false" variant="tonal">cancel</VBtn>
+                <VBtn color="success" v-if="mode == 'add'" @click="onOk" variant="tonal">OK</VBtn>
             </VCardActions>
         </VCard>
     </VDialog>
 </template>
 <script setup lang="ts">
 
-import { ref, unref } from 'vue';
+import { reactive, ref } from 'vue';
 import TrafficLight from './TrafficLight.vue';
 import SliderValue from './SliderValue.vue';
 import type { Dataset } from '@/types';
+import { useDatasets } from '@/composables/useDatasets';
+
+const { datasets } = useDatasets()
 
 const dialog = ref(false)
-const lights = ref([0, 0, 0])
-const pressure = ref(0)
+let dataset: Dataset
 const emits = defineEmits<{ dataset: [Dataset] }>()
+let mode: 'edit' | 'add'
 
 defineExpose({
-    edit(dataset: Dataset) {
-        lights.value = unref(dataset.lights)
-        pressure.value = unref(dataset.pressure)
+    edit(idx: number) {
+        dataset = datasets[idx]
+        console.log(dataset)
         dialog.value = true
+        mode = 'edit'
     },
     add() {
-        lights.value = [0, 0, 0]
-        pressure.value = 0
+        dataset = reactive({ lights: [0, 0, 0], pressure: 0 })
         dialog.value = true
+        mode = 'add'
     }
 })
-
+const r = () => parseFloat((Math.random()).toFixed(1))
+function setAll(v: null | number) {
+    if (v === 0) {
+        dataset.lights = [0, 0, 0]
+        dataset.pressure = 0
+    } else {
+        dataset.lights = [r(), r(), r()]
+        dataset.pressure = r()
+    }
+}
 function onOk() {
-    emits('dataset', { pressure: unref(pressure), lights: unref(lights) })
+    datasets.push(dataset)
     dialog.value = false
 }
 

@@ -1,5 +1,5 @@
 import type { Dataset, Vector } from "@/types";
-import { ref, watch, type Ref } from "vue";
+import { reactive, ref, watch, type Ref } from "vue";
 
 const STORAGE_KEY = "dataset";
 
@@ -12,7 +12,7 @@ const prefined: Dataset[] = [
     { pressure: 1, lights: [0, 0, 1] }
 ]
 
-const datasets = ref<Dataset[]>((() => {
+const datasets = reactive<Dataset[]>((() => {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
         const storedDatasets = (JSON.parse(raw) as any[])
@@ -27,8 +27,9 @@ const datasets = ref<Dataset[]>((() => {
 })())
 
 watch(datasets, (changed) => {
+    console.debug('Dataset update', changed)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(changed))
-}, { deep: true })
+})
 
 
 export function useDatasets() {

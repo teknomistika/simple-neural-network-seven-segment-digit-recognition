@@ -1,9 +1,9 @@
 <template>
     <VSheet class="pa-2">
         <!-- RED -->
-        <div v-for="(v, i) in values" :key="i" class="d-flex ga-2 justify-center">
+        <div v-for="(v, i) in model" :key="i" class="d-flex ga-2 justify-center">
             <div class="light-socket py-1">
-                <div class="bezel" @click="values[i] = values[i] ? 0 : 1">
+                <div class="bezel" @click="model[i] = model[i] ? 0 : 1">
                     <div class="bulb" :style="getStyle(v, i)">
                         <!-- <code>{{ v.toFixed(1) }}</code> -->
                     </div>
@@ -11,7 +11,7 @@
             </div>
             <div class="light-slider d-flex align-center">
                 <SliderValue v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'" hide-details :min="0" :max="1"
-                    :step="0.1" v-model="values[i]" />
+                    :step="0.1" v-model="model[i]" />
                 <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
                     <code>{{ v.toFixed(1) }}</code>
                 </VChip>
@@ -64,14 +64,6 @@ const model = defineModel<number[]>({
 })
 defineProps<{ withSliders?: boolean }>()
 
-const values = ref(Array(3).fill(0).map((_, i) => model.value[i] ?? 0))
-// const styles = ref(Array(3).fill(0).map((_, i) => getStyle(values.value[i], i)))
-watch(values, (changes) => {
-    // changes.forEach((v, i) => {
-    //     styles[i] = getStyle(v, i)
-    // })
-    model.value = changes
-})
 </script>
 
 <style>
