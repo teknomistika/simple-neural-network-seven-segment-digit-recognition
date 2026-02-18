@@ -21,8 +21,7 @@
 
 </template>
 <script lang="ts">
-const lightNames = ['Red', 'Yellow', 'Green']
-const lightColors = [/* red */ '#ff3232',/* yellow */ '#ffc800',/* green */ '#00dc50']
+
 const lightGlows = [ /* red */[255, 50, 50], /* yellow */[255, 200, 0], /* green */[0, 220, 80]]
 const offMap = [
   /* red */   'radial-gradient(circle at 40% 35%, #3d1a1a, #200d0d)',
@@ -57,8 +56,9 @@ function getStyle(brightness: number, colorIndex: number) {
 }
 </script>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
 import SliderValue from './SliderValue.vue';
+import { lightColors } from '@/utils/traffic-light.util';
+
 const model = defineModel<number[]>({
     default: [0, 0, 1]
 })
@@ -97,9 +97,11 @@ function toggle(i: number) {
         inset 0 -2px 4px rgba(255, 255, 255, 0.03),
         0 0 0 2px #1a1d24;
 }
-.bulb:not(.readonly){
+
+.bulb:not(.readonly) {
     cursor: pointer;
 }
+
 .bulb {
     width: 32px;
     height: 32px;

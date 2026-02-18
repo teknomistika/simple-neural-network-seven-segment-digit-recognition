@@ -10,8 +10,8 @@
             </v-slider>
         </template>
         <template v-slot:append>
-            <v-select :disabled="training" :items="selectSampleOptions" v-model="selectedSample" variant="outlined"
-                hide-details density="compact" />
+            <v-select title="Select sample to train" :disabled="training" :items="selectSampleOptions"
+                v-model="selectedSample" variant="outlined" hide-details density="compact" />
             <v-btn @click="step" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
             <v-btn style="width: 105px;" @click="stop" color="error" v-show="training"
                 prependIcon="mdi-stop">Stop</v-btn>
@@ -31,9 +31,11 @@
             <tbody>
                 <tr>
                     <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
-                        v-for="([digit, v], index) of sampleStats" :key="digit">
-                        <div><b :class="{ 'text-primary': digit === currentDigit }">{{ digit }}</b></div>
-                        <code>{{ v.error.toFixed(3) }}</code><br />
+                        v-for="([action, v], index) of sampleStats" :key="action">
+                        <div>
+                            <b :class="{ 'text-primary': action === currentDigit }">{{ Action[action] }}</b>
+                        </div>
+                        <code>Error: {{ v.error.toFixed(3) }}</code><br />
                         <small>
                             <code v-if="v.changes > 0" class="ml-1 text-error">+{{
                                 v.changes.toFixed(3) }}</code>
@@ -49,41 +51,40 @@
 </template>
 
 <script setup lang="ts">
+import ActionChip from '@/components/ActionChip.vue';
 import ModelStats from '@/components/ModelStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
 import type { MapValue, Vector } from '@/types';
-const SEVEN_SEGMENT_CHARSET  = []
+import { Action, getActionCategory } from '@/utils/traffic-light.util';
 import { nextTick, ref, shallowRef, watch } from 'vue';
 
-const { datasets: { value: datasets } } = useDatasets()
+const { datasets } = useDatasets()
 const { model, predict, train, weightChanges, biasChanges } = useModel()
 
 const lossHistory = shallowRef<number[]>([])
 const training = ref(false)
 
 const samples = datasets.map(v => ({
-    digit: v.pressure,
+    action: getActionCategory(v.pressure),
     target: v.pressure,
-    inputs: SEVEN_SEGMENT_CHARSET.map(
-        c => v.lights.includes(c) ? 1.0 : 0.0
-    ) as Vector
+    inputs: v.lights
 }))
 
 /** unique digits */
-const digits = [...new Set(datasets.map(v => v.pressure))]
-const sampleStats = ref(new Map(digits.map(v => [v, {
+const actions = [...new Set(samples.map(v => v.action))]
+const sampleStats = ref(new Map(actions.map(v => [v, {
     error: NaN,
     changes: 0,
     isOk: false
 }])))
 
 let sampleIndex = 0
-const currentDigit = ref(samples[sampleIndex].digit)
+const currentDigit = ref(samples[sampleIndex].action)
 const selectedSample = ref(null as number | null)
 const selectSampleOptions = ref([
     { value: null, title: 'All' },
-    ...samples.map((v, i) => ({ value: i, title: v.digit.toString() }))
+    ...samples.map((v, i) => ({ value: i, title: v.action.toString() }))
 ])
 
 let stat: MapValue<typeof sampleStats.value>, sample: typeof samples[0]
@@ -95,14 +96,14 @@ function step() {
     } else {
         sample = samples[selectedSample.value]
     }
-    currentDigit.value = sample.digit
+    currentDigit.value = sample.action
     // const sample = samples[currentDigit.value] // train one only
     const { output, error } = train(sample.target, sample.inputs)
 
     // Update UI
     model.totalEpochs++
 
-    stat = sampleStats.value.get(sample.digit)
+    stat = sampleStats.value.get(sample.action)
     stat.changes = (stat.error - error)
     stat.error = error
     stat.isOk = (Math.round(output)) == sample.target
@@ -118,14 +119,16 @@ function multistep() {
     step()
     nextTick(() => {
         if (!training.value) return
+        setTimeout(multistep, 0)
+
         // Check all OK
-        for (const [i, v] of sampleStats.value) {
-            if (!v.isOk) {
-                // nextTick
-                setTimeout(multistep, 0)
-                break
-            }
-        }
+        // for (const [i, v] of sampleStats.value) {
+        //     if (!v.isOk) {
+        //         // nextTick
+        //         setTimeout(multistep, 0)
+        //         break
+        //     }
+        // }
         // Stop it have all OK
     })
 }

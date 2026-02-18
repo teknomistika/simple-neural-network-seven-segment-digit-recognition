@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ActionChip from "@/components/ActionChip.vue";
 import DatasetDialog from "@/components/DatasetDialog.vue";
 import GasPedal from "@/components/GasPedal.vue";
 import TrafficLight from "@/components/TrafficLight.vue";
@@ -62,6 +63,8 @@ function loadDefaultSample() {
                     <V-divider class="mb-2" />
                     <p>Gas Pedal:</p>
                     <GasPedal :model-value="item.pressure" />
+                    <p>Action:</p>
+                    <ActionChip :treshold="item.pressure" />
                 </div>
             </v-sheet>
         </v-col>

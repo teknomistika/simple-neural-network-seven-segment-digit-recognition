@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ActionChip from '@/components/ActionChip.vue';
 import GasPedal from '@/components/GasPedal.vue';
 import TrafficLight from '@/components/TrafficLight.vue';
 import { onUnmounted, ref } from 'vue';
@@ -25,7 +26,7 @@ onUnmounted(() => {
 
 <template>
     <!-- <traffic-light with-sliders /> -->
-    <v-card max-width="700px" class="ma-auto">
+    <v-card max-width="720px" class="ma-auto">
         <v-card-text class="text-justify">
             <h1 class="text-h5">Teaching a Neural Network When to Press the Gas Pedal</h1>
             <br />
@@ -56,36 +57,53 @@ onUnmounted(() => {
             </ul> -->
 
             <p>At any moment, <strong>must be only one light is on</strong>.</p>
+            <p>A driver reacts to these signals by adjusting the gas pedal,
+                although the neural network produces a continuous output value, a real driver ultimately makes a
+                discrete decision: <code>stop</code>, <code>wait</code>, or <code>go</code>.
+                To bridge this gap, the gas pedal value is mapped into action categories based on simple thresholds.
+            </p>
 
-            <p>A driver reacts to these signals by adjusting the gas pedal:</p>
-            <VRow>
-                <VCol>
-                    <table style="border-collapse: collapse;" class="my-3 border">
+            The output of the neural network is interpreted as an intensity level, which is then converted into one of
+            three driving actions:
+            <VRow class="mb-2">
+                <VCol cols="12" sm="7">
+                    <table style="border-collapse: collapse;" class="my-3 border w-100">
                         <thead>
                             <tr>
                                 <th>Traffic Light</th>
-                                <th>Gas Pedal Action</th>
+                                <th>Gas Pedal</th>
+                                <th>Threshold</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Red</td>
-                                <td>Do not press (0.0)</td>
+                                <td>Do not press </td>
+                                <td><code> < 0.3</code></td>
+                                <td>STOP</td>
                             </tr>
                             <tr>
                                 <td>Yellow</td>
-                                <td>Press slightly (0.3)</td>
+                                <td>Press slightly </td>
+                                <td><code> < 0.6</code></td>
+                                <td>WAIT</td>
                             </tr>
                             <tr>
                                 <td>Green</td>
-                                <td>Press fully (1.0)</td>
+                                <td>Press fully </td>
+                                <td><code>>= 0.6</code></td>
+                                <td>GO</td>
                             </tr>
                         </tbody>
                     </table>
                 </VCol>
-                <VCol class="d-flex flex-column text-center justify-center">
+                <VCol cols="12" sm="5" class="d-flex flex-column text-center justify-center">
                     Gas Pedal Pressure:
                     <GasPedal :model-value="pressure" />
+                    <div>
+                        <ActionChip :treshold="pressure" />
+                    </div>
                 </VCol>
             </VRow>
 
