@@ -13,7 +13,7 @@ const {
 <template>
     <v-card density="compact">
         <v-card-title class="d-flex ga-2">
-            <div>Model Weights</div>
+            <div>Current Model Weights</div>
             <v-spacer/>
             <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
                 prependIcon="mdi-close-circle-multiple">Randomize</v-btn>
@@ -26,7 +26,7 @@ const {
             <tbody>
                 <tr>
                     <td class="py-2 border-e" v-for="(weight, index) in model.weights" :key="index">
-                        X<sub>{{ index + 1 }}</sub><br /><code>{{ weight.toFixed(4) }}</code>
+                        W<sub>{{ index + 1 }}</sub><br /><code>{{ weight.toFixed(4) }}</code>
                         <sup>
                             <changes :value="weightChanges[index]" />
                         </sup>

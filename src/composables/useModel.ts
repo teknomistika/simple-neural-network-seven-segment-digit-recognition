@@ -10,7 +10,8 @@ const model = reactive(
 )
 
 const weightChanges = ref(model.weights.map(_ => 0))
-const biasChanges = ref(0)
+const biasChanges = ref(NaN)
+const latestLoss = ref(NaN)
 
 function createRandomModel() {
     const now = new Date()
@@ -60,10 +61,14 @@ function predict(x: Vector) {
     return z
 }
 
-function train(gasPedal: number, lights: Vector) {
+function train(yPred: number, lights: Vector) {
 
-    const output = predict(lights)
-    const error = output - gasPedal;
+    const Y = predict(lights)
+    // MSE (Mean Squared Error)
+    latestLoss.value = 0.5 * (yPred - Y) ** 2
+    // derivative of MSE 
+    const error = Y - yPred;
+
     const adjustment = model.learningRate * error
 
     for (let i = 0; i < model.weights.length; i++) {
@@ -79,7 +84,7 @@ function train(gasPedal: number, lights: Vector) {
     model.bias -= adjustment;
 
     model.totalEpochs++
-    return { output, error }
+    return { output: Y, error, adjustment }
 }
 
 function save() {
@@ -96,6 +101,7 @@ export function useModel() {
         weightChanges,
         biasChanges,
         predict,
-        inputSize
+        inputSize,
+        latestLoss
     }
 }

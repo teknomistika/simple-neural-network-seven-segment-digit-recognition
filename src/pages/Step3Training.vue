@@ -21,9 +21,12 @@
     </VAppBar>
     <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
     <v-row>
-        <v-col>
+        <v-col cols="12">
+            <v-sheet class="mb-3 pa-4">
+                How to get correct weight values to achieve desired target output that fit for all samples?
+            </v-sheet>
             <ModelStats :model="model" />
-            <TrainingStats class="mt-3" :losses="lossHistory" :currentEpoch="model.totalEpochs" />
+            <TrainingStats class="mt-3" />
         </v-col>
     </v-row>
     <v-sheet class="mt-3 py-2 rounded">
@@ -33,7 +36,7 @@
                     <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
                         v-for="([action, v], index) of sampleStats" :key="action">
                         <div>
-                            <b :class="{ 'text-primary': action === currentDigit }">{{ ActionLabel[action] }}</b>
+                            <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action] }}</b>
                         </div>
                         <code>Target: {{ v.target.toFixed(3) }}</code><br />
                         <code>Predicted: {{ v.predicted.toFixed(3) }}</code><br />
@@ -62,7 +65,6 @@ import { nextTick, reactive, ref } from 'vue';
 const { datasets } = useDatasets()
 const { model, train } = useModel()
 
-const lossHistory = reactive<number[]>([])
 const training = ref(false)
 
 const samples = datasets.map(v => ({
@@ -82,7 +84,7 @@ const sampleStats = ref(new Map(actions.map(v => [v, {
 }])))
 
 let sampleIndex = 0
-const currentDigit = ref(samples[sampleIndex].action)
+const currentAction = ref(samples[sampleIndex].action)
 const selectedSample = ref(null as number | null)
 const selectSampleOptions = ref([
     { value: null, title: 'All' },
@@ -98,8 +100,8 @@ function step() {
     } else {
         sample = samples[selectedSample.value]
     }
-    currentDigit.value = sample.action
-    // const sample = samples[currentDigit.value] // train one only
+
+    currentAction.value = sample.action
     const { output, error } = train(sample.target, sample.inputs)
 
     stat = sampleStats.value.get(sample.action)
@@ -107,7 +109,6 @@ function step() {
     stat.error = error
     stat.predicted = output
     stat.isOk = parseFloat(output.toFixed(3)) == sample.target
-    lossHistory.push(Math.abs(error))
 }
 
 function multistep() {
@@ -133,6 +134,7 @@ function multistep() {
 function start() {
     // lossHistory.splice(0)
     training.value = true
+    sampleStats.value.forEach(v => v.isOk = false)
     multistep()
 }
 
