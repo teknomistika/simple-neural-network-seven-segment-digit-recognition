@@ -14,6 +14,7 @@ declare module 'vue' {
         SliderValue: typeof import('./components/SliderValue.vue').default
         TrafficLight: typeof import('./components/TrafficLight.vue').default
         TrainingStats: typeof import('./components/TrainingStats.vue').default
+        TextColor: typeof import('./components/TextColor.vue').default
     }
 }
 

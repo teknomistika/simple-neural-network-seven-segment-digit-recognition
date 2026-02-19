@@ -102,14 +102,11 @@ function step() {
     // const sample = samples[currentDigit.value] // train one only
     const { output, error } = train(sample.target, sample.inputs)
 
-    // Update UI
-    model.totalEpochs++
-
     stat = sampleStats.value.get(sample.action)
     stat.changes = (stat.error - error)
     stat.error = error
     stat.predicted = output
-    stat.isOk = getActionCategory(output) == sample.action
+    stat.isOk = parseFloat(output.toFixed(3)) == sample.target
     lossHistory.push(Math.abs(error))
 }
 
@@ -117,17 +114,19 @@ function multistep() {
     step()
     nextTick(() => {
         if (!training.value) return
-        setTimeout(multistep, 0)
+
+        // setTimeout(multistep, 0)
 
         // Check all OK
-        // for (const [i, v] of sampleStats.value) {
-        //     if (!v.isOk) {
-        //         // nextTick
-        //         setTimeout(multistep, 0)
-        //         break
-        //     }
-        // }
+        for (const [i, v] of sampleStats.value) {
+            if (!v.isOk) {
+                // nextTick
+                setTimeout(multistep, 0)
+                return
+            }
+        }
         // Stop it have all OK
+        stop()
     })
 }
 
