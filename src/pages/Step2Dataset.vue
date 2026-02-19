@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import ActionChip from "@/components/ActionChip.vue";
-import DatasetDialog from "@/components/DatasetDialog.vue";
-import GasPedal from "@/components/GasPedal.vue";
-import TrafficLight from "@/components/TrafficLight.vue";
+import type DatasetDialog from "@/components/DatasetDialog.vue";
 import { useDatasets } from "@/composables/useDatasets";
-import type { Dataset, Vector } from "@/types";
 import { shallowRef } from "vue";
 
 const {

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import ActionChip from '@/components/ActionChip.vue';
-import GasPedal from '@/components/GasPedal.vue';
-import TrafficLight from '@/components/TrafficLight.vue';
 import { onUnmounted, ref } from 'vue';
 const lights = ref([0, 0, 0])
 const pressure = ref(0)
@@ -50,11 +47,6 @@ onUnmounted(() => {
             <br />
             <p>A traffic light has three possible signals:</p>
             <TrafficLight readonly :model-value="lights" class="py-4" />
-            <!-- <ul>
-                <li>🔴 <strong>Red</strong></li>
-                <li>🟡 <strong>Yellow</strong></li>
-                <li>🟢 <strong>Green</strong></li>
-            </ul> -->
 
             <p>At any moment, <strong>must be only one light is on</strong>.</p>
             <p>A driver reacts to these signals by adjusting the gas pedal,

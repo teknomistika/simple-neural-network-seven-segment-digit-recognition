@@ -6,7 +6,8 @@
         </template>
         <VCard>
             <template #title>
-                <VBtn class="float-right" variant="plain" color="error" density="compact" @click="dialog = false" icon="mdi-close"/>
+                <VBtn class="float-right" variant="plain" color="error" density="compact" @click="dialog = false"
+                    icon="mdi-close" />
                 {{ mode == 'add' ? 'Add New' : 'Modify' }} Sample
             </template>
             <VDivider />
@@ -15,6 +16,8 @@
                 <TrafficLight class="ml-3" with-sliders v-model="dataset.lights" />
                 <p>Gas Pedal Pressure :</p>
                 <GasPedal with-sliders v-model="dataset.pressure" />
+                <p>Action Category:</p>
+                <ActionChip :treshold="dataset.pressure" />
             </VCardItem>
             <VDivider />
             <VCardActions>
@@ -35,6 +38,7 @@ import SliderValue from './SliderValue.vue';
 import type { Dataset } from '@/types';
 import { useDatasets } from '@/composables/useDatasets';
 import GasPedal from './GasPedal.vue';
+import ActionChip from './ActionChip.vue';
 
 const { datasets } = useDatasets()
 

@@ -1,22 +1,17 @@
 <script setup lang="ts">
 import { useModel } from "@/composables/useModel";
-import type { MicroNNModel } from "@/types";
 import { computed } from "vue"
+
 const {
-    model,
-    save, randomize, zero, useBestModel, weightChanges
+    model, randomize, zero, weightChanges
 } = useModel()
 
-const props = defineProps<{
-    model: MicroNNModel
-}>()
-
 const formattedCreatedAt = computed(() =>
-    props.model.createdAt.toLocaleString()
+    model.createdAt.toLocaleString()
 )
 
 const formattedUpdatedAt = computed(() =>
-    props.model.updateAt.toLocaleString()
+    model.updateAt.toLocaleString()
 )
 
 
@@ -31,13 +26,13 @@ const formattedUpdatedAt = computed(() =>
                 <table style="width: 100%; border-collapse: collapse;" class="border-t text-body-2">
                     <tbody>
                         <tr>
-                            <td :class="{ 'border-s': !!index }" class="text-center"
+                            <td :class="{ 'border-s': !!index }" class="text-center pt-1"
                                 v-for="(weight, index) in model.weights" :key="index">
                                 <code>{{ weight.toFixed(4) }}</code>
                             </td>
                         </tr>
                         <tr>
-                            <td :class="{ 'border-s': !!index }" class="text-center"
+                            <td :class="{ 'border-s': !!index }" class="text-center pb-1"
                                 v-for="(changes, index) in weightChanges" :key="index">
                                 <span v-if="changes > 0" class="ml-1 text-success">+{{
                                     changes.toFixed(3) }}</span>
@@ -60,9 +55,6 @@ const formattedUpdatedAt = computed(() =>
                 </v-card-text>
                 <v-divider />
                 <v-card-actions>
-                    <v-btn density="compact" @click="useBestModel" variant="tonal" color="primary"
-                        prependIcon="mdi-database-import">Load
-                        Pretrained Model</v-btn>
                     <v-spacer />
                     <v-btn density="compact" variant="tonal" color="warning" @click="randomize"
                         prependIcon="mdi-close-circle-multiple">Randomize</v-btn>

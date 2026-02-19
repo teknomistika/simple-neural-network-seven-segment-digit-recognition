@@ -9,6 +9,12 @@ const props = defineProps<{
     currentEpoch: number
 }>()
 
+const loss = computed(() => {
+    if (props.losses.length < 3) return '-'
+    return (props.losses.slice(-3).reduce((p, c) => p + c, 0) / 3)
+        .toFixed(3)
+})
+
 const accuracy = computed(() => {
     if (props.losses.length < 3) return '??'
 
@@ -22,23 +28,17 @@ const accuracy = computed(() => {
 <template>
     <v-card>
         <v-card-title class="d-flex align-center justify-space-between">
-            Learning Progress
+            Learning Progress (Epochs {{ currentEpoch }})
 
         </v-card-title>
 
         <v-card-subtitle>
-            Loss (Mean Squared Error)
+            Loss: {{ loss }}
         </v-card-subtitle>
+        <v-card-text>
+            <v-sparkline :max="1" :min="0" :gradient="['#f72047', '#ffd200', '#1feaea']" :model-value="losses"
+                color="success" line-width="3" padding="8" smooth Xauto-draw />
+        </v-card-text>
 
-        <v-row>
-            <v-col cols="9">
-                <v-sparkline :max="1" :min="0" :gradient="['#f72047', '#ffd200', '#1feaea']" :model-value="losses"
-                    color="blue" line-width="2" padding="8" smooth auto-draw />
-            </v-col>
-            <v-col cols="3" class="d-flex flex-column justify-center text-center">
-                <chip-color :value="props.losses.at(-1) || 0" />
-                <h3>Progress: {{ accuracy }}</h3>
-            </v-col>
-        </v-row>
     </v-card>
 </template>

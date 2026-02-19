@@ -53,19 +53,16 @@
 </template>
 
 <script setup lang="ts">
-import ActionChip from '@/components/ActionChip.vue';
-import ModelStats from '@/components/ModelStats.vue';
-import TrainingStats from '@/components/TrainingStats.vue';
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
-import type { MapValue, Vector } from '@/types';
-import { Action, ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
-import { nextTick, ref, shallowRef, watch } from 'vue';
+import type { MapValue } from '@/types';
+import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
+import { nextTick, reactive, ref } from 'vue';
 
 const { datasets } = useDatasets()
-const { model, predict, train, weightChanges, biasChanges } = useModel()
+const { model, train } = useModel()
 
-const lossHistory = shallowRef<number[]>([])
+const lossHistory = reactive<number[]>([])
 const training = ref(false)
 
 const samples = datasets.map(v => ({
@@ -113,12 +110,7 @@ function step() {
     stat.error = error
     stat.predicted = output
     stat.isOk = getActionCategory(output) == sample.action
-
-    if (lossHistory.value.length >= 50) {
-        lossHistory.value = [...lossHistory.value.slice(1), Math.abs(error)]
-    } else {
-        lossHistory.value = [...lossHistory.value, Math.abs(error)]
-    }
+    lossHistory.push(Math.abs(error))
 }
 
 function multistep() {
@@ -140,9 +132,8 @@ function multistep() {
 }
 
 function start() {
-    lossHistory.value = []
+    // lossHistory.splice(0)
     training.value = true
-    console.log(model, sampleStats.value)
     multistep()
 }
 
