@@ -3,7 +3,7 @@ import App from './App.vue'
 import uiUtil from './utils/ui.util'
 import VueKonva from 'vue-konva';
 
-const app = createApp(App).use(uiUtil).use(VueKonva, { prefix: 'konva' })
+const app = createApp(App).use(uiUtil).use(VueKonva, { prefix: 'k' })
 Object.entries(import.meta.glob('./components/*.vue', {
     eager: true,
     import: 'default'
@@ -31,27 +31,27 @@ declare module 'vue' {
         TrainingStage: typeof import('./components/TrainingStage.vue').default
 
         // Rename Konva components with prefix
-        KonvaArc: GlobalComponents['Arc']
-        KonvaArrow: GlobalComponents['Arrow']
-        KonvaCircle: GlobalComponents['Circle']
-        KonvaEllipse: GlobalComponents['Ellipse']
-        KonvaFastLayer: GlobalComponents['FastLayer']
-        KonvaGroup: GlobalComponents['Group']
-        KonvaImage: GlobalComponents['Image']
-        KonvaLabel: GlobalComponents['Label']
-        KonvaLayer: GlobalComponents['Layer']
-        KonvaLine: GlobalComponents['Line']
-        KonvaPath: GlobalComponents['Path']
-        KonvaRect: GlobalComponents['Rect']
-        KonvaRegularPolygon: GlobalComponents['RegularPolygon']
-        KonvaRing: GlobalComponents['Ring']
-        KonvaShape: GlobalComponents['Shape']
-        KonvaSprite: GlobalComponents['Sprite']
-        KonvaStar: GlobalComponents['Star']
-        KonvaTag: GlobalComponents['Tag']
-        KonvaText: GlobalComponents['Text']
-        KonvaTextPath: GlobalComponents['TextPath']
-        KonvaTransformer: GlobalComponents['Transformer']
-        KonvaWedge: GlobalComponents['Wedge']
+        KArc: GlobalComponents['Arc']
+        KArrow: GlobalComponents['Arrow']
+        KCircle: GlobalComponents['Circle']
+        KEllipse: GlobalComponents['Ellipse']
+        KFastLayer: GlobalComponents['FastLayer']
+        KGroup: GlobalComponents['Group']
+        KImage: GlobalComponents['Image']
+        KLabel: GlobalComponents['Label']
+        KLayer: GlobalComponents['Layer']
+        KLine: GlobalComponents['Line']
+        KPath: GlobalComponents['Path']
+        KRect: GlobalComponents['Rect']
+        KRegularPolygon: GlobalComponents['RegularPolygon']
+        KRing: GlobalComponents['Ring']
+        KShape: GlobalComponents['Shape']
+        KSprite: GlobalComponents['Sprite']
+        KStar: GlobalComponents['Star']
+        KTag: GlobalComponents['Tag']
+        KText: GlobalComponents['Text']
+        KTextPath: GlobalComponents['TextPath']
+        KTransformer: GlobalComponents['Transformer']
+        KWedge: GlobalComponents['Wedge']
     }
 }
