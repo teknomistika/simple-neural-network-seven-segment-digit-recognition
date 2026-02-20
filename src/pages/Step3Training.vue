@@ -26,7 +26,10 @@
                 How to get correct weight values to achieve desired target output that fit for all samples?
             </v-sheet>
             <ModelStats :model="model" />
-            <TrainingStats class="mt-3" />
+            <v-sheet>
+                <TrainingStage />
+            </v-sheet>
+            <!-- <TrainingStats class="mt-3" /> -->
         </v-col>
     </v-row>
     <v-sheet class="mt-3 py-2 rounded">

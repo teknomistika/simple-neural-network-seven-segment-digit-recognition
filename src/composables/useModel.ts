@@ -16,7 +16,7 @@ const latestLoss = ref(NaN)
 function createRandomModel() {
     const now = new Date()
     const model: MicroNNModel = {
-        learningRate: 0.1,
+        learningRate: 0.5,
         weights: Array.from({ length: inputSize }, () => Math.random() * 2 - 1),
         bias: 0,
         createdAt: now,
@@ -61,30 +61,32 @@ function predict(x: Vector) {
     return z
 }
 
-function train(yPred: number, lights: Vector) {
+function train(Y: number, inputs: Vector) {
 
-    const Y = predict(lights)
+    const yHat = predict(inputs)
     // MSE (Mean Squared Error)
-    latestLoss.value = 0.5 * (yPred - Y) ** 2
+    latestLoss.value = 0.5 * (Y - yHat) ** 2
     // derivative of MSE 
-    const error = Y - yPred;
-
-    const adjustment = model.learningRate * error
+    const error = yHat - Y;
 
     for (let i = 0; i < model.weights.length; i++) {
+        const gradient = error * inputs[i]
+
         // Track changes
-        weightChanges.value[i] = adjustment * lights[i];
+        weightChanges.value[i] = model.learningRate * gradient;
+
         // Update weight / connection
         model.weights[i] -= weightChanges.value[i]
     }
 
     // Track bias changes
-    biasChanges.value = adjustment
+    const biasGradient = error
+    biasChanges.value = model.learningRate * biasGradient
     // Update bias
-    model.bias -= adjustment;
+    model.bias -= biasChanges.value;
 
     model.totalEpochs++
-    return { output: Y, error, adjustment }
+    return { output: yHat, error }
 }
 
 function save() {
