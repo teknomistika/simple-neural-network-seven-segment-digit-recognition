@@ -20,19 +20,16 @@
         </template>
     </VAppBar>
     <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
-    <v-row>
-        <v-col cols="12">
-            <v-sheet class="mb-3 pa-4">
-                How to get correct weight values to achieve desired target output that fit for all samples?
-            </v-sheet>
-            <ModelStats :model="model" />
-            <v-sheet>
-                <TrainingStage />
-            </v-sheet>
-            <!-- <TrainingStats class="mt-3" /> -->
-        </v-col>
-    </v-row>
-    <v-sheet class="mt-3 py-2 rounded">
+    
+    <v-sheet class="mb-3 pa-4">
+        How to get correct weight values to achieve desired target output that fit for all samples?
+    </v-sheet>
+    <ModelStats :model="model" />
+    <v-sheet class="my-3">
+        <TrainingStage />
+    </v-sheet>
+        <!-- <TrainingStats class="mt-3" /> -->
+    <v-sheet class="py-2">
         <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
             <tbody>
                 <tr>
