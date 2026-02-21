@@ -1,9 +1,10 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import uiUtil from './utils/ui.util'
-import VueKonva from 'vue-konva';
 
-const app = createApp(App).use(uiUtil).use(VueKonva, { prefix: 'k' })
+const app = createApp(App).use(uiUtil)
+
+// Import all components
 Object.entries(import.meta.glob('./components/*.vue', {
     eager: true,
     import: 'default'
@@ -16,6 +17,7 @@ Object.entries(import.meta.glob('./components/*.vue', {
 app.mount('#app')
 
 declare module 'vue' {
+    // Register all components to make programmer happy :-)
     export interface GlobalComponents {
         ActionChip: typeof import('./components/ActionChip.vue').default
         Changes: typeof import('./components/Changes.vue').default
@@ -29,29 +31,5 @@ declare module 'vue' {
         TrainingStats: typeof import('./components/TrainingStats.vue').default
         TextColor: typeof import('./components/TextColor.vue').default
         TrainingStage: typeof import('./components/TrainingStage.vue').default
-
-        // Rename Konva components with prefix
-        KArc: GlobalComponents['Arc']
-        KArrow: GlobalComponents['Arrow']
-        KCircle: GlobalComponents['Circle']
-        KEllipse: GlobalComponents['Ellipse']
-        KFastLayer: GlobalComponents['FastLayer']
-        KGroup: GlobalComponents['Group']
-        KImage: GlobalComponents['Image']
-        KLabel: GlobalComponents['Label']
-        KLayer: GlobalComponents['Layer']
-        KLine: GlobalComponents['Line']
-        KPath: GlobalComponents['Path']
-        KRect: GlobalComponents['Rect']
-        KRegularPolygon: GlobalComponents['RegularPolygon']
-        KRing: GlobalComponents['Ring']
-        KShape: GlobalComponents['Shape']
-        KSprite: GlobalComponents['Sprite']
-        KStar: GlobalComponents['Star']
-        KTag: GlobalComponents['Tag']
-        KText: GlobalComponents['Text']
-        KTextPath: GlobalComponents['TextPath']
-        KTransformer: GlobalComponents['Transformer']
-        KWedge: GlobalComponents['Wedge']
     }
 }
