@@ -1,5 +1,7 @@
 # Single-Neuron Neural Network – Seven-Segment Digit Recognition
 
+  AI Behind the Scene: How Computer Can Learn.
+
 > **Educational project:** demystifying neural networks by building the *smallest possible* one that still learns.
 
 This project implements a **single-neuron neural network** (7 inputs → 1 output) in **pure JavaScript**, trained with **gradient descent and backpropagation**, to recognize digits displayed in **seven-segment form**.

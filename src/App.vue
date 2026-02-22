@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const steps = Object.entries(import.meta.glob('./pages/*.vue', {
   eager: true,
@@ -10,8 +10,10 @@ const steps = Object.entries(import.meta.glob('./pages/*.vue', {
   is: v
 }))
 
-const currentStep = ref(parseInt(location.hash?.slice(1) || "1"))
-
+const currentStep = ref(null)
+onMounted(() => {
+  currentStep.value = parseInt(location.hash?.slice(1) || "1")
+})
 watch(currentStep, (step) => {
   location.hash = `#${step}`
 })
@@ -48,7 +50,7 @@ watch(currentStep, (step) => {
     <!-- Main Content -->
     <v-main>
       <v-container fluid style="height: calc(100vh - var(--v-layout-bottom) - var(--v-layout-top)); overflow-y: auto;">
-        <VWindow v-model="currentStep">
+        <VWindow v-if="currentStep !== null" v-model="currentStep">
           <VWindowItem :value="step.value" v-for="(step, i) of steps" :key="step.value">
             <Component v-if="currentStep == step.value" :is="step.is" />
           </VWindowItem>

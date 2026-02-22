@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 
 import { defineConfig, Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 import vuetify from 'vite-plugin-vuetify'
 import ViteFonts from 'unplugin-fonts/vite'
 import { compileTemplate } from 'vue/compiler-sfc'
