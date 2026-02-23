@@ -1,18 +1,19 @@
 <template>
-    <div class="d-flex">
-        <div style="width:160px;">
-            <div ref="trainMenu">
+    <v-row>
+        <v-col :cols="4">
+            <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
                 <v-list-item title="Stepper"></v-list-item>
-                <v-list-item v-for="(t, i) in Steps" @click="selectStep(i)"
+                <v-list-item v-for="(t, i) in steps" @click="selectStep(i)" density="compact"
                     :disabled="i !== 0 && current === null || current + 1 < i" :title="t" :active="current === i"
                     color="primary">
                     <template #prepend>
-                        <v-avatar>{{ i + 1 }}</v-avatar>
+                        <v-avatar class="hidden-sm-and-down">{{ i + 1 }}</v-avatar>
                     </template>
                 </v-list-item>
-                <v-list-item @click="stepDone" :disabled="current + 1 < Steps.length" title="Done">
+                <v-list-item density="comfortable" @click="stepDone" :disabled="current + 1 < steps.length"
+                    title="Done">
                     <template #prepend>
-                        <v-avatar>{{ Steps.length + 1 }}</v-avatar>
+                        <v-avatar class="hidden-sm-and-down">{{ steps.length + 1 }}</v-avatar>
                     </template>
                 </v-list-item>
                 <v-divider />
@@ -20,11 +21,11 @@
                     <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
                 </div>
             </div>
-        </div>
-        <div :cols="9" style="flex: 1;">
+        </v-col>
+        <v-col :cols="8">
             <TrainingVector class="vector" ref="vector" :style="{ aspectRatio: `${ratio.w} / ${ratio.h}` }" />
-        </div>
-    </div>
+        </v-col>
+    </v-row>
 
 </template>
 <style>
@@ -41,7 +42,6 @@
         animation: dash 1s linear infinite;
         opacity: 1;
     }
-
 }
 
 @keyframes dash {
@@ -54,55 +54,75 @@
     }
 }
 </style>
+
 <script setup lang="ts">
-
 import { useSticky } from '@/composables/useSticky';
-import TrainingVector from './TrainingVectorPlain.svg'
+import TrainingVector from './TrainingVector.svg'
 import { onMounted, onUnmounted, onUpdated, ref, shallowRef, watch, type ComponentPublicInstance } from 'vue';
-import { useGoTo } from 'vuetify'
 
-// import type { VResponsive } from 'vuetify/components';
-// 16 / 9
 const ratio = { w: 3, h: 4 }
-// const scale = 10
-// const dim = { x: ratio.w * scale, y: ratio.h * scale }
 const vector = shallowRef<ComponentPublicInstance>()
 const trainMenu = shallowRef<HTMLDivElement>()
-const layersNames = ['predict', 'residual', 'gradient', 'optimizer'] as const
-const Steps = ['Predict', 'Residual', 'Gradients', 'Optimizer']
 
-type LayerNames = (typeof layersNames)[number]
+const steps = ['Predict', 'Residual', 'Gradients', 'Optimizer']
+const layers = ['predict', 'residual', 'gradient', 'optimizer']
+
+/** Known all ID value in SVG */
+const vectorRefs = {
+    x1: null as SVGTextElement,
+    x2: null as SVGTextElement,
+    x3: null as SVGTextElement,
+    b: null as SVGTextElement,
+    w1: null as SVGTextElement,
+    w2: null as SVGTextElement,
+    w3: null as SVGTextElement,
+    lr: null as SVGTextElement,
+    o_b: null as SVGTextElement,
+    o_w1: null as SVGTextElement,
+    o_w2: null as SVGTextElement,
+    o_w3: null as SVGTextElement,
+    g_b: null as SVGTextElement,
+    g_w1: null as SVGTextElement,
+    g_w2: null as SVGTextElement,
+    g_w3: null as SVGTextElement,
+    error: null as SVGTextElement,
+    output1: null as SVGTextElement,
+    output2: null as SVGTextElement,
+    target: null as SVGTextElement,
+    // Layers
+    gradient: null as SVGGElement,
+    optimizer: null as SVGGElement,
+    predict: null as SVGGElement,
+    residual: null as SVGGElement,
+
+    output_fill: null as SVGRectElement,
+    residual_fill: null as SVGRectElement,
+    target_fill: null as SVGRectElement,
+}
 
 const sticky = useSticky(trainMenu)
-
 const autoscroll = ref(true)
 const current = ref<number | null>(null)
 
-const layers: SVGGElement[] = []
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
-    layersNames.forEach(name => layers.push(svg.querySelector(`#${name}`) ?? null))
-    // Reset
-    // layers.forEach(l => l.classList.remove('active'))
-    // svg.querySelectorAll('path').forEach(v => {
-    //     v.removeAttribute('style')
-    // })
-    // svg.setAttribute('width', '100%')
-    // svg.setAttribute('height', '100%')
-    // svg.style.display = 'block'
+    for (const id in vectorRefs) {
+        if (!(vectorRefs[id] = svg.querySelector('#' + id))) {
+            console.warn(`Missing element in SVG Vector: ${id}`)
+        }
+    }
+
 }
 
 function stepDone() {
     current.value = null
     if (autoscroll.value) {
-        layers[0].scrollIntoView({
+        vectorRefs.predict.scrollIntoView({
             behavior: 'smooth',
             block: 'end'
         })
     }
 }
-
-// const goTo = useGoTo()
 
 function selectStep(i: number) {
     if (current !== null && i < current.value) {
@@ -111,9 +131,9 @@ function selectStep(i: number) {
 
     current.value = i
     if (autoscroll.value) {
-        layers[i].scrollIntoView({
+        vectorRefs[layers[i]].scrollIntoView({
             behavior: 'smooth',
-            block: 'center'
+            block: 'end'
         })
     }
 }
@@ -122,20 +142,18 @@ function next() {
         current.value = 0
     } else {
         current.value++
-        if (current.value >= layersNames.length) {
+        if (current.value >= layers.length) {
             current.value = null
         }
     }
 
 }
-let timer
 
 watch(current, (current, old) => {
-    console.log('ACTIVE CHANGED', current, old)
     if (current === null)
-        layers.forEach(l => l.classList.remove('active'))
+        layers.forEach(v => vectorRefs[v].classList.remove('active'))
     else {
-        layers.slice(0, current + 1).forEach(v => v.classList.add('active'))
+        layers.slice(0, current + 1).forEach(v => vectorRefs[v].classList.add('active'))
     }
 })
 
@@ -145,14 +163,9 @@ onUpdated(() => {
 onMounted(() => {
 
     setupVector()
-    // next()
-    // timer = setInterval(() => {
-    //     next()
-    // }, 1000)
 })
 onUnmounted(() => {
     sticky.stop()
-    clearInterval(timer)
 })
 
 // onUnmounted(() => svg?.remove())

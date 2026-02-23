@@ -6,6 +6,7 @@ export function useSticky(el: Ref<HTMLElement>) {
     const layout = useLayout()
     const scrollContainer: HTMLDivElement = document.querySelector('main.v-main > .v-container')
     let inlineTopOffset = Infinity
+    let inlineWidth = Infinity
     let isSticky = false
 
     const onScroll = () => {
@@ -13,12 +14,14 @@ export function useSticky(el: Ref<HTMLElement>) {
             if (!isSticky) {
                 isSticky = true
                 el.value.style.position = 'fixed'
+                el.value.style.width = inlineWidth + 'px'
 
             }
         } else {
             if (isSticky) {
                 isSticky = false
                 el.value.style.position = ''
+                el.value.style.width = ''
             }
         }
     }
@@ -28,6 +31,7 @@ export function useSticky(el: Ref<HTMLElement>) {
         if (!v) return
         inlineTopOffset = v.offsetTop
         el.value.style.top = layout.mainRect.value.top.toString() + 'px'
+        inlineWidth = el.value.clientWidth
     }, { immediate: true })
 
     return {

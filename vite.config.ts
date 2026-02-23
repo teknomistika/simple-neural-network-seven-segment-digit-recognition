@@ -21,8 +21,14 @@ const svgLoader: Plugin = {
     let svg = await fs.readFile(id, 'utf-8')
     svg = svg
       .replace(/<\?xml[^>]+>/, '')
-      .replaceAll(/<!--.+-->/g, '').trimStart()
-    // console.log(svg.split("\n").slice(0, 6))
+      .replaceAll(/<!--.+-->/g, '')
+      // Remove explicit size
+      .replace(/<svg\s*(width|height)="\d+"\s*(width|height)="\d+"/, '<svg')
+      // Clear InkScape props and tags
+      .replace(/<sodipodi:namedview[\s\S]+?<\/sodipodi:namedview>/m, '')
+      .replaceAll(/\s*(sodipodi|inkscape):[\w-]+="[^"]+"/g, '')
+      .trimStart()
+    console.log(svg.split("\n").slice(0, 22))
     const { code } = compileTemplate({
       id: JSON.stringify(id),
       source: svg,
