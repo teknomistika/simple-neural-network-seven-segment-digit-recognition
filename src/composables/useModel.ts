@@ -18,7 +18,7 @@ function createRandomModel() {
     const model: MicroNNModel = {
         learningRate: 0.5,
         weights: Array.from({ length: inputSize }, () => Math.random() * 2 - 1),
-        bias: 0,
+        bias: parseFloat(Math.random().toFixed(2)),
         createdAt: now,
         updateAt: now,
         totalEpochs: 0

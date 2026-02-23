@@ -28,7 +28,6 @@
     <v-sheet class="my-3">
         <TrainingStage />
     </v-sheet>
-        <!-- <TrainingStats class="mt-3" /> -->
     <v-sheet class="py-2">
         <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
             <tbody>
@@ -53,6 +52,7 @@
             </tbody>
         </table>
     </v-sheet>
+    
 </template>
 
 <script setup lang="ts">

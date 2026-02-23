@@ -22,8 +22,10 @@
                 </div>
             </div>
         </v-col>
-        <v-col :cols="8">
-            <TrainingVector class="vector" ref="vector" :style="{ aspectRatio: `${ratio.w} / ${ratio.h}` }" />
+        <v-col :cols="8" class="text-center">
+            <TrainingVector class="vector" ref="vector"
+                :style="{ aspectRatio: `${ratio.w} / ${ratio.h}`, maxHeight: '900px', margin: 'auto' }" />
+            <TrainingStats class="mt-3" />
         </v-col>
     </v-row>
 
@@ -58,7 +60,10 @@
 <script setup lang="ts">
 import { useSticky } from '@/composables/useSticky';
 import TrainingVector from './TrainingVector.svg'
-import { onMounted, onUnmounted, onUpdated, ref, shallowRef, watch, type ComponentPublicInstance } from 'vue';
+import { onMounted, onUnmounted, onUpdated, reactive, ref, shallowRef, watch, type ComponentPublicInstance } from 'vue';
+import ModelStats from './ModelStats.vue';
+import { useModel } from '@/composables/useModel';
+import type { MicroNNModel } from '@/types';
 
 const ratio = { w: 3, h: 4 }
 const vector = shallowRef<ComponentPublicInstance>()
@@ -99,10 +104,49 @@ const vectorRefs = {
     residual_fill: null as SVGRectElement,
     target_fill: null as SVGRectElement,
 }
+type VectorText<T> = {
+    [K in keyof T]: T[K] extends SVGTextElement ? K : never;
+}[keyof T];
 
 const sticky = useSticky(trainMenu)
 const autoscroll = ref(true)
 const current = ref<number | null>(null)
+
+const predictState = reactive({
+    inputs: [NaN, NaN, NaN],
+    output: NaN,
+    target: NaN
+})
+
+const { model } = useModel()
+
+function setValue(k: VectorText<typeof vectorRefs>, v: number) {
+    if (isNaN(v) || v === null) {
+        vectorRefs[k].textContent = ''
+    } else {
+        vectorRefs[k].textContent = v.toFixed(2)
+    }
+}
+
+function onModelChange(m: MicroNNModel) {
+    setValue('w1', m.weights[0])
+    setValue('w2', m.weights[1])
+    setValue('w3', m.weights[2])
+    setValue('b', m.bias)
+}
+
+function onPredictChange() {
+    setValue('x1', predictState.inputs[0])
+    setValue('x2', predictState.inputs[1])
+    setValue('x3', predictState.inputs[2])
+    setValue('output1', predictState.output)
+    setValue('output2', predictState.output)
+    setValue('target', predictState.target)
+
+}
+
+watch(model, onModelChange)
+watch(predictState, onPredictChange)
 
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
@@ -111,17 +155,23 @@ const setupVector = () => {
             console.warn(`Missing element in SVG Vector: ${id}`)
         }
     }
+    reset()
+}
 
+function reset() {
+    current.value = null
+    onModelChange(model)
+    onPredictChange()
 }
 
 function stepDone() {
-    current.value = null
-    if (autoscroll.value) {
-        vectorRefs.predict.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end'
-        })
-    }
+    reset()
+    // if (autoscroll.value) {
+    //     vectorRefs.predict.scrollIntoView({
+    //         behavior: 'smooth',
+    //         block: 'end'
+    //     })
+    // }
 }
 
 function selectStep(i: number) {
@@ -161,7 +211,6 @@ onUpdated(() => {
     setupVector()
 })
 onMounted(() => {
-
     setupVector()
 })
 onUnmounted(() => {
