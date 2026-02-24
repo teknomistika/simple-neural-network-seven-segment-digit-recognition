@@ -30,11 +30,11 @@
      showborder="false"
      borderlayer="true"
      inkscape:clip-to-page="true"
-     inkscape:zoom="0.75660426"
-     inkscape:cx="315.22424"
-     inkscape:cy="549.82509"
-     inkscape:window-width="2528"
-     inkscape:window-height="1043"
+     inkscape:zoom="2.14"
+     inkscape:cx="410.98131"
+     inkscape:cy="232.71028"
+     inkscape:window-width="1920"
+     inkscape:window-height="1163"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -680,12 +680,12 @@
        cy="180"
        r="30" />
     <rect
-       style="fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
+       style="fill:#88aa00;fill-opacity:1;stroke:none;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="output_fill"
        width="60"
-       height="90"
+       height="200"
        x="420"
-       y="190" />
+       y="80" />
     <rect
        style="fill:none;stroke:#cccccc;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect19"
@@ -816,7 +816,7 @@
        id="text107"><tspan
          x="15.108685"
          y="251.06929"
-         id="tspan2">x3</tspan></text>
+         id="tspan3">x3</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -831,12 +831,12 @@
        inkscape:connector-curvature="0"
        inkscape:connection-start="#rect32" />
     <rect
-       style="fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
+       style="fill:#88aa00;fill-opacity:1;stroke:none;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="target_fill"
        width="60"
-       height="56.355141"
+       height="200.00002"
        x="500"
-       y="223.64487" />
+       y="80.000015" />
     <rect
        style="fill:none;stroke:#cccccc;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect23"

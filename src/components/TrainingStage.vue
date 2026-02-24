@@ -142,12 +142,29 @@ function onPredictChange() {
     setValue('output1', predictState.output)
     setValue('output2', predictState.output)
     setValue('target', predictState.target)
+    setBarMeter(predictState.output, 'output_fill')
+    setBarMeter(predictState.target, 'target_fill')
+}
 
+function setBarMeter(v: number, k: 'output_fill' | 'target_fill') {
+    const el = vectorRefs[k]
+    if (isNaN(v)) {
+        el.style.opacity = '0'
+        return
+    }
+    // Make the value always between -1 to +1
+    const value = Math.min(1, Math.max(-1, v))
+    // width : 60, height: 200, x: 420, y: 80;
+    const height = 200 / 2 * (value + 1)
+    el.setAttribute('y', (80 + 200 - height).toFixed())
+    el.setAttribute('height', height.toFixed())
+    el.style.opacity = ''
+    el.style.fill = `hsl(${height / 2}, 100%, 32%)`;
 }
 
 watch(model, onModelChange)
 watch(predictState, onPredictChange)
-
+const r = () => parseFloat((Math.random() * 2 - 1).toFixed(2))
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
     for (const id in vectorRefs) {
@@ -155,6 +172,10 @@ const setupVector = () => {
             console.warn(`Missing element in SVG Vector: ${id}`)
         }
     }
+    // Dummy data
+    predictState.inputs = Array.from({ length: 3 }, r)
+    predictState.output = r()
+    predictState.target = r()
     reset()
 }
 

@@ -28,7 +28,7 @@ const svgLoader: Plugin = {
       .replace(/<sodipodi:namedview[\s\S]+?<\/sodipodi:namedview>/m, '')
       .replaceAll(/\s*(sodipodi|inkscape):[\w-]+="[^"]+"/g, '')
       .trimStart()
-    console.log(svg.split("\n").slice(0, 22))
+    // console.log(svg.split("\n").slice(0, 22))
     const { code } = compileTemplate({
       id: JSON.stringify(id),
       source: svg,
