@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col :cols="4">
+        <v-col :cols="4" sm="3">
             <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
                 <v-list-item title="Stepper"></v-list-item>
                 <v-list-item v-for="(t, i) in steps" @click="selectStep(i)" density="compact"
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </v-col>
-        <v-col :cols="8" class="text-center">
+        <v-col :cols="8" sm="9" class="text-center">
             <TrainingVector class="vector" ref="vector"
                 :style="{ aspectRatio: `${ratio.w} / ${ratio.h}`, maxHeight: '900px', margin: 'auto' }" />
             <TrainingStats class="mt-3" />
@@ -103,6 +103,8 @@ const vectorRefs = {
     output_fill: null as SVGRectElement,
     residual_fill: null as SVGRectElement,
     target_fill: null as SVGRectElement,
+
+    error_line: null as SVGPathElement
 }
 type VectorText<T> = {
     [K in keyof T]: T[K] extends SVGTextElement ? K : never;
@@ -142,15 +144,15 @@ function onPredictChange() {
     setValue('output1', predictState.output)
     setValue('output2', predictState.output)
     setValue('target', predictState.target)
-    setBarMeter(predictState.output, 'output_fill')
-    setBarMeter(predictState.target, 'target_fill')
+    setBarFill(predictState.output, 'output_fill')
+    setBarFill(predictState.target, 'target_fill')
+    setBarResidual()
 }
 
-function setBarMeter(v: number, k: 'output_fill' | 'target_fill') {
+function setBarFill(v: number, k: 'output_fill' | 'target_fill') {
     const el = vectorRefs[k]
     if (isNaN(v)) {
-        el.style.opacity = '0'
-        return
+        return el.style.opacity = '0'
     }
     // Make the value always between -1 to +1
     const value = Math.min(1, Math.max(-1, v))
@@ -158,9 +160,31 @@ function setBarMeter(v: number, k: 'output_fill' | 'target_fill') {
     const height = 200 / 2 * (value + 1)
     el.setAttribute('y', (80 + 200 - height).toFixed())
     el.setAttribute('height', height.toFixed())
-    el.style.opacity = ''
     el.style.fill = `hsl(${height / 2}, 100%, 32%)`;
+    el.style.opacity = ''
 }
+
+function setBarResidual() {
+
+    const el = vectorRefs['residual_fill']
+    if (isNaN(predictState.output) || isNaN(predictState.target)) {
+        return el.style.opacity = '0'
+    }
+    const residual = predictState.output - predictState.target
+    // width : 60, height: 200, x: 420, y: 80;
+    setValue('error', residual)
+    let outputY = vectorRefs['output_fill'].y.baseVal.value
+    let targetY = vectorRefs['target_fill'].y.baseVal.value
+    el.setAttribute('y', Math.min(outputY, targetY).toString())
+    el.setAttribute('height', Math.abs(outputY - targetY).toString())
+    el.style.fill = `hsl(${residual / 2}, 100%, 32%)`;
+    el.style.opacity = ''
+
+    let d = vectorRefs['error_line'].getAttribute('d')
+    const lower = Math.max(outputY, targetY).toString()
+    vectorRefs['error_line'].setAttribute('d', d.replace(/^(M \d+),\d+/, `$1,${lower}`))
+}
+
 
 watch(model, onModelChange)
 watch(predictState, onPredictChange)
