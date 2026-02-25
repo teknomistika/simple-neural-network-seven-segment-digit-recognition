@@ -20,53 +20,87 @@
         </template>
     </VAppBar>
     <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
-    
-    <v-sheet class="mb-3 pa-4">
-        How to get correct weight values to achieve desired target output that fit for all samples?
-    </v-sheet>
-    <ModelStats :model="model" />
-    <v-sheet class="my-3">
-        <TrainingStage />
-    </v-sheet>
-    <v-sheet class="py-2">
-        <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
-            <tbody>
-                <tr>
-                    <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
-                        v-for="([action, v], index) of sampleStats" :key="action">
-                        <div>
-                            <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action] }}</b>
-                        </div>
-                        <code>Target: {{ v.target.toFixed(3) }}</code><br />
-                        <code>Predicted: {{ v.predicted.toFixed(3) }}</code><br />
-                        <code>Error: {{ v.error.toFixed(3) }}</code><br />
-                        <small>
-                            <code v-if="v.changes > 0" class="ml-1 text-error">+{{
-                                v.changes.toFixed(3) }}</code>
-                            <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
-                                v.changes.toFixed(3) }}</code>
-                            <code v-else class="ml-1 text-disabled">&mdash;</code>
-                        </small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </v-sheet>
-    
+
+    <v-row>
+        <v-col :cols="4" sm="3">
+            <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
+                <v-list-item title="Stepper"></v-list-item>
+                <v-list-item v-for="(t, i) in steps" @click="selectStep(i)" density="compact"
+                    :disabled="i !== 0 && currentStep === null || currentStep + 1 < i" :title="t"
+                    :active="currentStep === i" color="primary">
+                    <template #prepend>
+                        <v-avatar class="hidden-sm-and-down">{{ i + 1 }}</v-avatar>
+                    </template>
+                </v-list-item>
+                <v-list-item density="comfortable" @click="selectStep(null)" :disabled="currentStep + 1 < steps.length"
+                    title="Done">
+                    <template #prepend>
+                        <v-avatar class="hidden-sm-and-down">{{ steps.length + 1 }}</v-avatar>
+                    </template>
+                </v-list-item>
+                <v-divider />
+                <div class="pa-3 d-flex justify-center">
+                    <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
+                </div>
+            </div>
+        </v-col>
+        <v-col :cols="8" sm="9" class="text-center">
+            <v-sheet class="mb-3 pa-4">
+                How to get correct weight values to achieve desired target output that fit for all samples?
+            </v-sheet>
+            <ModelStats :model="model" />
+            <v-sheet class="my-3">
+                <TrainingVector ref="trainingVector" />
+            </v-sheet>
+            <TrainingStats class="mt-3" />
+            <v-sheet class="py-2">
+                <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
+                    <tbody>
+                        <tr>
+                            <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
+                                v-for="([action, v], index) of sampleStats" :key="action">
+                                <div>
+                                    <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
+                                        }}</b>
+                                </div>
+                                <code>Target: {{ v.target.toFixed(3) }}</code><br />
+                                <code>Predicted: {{ v.predicted.toFixed(3) }}</code><br />
+                                <code>Error: {{ v.error.toFixed(3) }}</code><br />
+                                <small>
+                                    <code v-if="v.changes > 0" class="ml-1 text-error">+{{
+                                        v.changes.toFixed(3) }}</code>
+                                    <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
+                                        v.changes.toFixed(3) }}</code>
+                                    <code v-else class="ml-1 text-disabled">&mdash;</code>
+                                </small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </v-sheet>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup lang="ts">
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
+import { useSticky } from '@/composables/useSticky';
 import type { MapValue } from '@/types';
 import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
-import { nextTick, reactive, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents } from 'vue';
 
 const { datasets } = useDatasets()
-const { model, train } = useModel()
+const { model, train, predict } = useModel()
 
 const training = ref(false)
+const trainMenu = shallowRef<HTMLDivElement>()
+const trainingVector = shallowRef<InstanceType<GlobalComponents['TrainingVector']>>()
+const sticky = useSticky(trainMenu)
+const autoscroll = ref(true)
+const currentStep = ref<number | null>(null)
 
+const steps = ['Predict', 'Residual', 'Gradients', 'Optimizer']
 const samples = datasets.map(v => ({
     action: getActionCategory(v.pressure),
     target: v.pressure,
@@ -141,5 +175,58 @@ function start() {
 function stop() {
     training.value = false
 }
+
+const delay = (t = 500) => new Promise(r => setTimeout(r, t))
+let output = NaN
+function selectStep(i: number) {
+    if (currentStep !== null && i < currentStep.value) {
+        return
+    }
+
+    currentStep.value = i
+
+    switch (i) {
+        case 0:
+            if (selectedSample.value === null) {
+                sample = samples[sampleIndex++]
+                if (sampleIndex >= samples.length)
+                    sampleIndex = 0
+            } else {
+                sample = samples[selectedSample.value]
+            }
+
+            currentAction.value = sample.action
+            output = predict( sample.inputs )
+            
+            break
+    }
+
+    return delay()
+}
+
+function next() {
+    if (currentStep.value === null) {
+        currentStep.value = 0
+    } else {
+        currentStep.value++
+        if (currentStep.value >= steps.length) {
+            currentStep.value = null
+        }
+    }
+
+}
+
+// function stepDone() {
+//     //reset()
+
+// }
+
+onMounted(() => {
+    trainingVector.value?.stepDone()
+})
+
+onUnmounted(() => {
+    sticky.stop()
+})
 
 </script>

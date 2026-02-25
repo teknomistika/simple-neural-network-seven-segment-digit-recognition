@@ -1,34 +1,6 @@
 <template>
-    <v-row>
-        <v-col :cols="4" sm="3">
-            <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
-                <v-list-item title="Stepper"></v-list-item>
-                <v-list-item v-for="(t, i) in steps" @click="selectStep(i)" density="compact"
-                    :disabled="i !== 0 && current === null || current + 1 < i" :title="t" :active="current === i"
-                    color="primary">
-                    <template #prepend>
-                        <v-avatar class="hidden-sm-and-down">{{ i + 1 }}</v-avatar>
-                    </template>
-                </v-list-item>
-                <v-list-item density="comfortable" @click="stepDone" :disabled="current + 1 < steps.length"
-                    title="Done">
-                    <template #prepend>
-                        <v-avatar class="hidden-sm-and-down">{{ steps.length + 1 }}</v-avatar>
-                    </template>
-                </v-list-item>
-                <v-divider />
-                <div class="pa-3 d-flex justify-center">
-                    <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
-                </div>
-            </div>
-        </v-col>
-        <v-col :cols="8" sm="9" class="text-center">
-            <TrainingVector class="vector" ref="vector"
-                :style="{ aspectRatio: `${ratio.w} / ${ratio.h}`, maxHeight: '900px', margin: 'auto' }" />
-            <TrainingStats class="mt-3" />
-        </v-col>
-    </v-row>
-
+    <TrainingVectorSvg class="vector" ref="vector"
+        :style="{ aspectRatio: `${ratio.w} / ${ratio.h}`, maxHeight: '900px', margin: 'auto' }" />
 </template>
 <style>
 .vector {
@@ -58,18 +30,15 @@
 </style>
 
 <script setup lang="ts">
-import { useSticky } from '@/composables/useSticky';
-import TrainingVector from './TrainingVector.svg'
-import { onMounted, onUnmounted, onUpdated, reactive, ref, shallowRef, watch, type ComponentPublicInstance } from 'vue';
-import ModelStats from './ModelStats.vue';
-import { useModel } from '@/composables/useModel';
+import TrainingVectorSvg from './TrainingVector.svg'
+import { onMounted, onUpdated, shallowRef, watch, type ComponentPublicInstance } from 'vue';
 import type { MicroNNModel } from '@/types';
+import { useModel } from '@/composables/useModel';
+// const model = defineModel<number | null>()
+// const props = defineProps<{ lr: number }>()
 
 const ratio = { w: 3, h: 4 }
 const vector = shallowRef<ComponentPublicInstance>()
-const trainMenu = shallowRef<HTMLDivElement>()
-
-const steps = ['Predict', 'Residual', 'Gradients', 'Optimizer']
 const layers = ['predict', 'residual', 'gradient', 'optimizer']
 
 /** Known all ID value in SVG */
@@ -110,17 +79,63 @@ type VectorText<T> = {
     [K in keyof T]: T[K] extends SVGTextElement ? K : never;
 }[keyof T];
 
-const sticky = useSticky(trainMenu)
-const autoscroll = ref(true)
-const current = ref<number | null>(null)
-
-const predictState = reactive({
-    inputs: [NaN, NaN, NaN],
-    output: NaN,
-    target: NaN
-})
+// const predictState = reactive({
+//     inputs: [NaN, NaN, NaN],
+//     output: NaN,
+//     target: NaN
+// })
 
 const { model } = useModel()
+
+function step1(inputs: number[], target: number, output: number, setActive = true) {
+    setValues(['x1', 'x2', 'x3'], inputs)
+    setValues(['output1', 'output2', 'target'], [output, output, target])
+    setBarFill(output, 'output_fill')
+    setBarFill(target, 'target_fill')
+    setActive && setActiveLayer(0)
+}
+
+function step2(output: number, target: number, setActive = true) {
+    setBarResidual(output, target)
+    setActive && setActiveLayer(1)
+}
+
+function step3(values: number[], setActive = true) {
+    setValues(['g_w1', 'g_w2', 'g_w3', 'g_b'], values)
+    setActive && setActiveLayer(2)
+}
+
+function step4(values: number[], setActive = true) {
+    setValues(['o_w1', 'o_w2', 'o_w3', 'o_b'], values)
+    setActive && setActiveLayer(3)
+}
+
+function stepDone() {
+    step1([NaN, NaN, NaN], NaN, NaN, false)
+    step2(NaN, NaN, false)
+    step3([NaN, NaN, NaN, NaN], false)
+    step4([NaN, NaN, NaN, NaN], false)
+    setActiveLayer(null)
+}
+
+function scrollToStep(i: number) {
+    // if (current !== null && i < current.value) {
+    //     return
+    // }
+
+    // current.value = i
+    // if (props.autoscroll) {
+    vectorRefs[layers[i]].scrollIntoView({
+        behavior: 'smooth',
+        block: 'end'
+    })
+    // }
+}
+defineExpose({ step1, step2, step3, step4, stepDone, scrollToStep })
+
+function setValues(ks: VectorText<typeof vectorRefs>[], vs: number[]) {
+    ks.forEach((k, i) => setValue(k, vs[i]))
+}
 
 function setValue(k: VectorText<typeof vectorRefs>, v: number) {
     if (isNaN(v) || v === null) {
@@ -129,25 +144,27 @@ function setValue(k: VectorText<typeof vectorRefs>, v: number) {
         vectorRefs[k].textContent = v.toFixed(2)
     }
 }
-
-function onModelChange(m: MicroNNModel) {
+function onModelUpdate(m: MicroNNModel) {
     setValue('w1', m.weights[0])
     setValue('w2', m.weights[1])
     setValue('w3', m.weights[2])
     setValue('b', m.bias)
+    setValue('lr', m.learningRate)
 }
+watch(model, onModelUpdate)
 
-function onPredictChange() {
-    setValue('x1', predictState.inputs[0])
-    setValue('x2', predictState.inputs[1])
-    setValue('x3', predictState.inputs[2])
-    setValue('output1', predictState.output)
-    setValue('output2', predictState.output)
-    setValue('target', predictState.target)
-    setBarFill(predictState.output, 'output_fill')
-    setBarFill(predictState.target, 'target_fill')
-    setBarResidual()
-}
+
+// function onPredictChange() {
+//     setValue('x1', predictState.inputs[0])
+//     setValue('x2', predictState.inputs[1])
+//     setValue('x3', predictState.inputs[2])
+//     setValue('output1', predictState.output)
+//     setValue('output2', predictState.output)
+//     setValue('target', predictState.target)
+//     setBarFill(predictState.output, 'output_fill')
+//     setBarFill(predictState.target, 'target_fill')
+//     setBarResidual()
+// }
 
 function setBarFill(v: number, k: 'output_fill' | 'target_fill') {
     const el = vectorRefs[k]
@@ -164,13 +181,14 @@ function setBarFill(v: number, k: 'output_fill' | 'target_fill') {
     el.style.opacity = ''
 }
 
-function setBarResidual() {
+function setBarResidual(output: number, target: number) {
 
     const el = vectorRefs['residual_fill']
-    if (isNaN(predictState.output) || isNaN(predictState.target)) {
+    if (isNaN(output) || isNaN(target)) {
+        setValue('error', NaN)
         return el.style.opacity = '0'
     }
-    const residual = predictState.output - predictState.target
+    const residual = output - target
     // width : 60, height: 200, x: 420, y: 80;
     setValue('error', residual)
     let outputY = vectorRefs['output_fill'].y.baseVal.value
@@ -186,9 +204,11 @@ function setBarResidual() {
 }
 
 
-watch(model, onModelChange)
-watch(predictState, onPredictChange)
-const r = () => parseFloat((Math.random() * 2 - 1).toFixed(2))
+// watch(currentModel, onModelChange)
+// watch(predictState, onPredictChange)
+
+// const r = () => parseFloat((Math.random() * 2 - 1).toFixed(2))
+
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
     for (const id in vectorRefs) {
@@ -197,69 +217,45 @@ const setupVector = () => {
         }
     }
     // Dummy data
-    predictState.inputs = Array.from({ length: 3 }, r)
-    predictState.output = r()
-    predictState.target = r()
-    reset()
+    // predictState.inputs = Array.from({ length: 3 }, r)
+    // predictState.output = r()
+    // predictState.target = r()
+    // reset()
+    onModelUpdate(model)
 }
 
-function reset() {
-    current.value = null
-    onModelChange(model)
-    onPredictChange()
-}
+// function reset() {
+//     current.value = null
+//     onModelChange(model)
+//     onPredictChange()
+// }
 
-function stepDone() {
-    reset()
-    // if (autoscroll.value) {
-    //     vectorRefs.predict.scrollIntoView({
-    //         behavior: 'smooth',
-    //         block: 'end'
-    //     })
-    // }
-}
 
-function selectStep(i: number) {
-    if (current !== null && i < current.value) {
-        return
-    }
+// function next() {
+//     if (current.value === null) {
+//         current.value = 0
+//     } else {
+//         current.value++
+//         if (current.value >= layers.length) {
+//             current.value = null
+//         }
+//     }
 
-    current.value = i
-    if (autoscroll.value) {
-        vectorRefs[layers[i]].scrollIntoView({
-            behavior: 'smooth',
-            block: 'end'
-        })
-    }
-}
-function next() {
-    if (current.value === null) {
-        current.value = 0
-    } else {
-        current.value++
-        if (current.value >= layers.length) {
-            current.value = null
-        }
-    }
+// }
 
-}
-
-watch(current, (current, old) => {
+function setActiveLayer(current) {
     if (current === null)
         layers.forEach(v => vectorRefs[v].classList.remove('active'))
     else {
         layers.slice(0, current + 1).forEach(v => vectorRefs[v].classList.add('active'))
     }
-})
+}
 
 onUpdated(() => {
     setupVector()
 })
 onMounted(() => {
     setupVector()
-})
-onUnmounted(() => {
-    sticky.stop()
 })
 
 // onUnmounted(() => svg?.remove())
