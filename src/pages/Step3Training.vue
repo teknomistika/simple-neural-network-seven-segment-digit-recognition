@@ -42,12 +42,14 @@
                 <div class="pa-3 d-flex justify-center">
                     <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
                 </div>
+                <TrafficLight :model-value="[0.5, 0, 1]" />
+                
             </div>
         </v-col>
         <v-col :cols="8" sm="9" class="text-center">
-            <v-sheet class="mb-3 pa-4">
+            <!-- <v-sheet class="mb-3 pa-4">
                 How to get correct weight values to achieve desired target output that fit for all samples?
-            </v-sheet>
+            </v-sheet> -->
             <ModelStats :model="model" />
             <v-sheet class="my-3">
                 <TrainingVector ref="trainingVector" />

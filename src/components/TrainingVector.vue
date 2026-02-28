@@ -31,9 +31,10 @@
 
 <script setup lang="ts">
 import TrainingVectorSvg from './TrainingVector.svg'
-import { onMounted, onUpdated, shallowRef, watch, type ComponentPublicInstance } from 'vue';
+import { onMounted, onUpdated, shallowRef, watch, type ComponentPublicInstance, type Ref } from 'vue';
 import type { MicroNNModel } from '@/types';
 import { useModel } from '@/composables/useModel';
+import { glowController } from '@/utils/traffic-light.util';
 // const model = defineModel<number | null>()
 // const props = defineProps<{ lr: number }>()
 
@@ -73,17 +74,16 @@ const vectorRefs = {
     residual_fill: null as SVGRectElement,
     target_fill: null as SVGRectElement,
 
-    error_line: null as SVGPathElement
+    error_line: null as SVGPathElement,
+
+    x1_glow: null as SVGCircleElement,
+    x2_glow: null as SVGCircleElement,
+    x3_glow: null as SVGCircleElement,
 }
+
 type VectorText<T> = {
     [K in keyof T]: T[K] extends SVGTextElement ? K : never;
 }[keyof T];
-
-// const predictState = reactive({
-//     inputs: [NaN, NaN, NaN],
-//     output: NaN,
-//     target: NaN
-// })
 
 const { model } = useModel()
 
@@ -92,6 +92,11 @@ function step1(inputs: number[], target: number, output: number, setActive = tru
     setValues(['output1', 'output2', 'target'], [output, output, target])
     setBarFill(output, 'output_fill')
     setBarFill(target, 'target_fill')
+    if( !inputs || isNaN(inputs[0]) ){
+        bulbs.forEach( b => b.value = 0)
+    }else{
+        bulbs.forEach( (b, i) => b.value = inputs[i])
+    }
     setActive && setActiveLayer(0)
 }
 
@@ -208,7 +213,7 @@ function setResidual(output: number, target: number) {
 // watch(predictState, onPredictChange)
 
 // const r = () => parseFloat((Math.random() * 2 - 1).toFixed(2))
-
+const bulbs: Ref<number>[] = []
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
     for (const id in vectorRefs) {
@@ -216,6 +221,11 @@ const setupVector = () => {
             console.warn(`Missing element in SVG Vector: ${id}`)
         }
     }
+    bulbs.push(
+        glowController(0, vectorRefs.x1_glow, 0),
+        glowController(1, vectorRefs.x2_glow, 0.5),
+        glowController(2, vectorRefs.x3_glow, 1)
+    )
     // Dummy data
     // predictState.inputs = Array.from({ length: 3 }, r)
     // predictState.output = r()
