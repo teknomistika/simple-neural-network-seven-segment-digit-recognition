@@ -96,7 +96,7 @@ function step1(inputs: number[], target: number, output: number, setActive = tru
 }
 
 function step2(output: number, target: number, setActive = true) {
-    setBarResidual(output, target)
+    setResidual(output, target)
     setActive && setActiveLayer(1)
 }
 
@@ -181,7 +181,7 @@ function setBarFill(v: number, k: 'output_fill' | 'target_fill') {
     el.style.opacity = ''
 }
 
-function setBarResidual(output: number, target: number) {
+function setResidual(output: number, target: number) {
 
     const el = vectorRefs['residual_fill']
     if (isNaN(output) || isNaN(target)) {

@@ -88,10 +88,10 @@ import { useModel } from '@/composables/useModel';
 import { useSticky } from '@/composables/useSticky';
 import type { MapValue } from '@/types';
 import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
-import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents } from 'vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents, type ShallowRef } from 'vue';
 
 const { datasets } = useDatasets()
-const { model, train, predict } = useModel()
+const { model, train, predict, biasChanges, weightChanges, latestLoss } = useModel()
 
 const training = ref(false)
 const trainMenu = shallowRef<HTMLDivElement>()
@@ -125,24 +125,25 @@ const selectSampleOptions = ref([
     ...samples.map((v, i) => ({ value: i, title: v.action.toString() }))
 ])
 
-let stat: MapValue<typeof sampleStats.value>, sample: typeof samples[0]
+let stat: MapValue<typeof sampleStats.value>
+
 function step() {
     if (selectedSample.value === null) {
-        sample = samples[sampleIndex++]
+        sample.value = samples[sampleIndex++]
         if (sampleIndex >= samples.length)
             sampleIndex = 0
     } else {
-        sample = samples[selectedSample.value]
+        sample.value = samples[selectedSample.value]
     }
 
-    currentAction.value = sample.action
-    const { output, error } = train(sample.target, sample.inputs)
+    currentAction.value = sample.value.action
+    const { output, error } = train(sample.value.target, sample.value.inputs)
 
-    stat = sampleStats.value.get(sample.action)
+    stat = sampleStats.value.get(sample.value.action)
     stat.changes = (stat.error - error)
     stat.error = error
     stat.predicted = output
-    stat.isOk = parseFloat(output.toFixed(3)) == sample.target
+    stat.isOk = parseFloat(output.toFixed(3)) == sample.value.target
 }
 
 function multistep() {
@@ -177,27 +178,85 @@ function stop() {
 }
 
 const delay = (t = 500) => new Promise(r => setTimeout(r, t))
-let output = NaN
-function selectStep(i: number) {
-    if (currentStep !== null && i < currentStep.value) {
-        return
-    }
+let output = ref(NaN)
+const sample = shallowRef<typeof samples[0]>()
+const gradients = shallowRef<number[]>()
+let newWeights = []
 
+function selectStep(i: number) {
     currentStep.value = i
 
+    if (autoscroll.value && i !== null) {
+        trainingVector.value.scrollToStep(i)
+    }
+
     switch (i) {
+        // Predict
         case 0:
+            trainingVector.value?.stepDone()
+            training.value = true
             if (selectedSample.value === null) {
-                sample = samples[sampleIndex++]
+                sample.value = samples[sampleIndex++]
                 if (sampleIndex >= samples.length)
                     sampleIndex = 0
             } else {
-                sample = samples[selectedSample.value]
+                sample.value = samples[selectedSample.value]
             }
+            currentAction.value = sample.value.action
+            output.value = predict(sample.value.inputs)
+            trainingVector.value.step1(sample.value.inputs, sample.value.target, output.value)
 
-            currentAction.value = sample.action
-            output = predict( sample.inputs )
-            
+            const error = output.value - sample.value.target
+            stat = sampleStats.value.get(sample.value.action)
+            stat.changes = (stat.error - error)
+            stat.error = error
+            stat.predicted = output.value
+            stat.isOk = parseFloat(output.value.toFixed(3)) == sample.value.target
+            break
+        // Residual
+        case 1:
+            trainingVector.value.step2(output.value, sample.value.target)
+            break
+        // Gradients
+        case 2:
+            const residual = output.value - sample.value.target
+            latestLoss.value = residual
+            gradients.value = [
+                residual * sample.value.inputs[0],
+                residual * sample.value.inputs[1],
+                residual * sample.value.inputs[2],
+                residual * 1, // Bias
+            ]
+            trainingVector.value.step3(gradients.value)
+            break
+        // Optimizer
+        case 3:
+
+
+            newWeights = [
+                model.weights[0] - model.learningRate * gradients.value[0],
+                model.weights[1] - model.learningRate * gradients.value[1],
+                model.weights[2] - model.learningRate * gradients.value[2],
+                model.bias - model.learningRate * gradients.value[3]
+            ]
+
+            trainingVector.value.step4(newWeights)
+            break
+
+        case null:
+            if (newWeights.length) {
+                weightChanges.value[0] = newWeights[0] - model.weights[0]
+                weightChanges.value[1] = newWeights[1] - model.weights[1]
+                weightChanges.value[2] = newWeights[2] - model.weights[2]
+                biasChanges.value = newWeights[3] - model.bias
+
+                // apply changes
+                model.weights[0] = newWeights[0]
+                model.weights[1] = newWeights[1]
+                model.weights[2] = newWeights[2]
+                model.bias = newWeights[3]
+            }
+            training.value = false
             break
     }
 
@@ -222,7 +281,8 @@ function next() {
 // }
 
 onMounted(() => {
-    trainingVector.value?.stepDone()
+    selectStep(null)
+    // trainingVector.value?.stepDone()
 })
 
 onUnmounted(() => {

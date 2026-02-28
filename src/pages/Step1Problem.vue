@@ -58,12 +58,13 @@ onUnmounted(() => {
             The output of the neural network is interpreted as an intensity level, which is then converted into one of
             three driving actions:
             <VRow class="mb-2">
-                <VCol cols="12" sm="7">
+                <VCol cols="12" sm="8">
                     <table style="border-collapse: collapse;" class="my-3 border w-100">
                         <thead>
                             <tr>
                                 <th>Traffic Light</th>
                                 <th>Gas Pedal</th>
+                                <th>Target</th>
                                 <th>Threshold</th>
                                 <th>Action</th>
                             </tr>
@@ -72,25 +73,28 @@ onUnmounted(() => {
                             <tr>
                                 <td>Red</td>
                                 <td>Do not press </td>
-                                <td><code> < 0.25</code></td>
+                                <td><code>0.00</code></td>
+                                <td><code> 0.00 - 0.25</code></td>
                                 <td>STOP</td>
                             </tr>
                             <tr>
                                 <td>Yellow</td>
                                 <td>Press slightly </td>
-                                <td><code> < 0.75</code></td>
+                                <td><code>0.50</code></td>
+                                <td><code>0.26 - 0.75</code></td>
                                 <td>WAIT</td>
                             </tr>
                             <tr>
                                 <td>Green</td>
                                 <td>Press fully </td>
-                                <td><code>>= 0.75</code></td>
+                                <td><code>1.00</code></td>
+                                <td><code>0.76 - 1.00</code></td>
                                 <td>GO</td>
                             </tr>
                         </tbody>
                     </table>
                 </VCol>
-                <VCol cols="12" sm="5" class="d-flex flex-column text-center justify-center">
+                <VCol cols="12" sm="4" class="d-flex flex-column text-center justify-center">
                     Gas Pedal Pressure:
                     <GasPedal :model-value="pressure" />
                     <div>
