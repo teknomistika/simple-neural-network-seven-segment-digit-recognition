@@ -31,11 +31,11 @@
      showborder="false"
      borderlayer="true"
      inkscape:clip-to-page="true"
-     inkscape:zoom="4"
-     inkscape:cx="13.75"
-     inkscape:cy="200.5"
-     inkscape:window-width="1599"
-     inkscape:window-height="1041"
+     inkscape:zoom="1"
+     inkscape:cx="280.5"
+     inkscape:cy="271"
+     inkscape:window-width="2025"
+     inkscape:window-height="971"
      inkscape:window-x="26"
      inkscape:window-y="23"
      inkscape:window-maximized="0"
@@ -203,39 +203,39 @@
        width="600"
        height="147.8978"
        x="3.6888261e-07"
-       y="432.1022" />
+       y="392.1022" />
     <rect
        style="opacity:0.187192;fill:#f9f9f9;fill-opacity:1;stroke:none;stroke-width:1.99999;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect58"
        width="600"
-       height="220"
+       height="200"
        x="0"
-       y="580" />
+       y="540" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;opacity:0.5;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="140.66"
-       y="418.02487"
+       y="378.02487"
        id="text102"><tspan
          sodipodi:role="line"
          id="tspan102"
          x="140.66"
-         y="418.02487"
+         y="378.02487"
          style="text-align:end;text-anchor:end">Calculate Gradients</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:start;opacity:0.5;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="12.194701"
-       y="595.41858"
+       y="555.41858"
        id="text103"><tspan
          sodipodi:role="line"
          id="tspan103"
          x="12.194701"
-         y="595.41858"
+         y="555.41858"
          style="text-align:start;text-anchor:start">Optimizer</tspan><tspan
          sodipodi:role="line"
          x="12.194701"
-         y="613.75195"
+         y="573.75195"
          style="text-align:start;text-anchor:start"
          id="tspan104">(Gradient Descent)</tspan></text>
     <rect
@@ -271,49 +271,49 @@
      style="display:inline">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 274.80474,645.56815 135.97526,725.7841"
+       d="M 274.80474,605.56815 135.97526,685.7841"
        id="path94"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 286.29473,656.83066 -31.80946,57.69093"
+       d="m 286.29473,616.83066 -31.80946,57.69093"
        id="path95"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 316.73343,655.96548 37.31314,59.42129"
+       d="m 316.73343,615.96548 37.31314,59.42129"
        id="path96"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 327.02926,645.08392 146.72148,81.18441"
+       d="m 327.02926,605.08392 146.72148,81.18441"
        id="path97"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 110,559.01696 v 151.7757"
+       d="m 110,519.01696 v 151.7757"
        id="path98"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 240,559.01696 v 151.7757"
+       d="m 240,519.01696 v 151.7757"
        id="path99"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 370,559.01696 v 151.7757"
+       d="m 370,519.01696 v 151.7757"
        id="path100"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 500,559.01696 v 151.7757"
+       d="m 500,519.01696 v 151.7757"
        id="path101"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
@@ -321,31 +321,31 @@
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle56"
        cx="300.78"
-       cy="630.55957"
+       cy="590.55957"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle59"
        cx="110"
-       cy="740.79266"
+       cy="700.79266"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle62"
        cx="240"
-       cy="740.79266"
+       cy="700.79266"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle65"
        cx="370"
-       cy="740.79266"
+       cy="700.79266"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle68"
        cx="500"
-       cy="740.79266"
+       cy="700.79266"
        r="30" />
   </g>
   <g
@@ -354,74 +354,89 @@
      id="gradient"
      style="display:inline">
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 278.70488,373.77134 132.07512,508.70299"
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="m 278.70488,373.77134 -143.93333,98.3237"
        id="path87"
        inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 290.96543,381.8062 249.81457,500.66813"
-       id="path88"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="m 311.78382,381.36586 47.21236,119.74261"
-       id="path89"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 323.28742,373.29169 477.49258,509.18264"
-       id="path90"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#circle36" />
     <path
        style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 78.231019,149.22185 106.45064,499.22817"
+       d="m 290.96543,381.8062 -38.08554,80.11667"
+       id="path88"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#circle46" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="m 311.78382,381.36586 43.94592,81.26309"
+       id="path89"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#circle49" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="m 323.28742,373.29169 151.61572,99.28988"
+       id="path90"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#circle52" />
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
+       d="M 78.581886,149.19148 107.23822,459.14493"
        id="path91"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#x1border" />
+       inkscape:connection-start="#x1border"
+       inkscape:connection-end="#circle36" />
     <path
        style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 88.505662,207.18536 226.24254,502.35777"
+       d="M 89.895569,206.49263 225.92454,462.52434"
        id="path92"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#circle8" />
+       inkscape:connection-start="#circle8"
+       inkscape:connection-end="#circle46" />
     <path
        style="display:inline;fill:none;fill-rule:evenodd;stroke:#00ffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ArrowWideHeavy)"
-       d="M 97.203164,262.40258 347.72606,508.92091"
+       d="M 98.770283,260.68196 347.04982,469.69634"
        id="path93"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#circle7" />
+       inkscape:connection-start="#circle7"
+       inkscape:connection-end="#circle49" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle36"
        cx="110"
-       cy="529.01697"
+       cy="489.01697"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle46"
        cx="240"
-       cy="529.01697"
+       cy="489.01697"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle49"
        cx="370"
-       cy="529.01697"
+       cy="489.01697"
        r="30" />
     <circle
        style="fill:none;stroke:#cccccc;stroke-width:0.680555;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="circle52"
        cx="500"
-       cy="529.01697"
+       cy="489.01697"
        r="30" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 370,489.01697 v 0"
+       id="path1"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-start="#circle49"
+       inkscape:connection-end="#circle49" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -550,7 +565,7 @@
        cx="24.000002"
        cy="119.31944"
        r="8"
-       transform="matrix(2.0000007,0,0,2.0000007,-24.00002,-59.638975)" />
+       transform="matrix(2.0000007,0,0,2.0000007,-24.00002,-58.638969)" />
     <ellipse
        style="opacity:0.461719;fill:url(#radialGradient111);fill-rule:nonzero;stroke:none;stroke-width:2.00592;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke fill markers"
        id="ellipse111"
@@ -632,25 +647,25 @@
      inkscape:label="top">
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="306"
-       y="590"
+       y="550"
        id="text55"><tspan
          sodipodi:role="line"
          x="306"
-         y="590"
+         y="550"
          id="tspan55">Learning Rate (LR)</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="300"
-       y="632.10223"
+       y="592.10223"
        id="lr"
        inkscape:label="lr"><tspan
          sodipodi:role="line"
          id="tspan56"
          x="300"
-         y="632.10223"
+         y="592.10223"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <path
        style="display:inline;opacity:0.5;fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
@@ -662,212 +677,212 @@
        id="path17" />
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="109.22"
-       y="742.33527"
+       y="702.33527"
        id="o_w1"
        inkscape:label="o_w1"><tspan
          sodipodi:role="line"
          id="tspan59"
          x="109.22"
-         y="742.33527"
+         y="702.33527"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="110"
-       y="662.10223"
+       y="622.10223"
        id="text61"><tspan
          sodipodi:role="line"
          id="tspan75"
          x="110"
-         y="662.10223">Optimize W1</tspan><tspan
+         y="622.10223">Optimize W1</tspan><tspan
          sodipodi:role="line"
          id="tspan76"
          x="110"
-         y="680.43561">W1-LR⋅g_w1</tspan></text>
+         y="640.43561">W1-LR⋅g_w1</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="239.22"
-       y="742.33527"
+       y="702.33527"
        id="o_w2"
        inkscape:label="o_w2"><tspan
          sodipodi:role="line"
          id="tspan62"
          x="239.22"
-         y="742.33527"
+         y="702.33527"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="240"
-       y="662.10223"
+       y="622.10223"
        id="text64"><tspan
          sodipodi:role="line"
          id="tspan64"
          x="240"
-         y="662.10223">Optimize w2</tspan><tspan
+         y="622.10223">Optimize w2</tspan><tspan
          sodipodi:role="line"
          x="240"
-         y="680.43561"
+         y="640.43561"
          id="tspan83">w2-LR⋅g_w2</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="369.22"
-       y="742.33527"
+       y="702.33527"
        id="o_w3"
        inkscape:label="o_w3"><tspan
          sodipodi:role="line"
          id="tspan65"
          x="369.22"
-         y="742.33527"
+         y="702.33527"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="370"
-       y="662.10223"
+       y="622.10223"
        id="text67"><tspan
          sodipodi:role="line"
          id="tspan67"
          x="370"
-         y="662.10223">Optimize w3</tspan><tspan
+         y="622.10223">Optimize w3</tspan><tspan
          sodipodi:role="line"
          x="370"
-         y="680.43561"
+         y="640.43561"
          id="tspan84">w3-LR⋅g_w3</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="499.22"
-       y="742.33527"
+       y="702.33527"
        id="o_b"
        inkscape:label="o_b"><tspan
          sodipodi:role="line"
          id="tspan68"
          x="499.22"
-         y="742.33527"
+         y="702.33527"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="500"
-       y="662.10223"
+       y="622.10223"
        id="text70"><tspan
          sodipodi:role="line"
          id="tspan70"
          x="500"
-         y="662.10223">Optimize Bias</tspan><tspan
+         y="622.10223">Optimize Bias</tspan><tspan
          sodipodi:role="line"
          x="500"
-         y="680.43561"
+         y="640.43561"
          id="tspan85">b-LR⋅g_b</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="109.22"
-       y="530.55957"
+       y="490.55957"
        id="g_w1"
        inkscape:label="g_w1"><tspan
          sodipodi:role="line"
          id="tspan36"
          x="109.22"
-         y="530.55957"
+         y="490.55957"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="80"
-       y="450.10223"
+       y="410.10223"
        id="text41"><tspan
          sodipodi:role="line"
          id="tspan77"
          x="80"
-         y="450.10223">W1 Gradient (g_w1)</tspan><tspan
+         y="410.10223">W1 Gradient (g_w1)</tspan><tspan
          sodipodi:role="line"
          id="tspan78"
          x="80"
-         y="468.43561">(y^​−y)⋅x1</tspan></text>
+         y="428.43561">(y^​−y)⋅x1</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="239.22"
-       y="530.55957"
+       y="490.55957"
        id="g_w2"
        inkscape:label="g_w2"><tspan
          sodipodi:role="line"
          id="tspan46"
          x="239.22"
-         y="530.55957"
+         y="490.55957"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="230"
-       y="450.10223"
+       y="410.10223"
        id="text48"><tspan
          sodipodi:role="line"
          id="tspan79"
          x="230"
-         y="450.10223">W2 Gradient (g_w2)</tspan><tspan
+         y="410.10223">W2 Gradient (g_w2)</tspan><tspan
          sodipodi:role="line"
          id="tspan80"
          x="230"
-         y="468.43561">(y^​−y)⋅x2</tspan></text>
+         y="428.43561">(y^​−y)⋅x2</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="369.22"
-       y="530.55957"
+       y="490.55957"
        id="g_w3"
        inkscape:label="g_w3"><tspan
          sodipodi:role="line"
          id="tspan49"
          x="369.22"
-         y="530.55957"
+         y="490.55957"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="370"
-       y="450.10223"
+       y="410.10223"
        id="text51"><tspan
          sodipodi:role="line"
          id="tspan81"
          x="370"
-         y="450.10223">W3 Gradient (g_w3)</tspan><tspan
+         y="410.10223">W3 Gradient (g_w3)</tspan><tspan
          sodipodi:role="line"
          id="tspan82"
          x="370"
-         y="468.43561">(y^​−y)⋅x3</tspan></text>
+         y="428.43561">(y^​−y)⋅x3</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="499.22"
-       y="530.55957"
+       y="490.55957"
        id="g_b"
        inkscape:label="g_b"><tspan
          sodipodi:role="line"
          id="tspan52"
          x="499.22"
-         y="530.55957"
+         y="490.55957"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:0.597627">-1.00</tspan></text>
     <text
        xml:space="preserve"
-       style="display:inline;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="510"
-       y="450.10223"
+       y="410.10223"
        id="text54"><tspan
          sodipodi:role="line"
          id="tspan53"
          x="510"
-         y="450.10223">Bias Gradient (g_b)</tspan><tspan
+         y="410.10223">Bias Gradient (g_b)</tspan><tspan
          sodipodi:role="line"
          id="tspan54"
          x="510"
-         y="468.43561">(y^​−y)⋅1</tspan></text>
+         y="428.43561">(y^​−y)⋅1</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.3333px;font-family:Monospace;-inkscape-font-specification:'Monospace, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;fill:#ffffff;stroke-width:0.597627;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
@@ -1166,12 +1181,12 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;opacity:1;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
        x="24.249352"
-       y="180.37865"
+       y="181.37865"
        id="text3"><tspan
          sodipodi:role="line"
          id="tspan3"
          x="24.249352"
-         y="180.37865">x2</tspan></text>
+         y="181.37865">x2</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;writing-mode:lr-tb;direction:ltr;dominant-baseline:middle;text-anchor:middle;display:inline;opacity:1;fill:#ffffff;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"

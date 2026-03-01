@@ -1,5 +1,8 @@
 <template>
     <v-navigation-drawer location="left" permanent>
+        <div class="text-h5 text-center py-2">
+            Epochs: <code>{{ model.totalEpochs }}</code>
+        </div>
         <v-list-item @click="stop" title="stop" class="text-error" v-show="training" prependIcon="mdi-stop" />
         <v-list-item @click="start" title="Start Training" class="text-success" v-show="!training"
             prependIcon="mdi-play-box-multiple" />
@@ -22,7 +25,8 @@
         <v-divider />
         <div class="px-4 d-flex flex-column ga-2">
             <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
-            <v-select label="Select sample" :disabled="training" :items="selectSampleOptions" v-model="selectedSample"
+            Select sample:
+            <v-select :disabled="training" :items="selectSampleOptions" v-model="selectedSample"
                 variant="outlined" hide-details density="compact" />
             <TrafficLight v-if="selectedSample !== null" :model-value="samples[selectedSample].inputs" />
             <div>
