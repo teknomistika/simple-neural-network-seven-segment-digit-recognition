@@ -1,18 +1,21 @@
-import { createApp } from 'vue'
+import { createApp, type ComponentPublicInstance } from 'vue'
+import 'unfonts.css'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 import App from './App.vue'
-import uiUtil from './utils/ui.util'
 
-const app = createApp(App).use(uiUtil)
+const app = createApp(App).use(createVuetify())
 
-// Import all components
-Object.entries(import.meta.glob('./components/*.vue', {
+// Import all components (vue and svg)
+Object.entries(import.meta.glob('./components/*.(vue|svg)', {
     eager: true,
     import: 'default'
 })).forEach(([k, v]) => {
-    const cName = k.match(/\/(?<name>[^\/]+)\.vue/).groups.name
-    app.component(cName, v)
-}
-)
+    let { name, ext } = k.match(/\/(?<name>[^\/]+)\.(?<ext>.{3})$/).groups
+    if (ext == 'svg')
+        name = `${name}Svg`
+    app.component(name, v)
+})
 
 app.mount('#app')
 
@@ -25,11 +28,12 @@ declare module 'vue' {
         DatasetDialog: typeof import('./components/DatasetDialog.vue').default
         GasPedal: typeof import('./components/GasPedal.vue').default
         ModelStats: typeof import('./components/ModelStats.vue').default
-        NeuralNetwork: typeof import('./components/NeuralNetwork.vue').default
         SliderValue: typeof import('./components/SliderValue.vue').default
         TrafficLight: typeof import('./components/TrafficLight.vue').default
         TrainingStats: typeof import('./components/TrainingStats.vue').default
         TextColor: typeof import('./components/TextColor.vue').default
         TrainingVector: typeof import('./components/TrainingVector.vue').default
+        TrainingVectorSvg: ComponentPublicInstance
+        BulbSvg: ComponentPublicInstance
     }
 }

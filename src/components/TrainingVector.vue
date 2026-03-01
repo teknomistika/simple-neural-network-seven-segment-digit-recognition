@@ -30,16 +30,13 @@
 </style>
 
 <script setup lang="ts">
-import TrainingVectorSvg from './TrainingVector.svg'
-import { onMounted, onUpdated, shallowRef, watch, type ComponentPublicInstance, type Ref } from 'vue';
+import { onMounted, onUpdated, shallowRef, watch, type GlobalComponents, type Ref } from 'vue';
 import type { MicroNNModel } from '@/types';
 import { useModel } from '@/composables/useModel';
 import { glowController } from '@/utils/traffic-light.util';
-// const model = defineModel<number | null>()
-// const props = defineProps<{ lr: number }>()
 
 const ratio = { w: 3, h: 4 }
-const vector = shallowRef<ComponentPublicInstance>()
+const vector = shallowRef<GlobalComponents['TrainingVectorSvg']>()
 const layers = ['predict', 'residual', 'gradient', 'optimizer']
 
 /** Known all ID value in SVG */
@@ -92,10 +89,10 @@ function step1(inputs: number[], target: number, output: number, setActive = tru
     setValues(['output1', 'output2', 'target'], [output, output, target])
     setBarFill(output, 'output_fill')
     setBarFill(target, 'target_fill')
-    if( !inputs || isNaN(inputs[0]) ){
-        bulbs.forEach( b => b.value = 0)
-    }else{
-        bulbs.forEach( (b, i) => b.value = inputs[i])
+    if (!inputs || isNaN(inputs[0])) {
+        bulbs.forEach(b => b.value = 0)
+    } else {
+        bulbs.forEach((b, i) => b.value = inputs[i])
     }
     setActive && setActiveLayer(0)
 }

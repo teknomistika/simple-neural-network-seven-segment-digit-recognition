@@ -23,12 +23,12 @@ const svgLoader: Plugin = {
       .replace(/<\?xml[^>]+>/, '')
       .replaceAll(/<!--.+-->/g, '')
       // Remove explicit size
-      .replace(/<svg\s*(width|height)="\d+"\s*(width|height)="\d+"/, '<svg')
+      .replace(/<svg\s*(width|height)="(600|800)"\s*(width|height)="(600|800)"/, '<svg')
       // Clear InkScape props and tags
-      .replace(/<sodipodi:namedview[\s\S]+?<\/sodipodi:namedview>/m, '')
+      .replace(/<sodipodi:namedview[\s\S]+?(\/>|<\/sodipodi:namedview>)/m, '')
       .replaceAll(/\s*(sodipodi|inkscape):[\w-]+="[^"]+"/g, '')
       .trimStart()
-    // console.log(svg.split("\n").slice(0, 22))
+    // console.log(id, svg.split("\n").slice(0, 22))
     const { code } = compileTemplate({
       id: JSON.stringify(id),
       source: svg,
