@@ -1,9 +1,8 @@
 
 // export const lightNames = ['Red', 'Yellow', 'Green']
 export const lightColorValues = [ /* red */[255, 60, 60], /* yellow */[240, 200, 0], /* green */[0, 220, 80]]
-
+export const lightColorHexs = lightColorValues.map(v => '#' + v.map(n => n.toString(16).padStart(2, '0')).join(''))
 export const ActionLabel = ['STOP < 0.25', 'WAIT < 0.75', 'GO > 0.75']
-export const lightColorRgb = lightColorValues.map( v => `RGB(${v.join()})`)
 
 export enum Action {
   STOP,

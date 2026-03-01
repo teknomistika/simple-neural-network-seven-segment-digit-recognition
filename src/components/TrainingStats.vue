@@ -6,11 +6,11 @@ const { model, latestLoss } = useModel()
 const losses = reactive<number[]>([])
 watch(latestLoss, loss => losses.push(loss))
 
-const loss = computed(() => {
-    if (losses.length < 3) return losses.at(-1) || NaN
-    return (losses.slice(-3).reduce((p, c) => p + c, 0) / 3)
+// const loss = computed(() => {
+//     if (losses.length < 3) return losses.at(-1) || NaN
+//     return (losses.slice(-3).reduce((p, c) => p + c, 0) / 3)
 
-})
+// })
 
 </script>
 
@@ -20,7 +20,7 @@ const loss = computed(() => {
             <v-spacer class="text-center">
                 Learning Progress:
                 Epochs <code>{{ model.totalEpochs }}</code> Loss: <text-color
-                    :value="loss"><code>{{ loss?.toFixed(4) }}</code></text-color>
+                    :value="latestLoss"><code>{{ latestLoss }}</code></text-color>
             </v-spacer>
             <v-btn @click="losses.splice(0)" prepend-icon="mdi-close" density="comfortable" color="warning"
                 variant="plain">Clear</v-btn>

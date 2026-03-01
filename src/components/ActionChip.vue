@@ -2,7 +2,7 @@
     <VChip label v-bind="props" />
 </template>
 <script setup lang="ts">
-import { Action, getActionCategory, lightColorRgb } from '@/utils/traffic-light.util';
+import { Action, getActionCategory, lightColorHexs } from '@/utils/traffic-light.util';
 import { computed } from 'vue';
 
 const thisProps = defineProps<{ treshold?: number, action?: number }>()
@@ -11,7 +11,7 @@ const props = computed(() => {
     return {
         action,
         text: Action[action],
-        color: lightColorRgb[action]
+        color: lightColorHexs[action]
     }
 })
 </script>

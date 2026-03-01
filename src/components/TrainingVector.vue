@@ -121,18 +121,12 @@ function stepDone() {
 }
 
 function scrollToStep(i: number) {
-    // if (current !== null && i < current.value) {
-    //     return
-    // }
-
-    // current.value = i
-    // if (props.autoscroll) {
     vectorRefs[layers[i]].scrollIntoView({
         behavior: 'smooth',
-        block: 'end'
+        block: 'start'
     })
-    // }
 }
+
 defineExpose({ step1, step2, step3, step4, stepDone, scrollToStep })
 
 function setValues(ks: VectorText<typeof vectorRefs>[], vs: number[]) {
@@ -154,19 +148,6 @@ function onModelUpdate(m: MicroNNModel) {
     setValue('lr', m.learningRate)
 }
 watch(model, onModelUpdate)
-
-
-// function onPredictChange() {
-//     setValue('x1', predictState.inputs[0])
-//     setValue('x2', predictState.inputs[1])
-//     setValue('x3', predictState.inputs[2])
-//     setValue('output1', predictState.output)
-//     setValue('output2', predictState.output)
-//     setValue('target', predictState.target)
-//     setBarFill(predictState.output, 'output_fill')
-//     setBarFill(predictState.target, 'target_fill')
-//     setBarResidual()
-// }
 
 function setBarFill(v: number, k: 'output_fill' | 'target_fill') {
     const el = vectorRefs[k]
@@ -205,11 +186,6 @@ function setResidual(output: number, target: number) {
     vectorRefs['error_line'].setAttribute('d', d.replace(/^(M \d+),\d+/, `$1,${lower}`))
 }
 
-
-// watch(currentModel, onModelChange)
-// watch(predictState, onPredictChange)
-
-// const r = () => parseFloat((Math.random() * 2 - 1).toFixed(2))
 const bulbs: Ref<number>[] = []
 const setupVector = () => {
     const svg: SVGSVGElement = vector.value.$el
@@ -223,32 +199,9 @@ const setupVector = () => {
         useGlowController(1, vectorRefs.x2_glow, 0.5),
         useGlowController(2, vectorRefs.x3_glow, 1)
     )
-    // Dummy data
-    // predictState.inputs = Array.from({ length: 3 }, r)
-    // predictState.output = r()
-    // predictState.target = r()
-    // reset()
+
     onModelUpdate(model)
 }
-
-// function reset() {
-//     current.value = null
-//     onModelChange(model)
-//     onPredictChange()
-// }
-
-
-// function next() {
-//     if (current.value === null) {
-//         current.value = 0
-//     } else {
-//         current.value++
-//         if (current.value >= layers.length) {
-//             current.value = null
-//         }
-//     }
-
-// }
 
 function setActiveLayer(current) {
     if (current === null)
@@ -264,7 +217,4 @@ onUpdated(() => {
 onMounted(() => {
     setupVector()
 })
-
-// onUnmounted(() => svg?.remove())
-
 </script>

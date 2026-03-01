@@ -12,27 +12,36 @@
         <template v-slot:append>
             <v-select title="Select sample to train" :disabled="training" :items="selectSampleOptions"
                 v-model="selectedSample" variant="outlined" hide-details density="compact" />
-            <v-btn @click="oneEpoch" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
-            <v-btn style="width: 105px;" @click="stop" color="error" v-show="training"
-                prependIcon="mdi-stop">Stop</v-btn>
-            <v-btn style="width: 105px;" @click="start" color="success" v-show="!training"
-                prependIcon="mdi-play">START</v-btn>
         </template>
     </VAppBar>
-    <!-- <VProgressLinear color="primary" absolute v-if="training" indeterminate /> -->
-
     <v-row>
-        <v-col :cols="4" sm="3">
-            <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
-                <v-list-item title="Stepper"></v-list-item>
+        <v-col :cols="4" sm="3" style="background-color: rgb(var(--v-theme-surface));">
+            <!--                 
+            <div>
+                    <v-btn block @click="stop" color="error" v-show="training" prependIcon="mdi-stop">Stop</v-btn>
+                    <v-btn block @click="start" color="success" v-show="!training"
+                    prependIcon="mdi-play-box-multiple">START</v-btn>
+                    <v-btn block @click="oneEpoch" color="primary" :disabled="training" prependIcon="mdi-play">One
+                        Step</v-btn>
+            </div>
+            -->
+            <!-- <v-list-item color="success" title="Start Training" prepend-icon="mdi-play"></v-list-item> -->
+            <div ref="trainMenu">
+                <v-list-item @click="stop" title="stop" class="text-error" v-show="training" prependIcon="mdi-stop" />
+                <v-list-item @click="start" title="Start Training" class="text-success" v-show="!training"
+                    prependIcon="mdi-play-box-multiple" />
+                <v-list-item @click="oneEpoch" title="One Epoch" class="text-primary" :disabled="training"
+                    prependIcon="mdi-play" />
+                <v-divider />
+                <v-list-item title="Epoch Steps:"></v-list-item>
                 <v-list-item v-for="(t, i) in steps" @click="step(i)" density="compact"
                     :disabled="i !== 0 && currentStep === null || currentStep + 1 < i" :title="t"
                     :active="currentStep === i" color="primary">
                     <template #prepend>
-                        <v-avatar class="hidden-xs">{{ i + 1 }}</v-avatar>
+                        <v-avatar :color="currentStep === i ? 'primary' : ''" class="hidden-xs">{{ i + 1 }}</v-avatar>
                     </template>
                 </v-list-item>
-                <v-list-item density="comfortable" @click="step(null)" :disabled="currentStep + 1 < steps.length"
+                <v-list-item density="comfortable" @click="done" :disabled="currentStep + 1 < steps.length"
                     title="Done">
                     <template #prepend>
                         <v-avatar class="hidden-xs">{{ steps.length + 1 }}</v-avatar>
@@ -42,7 +51,7 @@
                 <div class="pa-3 d-flex justify-center">
                     <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
                 </div>
-                <TrafficLight :model-value="[0.5, 0, 1]" />
+                <TrafficLight v-if="selectedSample !== null" :model-value="samples[selectedSample].inputs" />
 
             </div>
         </v-col>
@@ -56,7 +65,7 @@
             </v-sheet>
             <TrainingStats class="mt-3" />
             <v-sheet class="py-2">
-                <table style="width: 100%; border-collapse: collapse;" class="text-body-2">
+                <table style="width: 100%; border-collapse: collapse; table-layout: fixed;" class="text-body-2">
                     <tbody>
                         <tr>
                             <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
@@ -65,14 +74,14 @@
                                     <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
                                         }}</b>
                                 </div>
-                                <code>Target: {{ v.target.toFixed(3) }}</code><br />
-                                <code>Predicted: {{ v.predicted.toFixed(3) }}</code><br />
-                                <code>Error: {{ v.error.toFixed(3) }}</code><br />
+                                <code>Target: {{ v.target }}</code><br />
+                                <code>Predicted: {{ v.predicted }}</code><br />
+                                <code>Error: {{ v.error }}</code><br />
                                 <small>
                                     <code v-if="v.changes > 0" class="ml-1 text-error">+{{
-                                        v.changes.toFixed(3) }}</code>
+                                        v.changes }}</code>
                                     <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
-                                        v.changes.toFixed(3) }}</code>
+                                        v.changes }}</code>
                                     <code v-else class="ml-1 text-disabled">&mdash;</code>
                                 </small>
                             </td>
@@ -89,6 +98,7 @@ import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
 import { useSticky } from '@/composables/useSticky';
 import type { MapValue } from '@/types';
+import { fixed } from '@/utils/helper.util';
 import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
 import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents, type ShallowRef } from 'vue';
 
@@ -124,13 +134,12 @@ const currentAction = ref(samples[sampleIndex].action)
 const selectedSample = ref(null as number | null)
 const selectSampleOptions = ref([
     { value: null, title: 'All' },
-    ...samples.map((v, i) => ({ value: i, title: v.action.toString() }))
+    ...samples.map((v, i) => ({ value: i, title: `#${i}` }))
 ])
 
 let stat: MapValue<typeof sampleStats.value>
 
 function oneEpoch() {
-    training.value = true
     oneStage().finally(() => training.value = false)
 }
 
@@ -164,7 +173,6 @@ function multiEpochs() {
 }
 
 function start() {
-    training.value = true
     sampleStats.value.forEach(v => v.isOk = false)
     multiEpochs()
 }
@@ -173,11 +181,17 @@ function stop() {
     training.value = false
 }
 
-const delay = (t = 500) => new Promise(r => setTimeout(r, t))
+function done() {
+    step(null)
+    stop()
+}
+
+const delay = (t = 300) => new Promise(r => setTimeout(r, t))
 let output = ref(NaN)
 const sample = shallowRef<typeof samples[0]>()
 const gradients = shallowRef<number[]>()
 let newWeights = []
+let residual = NaN
 
 function step(i: number) {
     currentStep.value = i
@@ -199,15 +213,15 @@ function step(i: number) {
                 sample.value = samples[selectedSample.value]
             }
             currentAction.value = sample.value.action
-            output.value = predict(sample.value.inputs)
+            output.value = fixed(predict(sample.value.inputs))
             trainingVector.value.step1(sample.value.inputs, sample.value.target, output.value)
 
-            const error = output.value - sample.value.target
+            residual = fixed(output.value - sample.value.target)
             stat = sampleStats.value.get(sample.value.action)
-            stat.changes = (stat.error - error)
-            stat.error = error
+            stat.changes = fixed(stat.error - residual)
+            stat.error = residual
             stat.predicted = output.value
-            stat.isOk = parseFloat(output.value.toFixed(3)) == sample.value.target
+            stat.isOk = output.value == sample.value.target
             break
         // Residual
         case 1:
@@ -215,25 +229,22 @@ function step(i: number) {
             break
         // Gradients
         case 2:
-            const residual = output.value - sample.value.target
-            latestLoss.value = 0.5 * residual ** 2
+            latestLoss.value = fixed(0.5 * residual ** 2)
             gradients.value = [
-                residual * sample.value.inputs[0],
-                residual * sample.value.inputs[1],
-                residual * sample.value.inputs[2],
-                residual * 1, // Bias
+                fixed(residual * sample.value.inputs[0]),
+                fixed(residual * sample.value.inputs[1]),
+                fixed(residual * sample.value.inputs[2]),
+                fixed(residual * 1), // Bias
             ]
             trainingVector.value.step3(gradients.value)
             break
         // Optimizer
         case 3:
-
-
             newWeights = [
-                model.weights[0] - model.learningRate * gradients.value[0],
-                model.weights[1] - model.learningRate * gradients.value[1],
-                model.weights[2] - model.learningRate * gradients.value[2],
-                model.bias - model.learningRate * gradients.value[3]
+                fixed(model.weights[0] - model.learningRate * gradients.value[0]),
+                fixed(model.weights[1] - model.learningRate * gradients.value[1]),
+                fixed(model.weights[2] - model.learningRate * gradients.value[2]),
+                fixed(model.bias - model.learningRate * gradients.value[3]),
             ]
 
             trainingVector.value.step4(newWeights)
@@ -251,6 +262,7 @@ function step(i: number) {
                 model.weights[1] = newWeights[1]
                 model.weights[2] = newWeights[2]
                 model.bias = newWeights[3]
+                model.totalEpochs++
             }
             break
     }
@@ -258,26 +270,9 @@ function step(i: number) {
     return delay()
 }
 
-function next() {
-    if (currentStep.value === null) {
-        currentStep.value = 0
-    } else {
-        currentStep.value++
-        if (currentStep.value >= steps.length) {
-            currentStep.value = null
-        }
-    }
-
-}
-
-// function stepDone() {
-//     //reset()
-
-// }
-
 onMounted(() => {
-    step(null)
-    // trainingVector.value?.stepDone()
+    // Reset
+    trainingVector.value.stepDone()
 })
 
 onUnmounted(() => {

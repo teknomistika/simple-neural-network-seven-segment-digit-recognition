@@ -1,4 +1,5 @@
 import type { MicroNNModel, Vector } from "@/types";
+import { random } from "@/utils/helper.util";
 import { reactive, ref } from "vue";
 
 const inputSize = 3
@@ -17,8 +18,8 @@ function createRandomModel() {
     const now = new Date()
     const model: MicroNNModel = {
         learningRate: 0.5,
-        weights: Array.from({ length: inputSize }, () => Math.random() * 2 - 1),
-        bias: parseFloat(Math.random().toFixed(2)),
+        weights: Array.from({ length: inputSize }, random),
+        bias: random(),
         createdAt: now,
         updateAt: now,
         totalEpochs: 0
