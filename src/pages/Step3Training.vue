@@ -1,96 +1,73 @@
 <template>
-    <VAppBar style="bottom: 0px; position: fixed;" key="step2-appbar" elevation="2" location="bottom" density="compact">
-        <template #title>
-            <v-slider :step="0.01" label="Learning Rate" density="compact" v-model="model.learningRate" :max="1"
-                :min="0" class="align-center" hide-details>
-                <template v-slot:append>
-                    <v-text-field step="0.01" v-model="model.learningRate" density="compact" style="width: 90px"
-                        type="number" hide-details variant="outlined" single-line></v-text-field>
-                </template>
-            </v-slider>
-        </template>
-        <template v-slot:append>
-            <v-select title="Select sample to train" :disabled="training" :items="selectSampleOptions"
-                v-model="selectedSample" variant="outlined" hide-details density="compact" />
-        </template>
-    </VAppBar>
-    <v-row>
-        <v-col :cols="4" sm="3" style="background-color: rgb(var(--v-theme-surface));">
-            <!--                 
+    <v-navigation-drawer location="left" permanent>
+        <v-list-item @click="stop" title="stop" class="text-error" v-show="training" prependIcon="mdi-stop" />
+        <v-list-item @click="start" title="Start Training" class="text-success" v-show="!training"
+            prependIcon="mdi-play-box-multiple" />
+        <v-list-item @click="oneEpoch" title="One Epoch" class="text-primary" :disabled="training"
+            prependIcon="mdi-play" />
+        <v-divider />
+        <v-list-item title="Epoch Steps:"></v-list-item>
+        <v-list-item v-for="(t, i) in steps" @click="step(i)" density="compact"
+            :disabled="i !== 0 && currentStep === null || currentStep + 1 < i" :title="t" :active="currentStep === i"
+            color="primary">
+            <template #prepend>
+                <v-avatar :color="currentStep === i ? 'primary' : ''" class="hidden-xs">{{ i + 1 }}</v-avatar>
+            </template>
+        </v-list-item>
+        <v-list-item density="comfortable" @click="done" :disabled="currentStep + 1 < steps.length" title="Done">
+            <template #prepend>
+                <v-avatar class="hidden-xs">{{ steps.length + 1 }}</v-avatar>
+            </template>
+        </v-list-item>
+        <v-divider />
+        <div class="px-4 d-flex flex-column ga-2">
+            <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
+            <v-select label="Select sample" :disabled="training" :items="selectSampleOptions" v-model="selectedSample"
+                variant="outlined" hide-details density="compact" />
+            <TrafficLight v-if="selectedSample !== null" :model-value="samples[selectedSample].inputs" />
             <div>
-                    <v-btn block @click="stop" color="error" v-show="training" prependIcon="mdi-stop">Stop</v-btn>
-                    <v-btn block @click="start" color="success" v-show="!training"
-                    prependIcon="mdi-play-box-multiple">START</v-btn>
-                    <v-btn block @click="oneEpoch" color="primary" :disabled="training" prependIcon="mdi-play">One
-                        Step</v-btn>
+                Learning Rate:
+                <v-slider :step="0.01" density="compact" v-model="model.learningRate" :max="1" :min="0"
+                    class="align-center" hide-details>
+                    <template v-slot:append>
+                        <v-text-field step="0.01" v-model="model.learningRate" density="compact" style="width: 90px"
+                            type="number" hide-details variant="outlined" single-line></v-text-field>
+                    </template>
+                </v-slider>
             </div>
-            -->
-            <!-- <v-list-item color="success" title="Start Training" prepend-icon="mdi-play"></v-list-item> -->
-            <div ref="trainMenu">
-                <v-list-item @click="stop" title="stop" class="text-error" v-show="training" prependIcon="mdi-stop" />
-                <v-list-item @click="start" title="Start Training" class="text-success" v-show="!training"
-                    prependIcon="mdi-play-box-multiple" />
-                <v-list-item @click="oneEpoch" title="One Epoch" class="text-primary" :disabled="training"
-                    prependIcon="mdi-play" />
-                <v-divider />
-                <v-list-item title="Epoch Steps:"></v-list-item>
-                <v-list-item v-for="(t, i) in steps" @click="step(i)" density="compact"
-                    :disabled="i !== 0 && currentStep === null || currentStep + 1 < i" :title="t"
-                    :active="currentStep === i" color="primary">
-                    <template #prepend>
-                        <v-avatar :color="currentStep === i ? 'primary' : ''" class="hidden-xs">{{ i + 1 }}</v-avatar>
-                    </template>
-                </v-list-item>
-                <v-list-item density="comfortable" @click="done" :disabled="currentStep + 1 < steps.length"
-                    title="Done">
-                    <template #prepend>
-                        <v-avatar class="hidden-xs">{{ steps.length + 1 }}</v-avatar>
-                    </template>
-                </v-list-item>
-                <v-divider />
-                <div class="pa-3 d-flex justify-center">
-                    <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
-                </div>
-                <TrafficLight v-if="selectedSample !== null" :model-value="samples[selectedSample].inputs" />
+        </div>
+    </v-navigation-drawer>
 
-            </div>
-        </v-col>
-        <v-col :cols="8" sm="9" class="text-center">
-            <!-- <v-sheet class="mb-3 pa-4">
-                How to get correct weight values to achieve desired target output that fit for all samples?
-            </v-sheet> -->
-            <ModelStats :model="model" />
-            <v-sheet class="my-3">
-                <TrainingVector ref="trainingVector" />
-            </v-sheet>
-            <TrainingStats class="mt-3" />
-            <v-sheet class="py-2">
-                <table style="width: 100%; border-collapse: collapse; table-layout: fixed;" class="text-body-2">
-                    <tbody>
-                        <tr>
-                            <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
-                                v-for="([action, v], index) of sampleStats" :key="action">
-                                <div>
-                                    <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
-                                        }}</b>
-                                </div>
-                                <code>Target: {{ v.target }}</code><br />
-                                <code>Predicted: {{ v.predicted }}</code><br />
-                                <code>Error: {{ v.error }}</code><br />
-                                <small>
-                                    <code v-if="v.changes > 0" class="ml-1 text-error">+{{
-                                        v.changes }}</code>
-                                    <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
-                                        v.changes }}</code>
-                                    <code v-else class="ml-1 text-disabled">&mdash;</code>
-                                </small>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </v-sheet>
-        </v-col>
-    </v-row>
+    <ModelStats :model="model" />
+    <v-sheet class="my-3 text-center">
+        <TrainingVector ref="trainingVector" />
+    </v-sheet>
+    <TrainingStats class="mt-3" />
+    <v-sheet class="py-2">
+        <table style="width: 100%; border-collapse: collapse; table-layout: fixed;" class="text-body-2">
+            <tbody>
+                <tr>
+                    <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
+                        v-for="([action, v], index) of sampleStats" :key="action">
+                        <div>
+                            <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
+                                }}</b>
+                        </div>
+                        <code>Target: {{ v.target }}</code><br />
+                        <code>Predicted: {{ v.predicted }}</code><br />
+                        <code>Error: {{ v.error }}</code><br />
+                        <small>
+                            <code v-if="v.changes > 0" class="ml-1 text-error">+{{
+                                v.changes }}</code>
+                            <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
+                                v.changes }}</code>
+                            <code v-else class="ml-1 text-disabled">&mdash;</code>
+                        </small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </v-sheet>
 </template>
 
 <script setup lang="ts">
@@ -106,9 +83,9 @@ const { datasets } = useDatasets()
 const { model, predict, biasChanges, weightChanges, latestLoss } = useModel()
 
 const training = ref(false)
-const trainMenu = shallowRef<HTMLDivElement>()
+// const trainMenu = shallowRef<HTMLDivElement>()
 const trainingVector = shallowRef<InstanceType<GlobalComponents['TrainingVector']>>()
-const sticky = useSticky(trainMenu)
+// const sticky = useSticky(trainMenu)
 const autoscroll = ref(true)
 const currentStep = ref<number | null>(null)
 
@@ -275,8 +252,8 @@ onMounted(() => {
     trainingVector.value.stepDone()
 })
 
-onUnmounted(() => {
-    sticky.stop()
-})
+// onUnmounted(() => {
+//     sticky.stop()
+// })
 
 </script>
