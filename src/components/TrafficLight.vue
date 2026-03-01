@@ -6,9 +6,9 @@
                 <BulbSvg @click="toggle(i)" ref="bulbs" :class="{ bulb: 1, ro: readonly }" />
             </div>
             <div class="d-flex align-center">
-                <SliderValue :readonly="readonly" v-if="withSliders" :color="v > 0 ? lightColors[i] : 'grey'"
+                <SliderValue :readonly="readonly" v-if="withSliders" :color="v > 0 ? lightColorRgb[i] : 'grey'"
                     v-model="model[i]" />
-                <VChip v-else :color="v > 0 ? lightColors[i] : 'grey'" :value="true" label>
+                <VChip v-else :color="v > 0 ? lightColorRgb[i] : 'grey'" :value="true" label>
                     <code>{{ v.toFixed(1) }}</code>
                 </VChip>
             </div>
@@ -20,7 +20,8 @@
 import { onMounted, shallowRef, watch, type GlobalComponents, type Ref } from 'vue';
 
 import SliderValue from './SliderValue.vue';
-import { glowController, lightColors } from '@/utils/traffic-light.util';
+import { useGlowController } from '@/composables/useGlowController';
+import { lightColorRgb } from '@/utils/traffic-light.util';
 
 const model = defineModel<number[]>({
     default: [0, 0, 1]
@@ -36,7 +37,7 @@ watch(model, () => {
 onMounted(() => {
     bulbs.value.forEach((v, i) => {
         const svg = v.$el as SVGElement
-        bulbControllers.push(glowController(i, svg.querySelector('#x1_glow'), model.value[i]))
+        bulbControllers.push(useGlowController(i, svg.querySelector('#x1_glow'), model.value[i]))
     })
 })
 

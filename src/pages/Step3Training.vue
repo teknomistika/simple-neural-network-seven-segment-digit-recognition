@@ -12,7 +12,7 @@
         <template v-slot:append>
             <v-select title="Select sample to train" :disabled="training" :items="selectSampleOptions"
                 v-model="selectedSample" variant="outlined" hide-details density="compact" />
-            <v-btn @click="step" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
+            <v-btn @click="oneEpoch" color="primary" :disabled="training" prependIcon="mdi-play">One Step</v-btn>
             <v-btn style="width: 105px;" @click="stop" color="error" v-show="training"
                 prependIcon="mdi-stop">Stop</v-btn>
             <v-btn style="width: 105px;" @click="start" color="success" v-show="!training"
@@ -25,17 +25,17 @@
         <v-col :cols="4" sm="3">
             <div ref="trainMenu" style="background-color: rgb(var(--v-theme-surface));">
                 <v-list-item title="Stepper"></v-list-item>
-                <v-list-item v-for="(t, i) in steps" @click="selectStep(i)" density="compact"
+                <v-list-item v-for="(t, i) in steps" @click="step(i)" density="compact"
                     :disabled="i !== 0 && currentStep === null || currentStep + 1 < i" :title="t"
                     :active="currentStep === i" color="primary">
                     <template #prepend>
-                        <v-avatar class="hidden-sm-and-down">{{ i + 1 }}</v-avatar>
+                        <v-avatar class="hidden-xs">{{ i + 1 }}</v-avatar>
                     </template>
                 </v-list-item>
-                <v-list-item density="comfortable" @click="selectStep(null)" :disabled="currentStep + 1 < steps.length"
+                <v-list-item density="comfortable" @click="step(null)" :disabled="currentStep + 1 < steps.length"
                     title="Done">
                     <template #prepend>
-                        <v-avatar class="hidden-sm-and-down">{{ steps.length + 1 }}</v-avatar>
+                        <v-avatar class="hidden-xs">{{ steps.length + 1 }}</v-avatar>
                     </template>
                 </v-list-item>
                 <v-divider />
@@ -43,7 +43,7 @@
                     <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
                 </div>
                 <TrafficLight :model-value="[0.5, 0, 1]" />
-                
+
             </div>
         </v-col>
         <v-col :cols="8" sm="9" class="text-center">
@@ -93,7 +93,7 @@ import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
 import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents, type ShallowRef } from 'vue';
 
 const { datasets } = useDatasets()
-const { model, train, predict, biasChanges, weightChanges, latestLoss } = useModel()
+const { model, predict, biasChanges, weightChanges, latestLoss } = useModel()
 
 const training = ref(false)
 const trainMenu = shallowRef<HTMLDivElement>()
@@ -129,50 +129,44 @@ const selectSampleOptions = ref([
 
 let stat: MapValue<typeof sampleStats.value>
 
-function step() {
-    if (selectedSample.value === null) {
-        sample.value = samples[sampleIndex++]
-        if (sampleIndex >= samples.length)
-            sampleIndex = 0
-    } else {
-        sample.value = samples[selectedSample.value]
-    }
-
-    currentAction.value = sample.value.action
-    const { output, error } = train(sample.value.target, sample.value.inputs)
-
-    stat = sampleStats.value.get(sample.value.action)
-    stat.changes = (stat.error - error)
-    stat.error = error
-    stat.predicted = output
-    stat.isOk = parseFloat(output.toFixed(3)) == sample.value.target
+function oneEpoch() {
+    training.value = true
+    oneStage().finally(() => training.value = false)
 }
 
-function multistep() {
-    step()
-    nextTick(() => {
-        if (!training.value) return
+async function oneStage() {
+    await step(0)
+    if (!training.value) return Promise.reject(new Error('Stopped by user'))
+    await step(1)
+    if (!training.value) return Promise.reject(new Error('Stopped by user'))
+    await step(2)
+    if (!training.value) return Promise.reject(new Error('Stopped by user'))
+    await step(3)
+    if (!training.value) return Promise.reject(new Error('Stopped by user'))
+    await step(null)
+}
 
-        // setTimeout(multistep, 0)
-
-        // Check all OK
-        for (const [i, v] of sampleStats.value) {
-            if (!v.isOk) {
-                // nextTick
-                setTimeout(multistep, 0)
-                return
+function multiEpochs() {
+    oneStage().then(
+        () => {
+            if (!training.value) return
+            // Check all OK
+            for (const [i, v] of sampleStats.value) {
+                if (!v.isOk) {
+                    nextTick(multiEpochs)
+                    return
+                }
             }
+            // Stop it have all OK
+            stop()
         }
-        // Stop it have all OK
-        stop()
-    })
+    )
 }
 
 function start() {
-    // lossHistory.splice(0)
     training.value = true
     sampleStats.value.forEach(v => v.isOk = false)
-    multistep()
+    multiEpochs()
 }
 
 function stop() {
@@ -185,7 +179,7 @@ const sample = shallowRef<typeof samples[0]>()
 const gradients = shallowRef<number[]>()
 let newWeights = []
 
-function selectStep(i: number) {
+function step(i: number) {
     currentStep.value = i
 
     if (autoscroll.value && i !== null) {
@@ -222,7 +216,7 @@ function selectStep(i: number) {
         // Gradients
         case 2:
             const residual = output.value - sample.value.target
-            latestLoss.value = residual
+            latestLoss.value = 0.5 * residual ** 2
             gradients.value = [
                 residual * sample.value.inputs[0],
                 residual * sample.value.inputs[1],
@@ -258,7 +252,6 @@ function selectStep(i: number) {
                 model.weights[2] = newWeights[2]
                 model.bias = newWeights[3]
             }
-            training.value = false
             break
     }
 
@@ -283,7 +276,7 @@ function next() {
 // }
 
 onMounted(() => {
-    selectStep(null)
+    step(null)
     // trainingVector.value?.stepDone()
 })
 

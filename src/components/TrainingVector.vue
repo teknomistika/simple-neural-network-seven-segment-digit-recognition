@@ -33,7 +33,7 @@
 import { onMounted, onUpdated, shallowRef, watch, type GlobalComponents, type Ref } from 'vue';
 import type { MicroNNModel } from '@/types';
 import { useModel } from '@/composables/useModel';
-import { glowController } from '@/utils/traffic-light.util';
+import { useGlowController } from '@/composables/useGlowController';
 
 const ratio = { w: 3, h: 4 }
 const vector = shallowRef<GlobalComponents['TrainingVectorSvg']>()
@@ -219,9 +219,9 @@ const setupVector = () => {
         }
     }
     bulbs.push(
-        glowController(0, vectorRefs.x1_glow, 0),
-        glowController(1, vectorRefs.x2_glow, 0.5),
-        glowController(2, vectorRefs.x3_glow, 1)
+        useGlowController(0, vectorRefs.x1_glow, 0),
+        useGlowController(1, vectorRefs.x2_glow, 0.5),
+        useGlowController(2, vectorRefs.x3_glow, 1)
     )
     // Dummy data
     // predictState.inputs = Array.from({ length: 3 }, r)

@@ -61,45 +61,13 @@ function predict(x: Vector) {
     return z
 }
 
-function train(Y: number, inputs: Vector) {
-
-    const yHat = predict(inputs)
-    // MSE (Mean Squared Error)
-    latestLoss.value = 0.5 * (Y - yHat) ** 2
-    // derivative of MSE 
-    const error = yHat - Y;
-
-    for (let i = 0; i < model.weights.length; i++) {
-        const gradient = error * inputs[i]
-
-        // Track changes
-        weightChanges.value[i] = model.learningRate * gradient;
-
-        // Update weight / connection
-        model.weights[i] -= weightChanges.value[i]
-    }
-
-    // Track bias changes
-    const biasGradient = error
-    biasChanges.value = model.learningRate * biasGradient
-    // Update bias
-    model.bias -= biasChanges.value;
-
-    model.totalEpochs++
-    return { output: yHat, error }
-}
-
-function save() {
-    localStorage.setItem('micro-nn-model', JSON.stringify(model))
-}
-
 export function useModel() {
     return {
         model,
-        save,
+        // save,
         zero,
         randomize,
-        train,
+        // train,
         weightChanges,
         biasChanges,
         predict,
