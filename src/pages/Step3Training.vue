@@ -26,8 +26,8 @@
         <div class="px-4 d-flex flex-column ga-2">
             <VCheckbox v-model="autoscroll" density="compact" hide-details label="Auto-scroll" />
             Select sample:
-            <v-select :disabled="training" :items="selectSampleOptions" v-model="selectedSample"
-                variant="outlined" hide-details density="compact" />
+            <v-select :disabled="training" :items="selectSampleOptions" v-model="selectedSample" variant="outlined"
+                hide-details density="compact" />
             <TrafficLight v-if="selectedSample !== null" :model-value="samples[selectedSample].inputs" />
             <div>
                 Learning Rate:
@@ -55,7 +55,7 @@
                         v-for="([action, v], index) of sampleStats" :key="action">
                         <div>
                             <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
-                                }}</b>
+                            }}</b>
                         </div>
                         <code>Target: {{ v.target }}</code><br />
                         <code>Predicted: {{ v.predicted }}</code><br />
@@ -177,7 +177,7 @@ let residual = NaN
 function step(i: number) {
     currentStep.value = i
 
-    if (autoscroll.value && i !== null) {
+    if (autoscroll.value) {
         trainingVector.value.scrollToStep(i)
     }
 

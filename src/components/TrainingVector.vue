@@ -12,8 +12,16 @@
         animation: none;
     }
 
+    g:not(#inputs) circle {
+        opacity: 0.1;
+    }
+
     g.active path {
         animation: dash 1s linear infinite;
+        opacity: 1;
+    }
+
+    g.active:not(#inputs) circle {
         opacity: 1;
     }
 }
@@ -120,7 +128,14 @@ function stepDone() {
     setActiveLayer(null)
 }
 
-function scrollToStep(i: number) {
+function scrollToStep(i: number | null) {
+    if (i === null) {
+        document.querySelector('main > .v-container').scrollTo({
+            behavior: 'smooth',
+            top: 0
+        })
+        return
+    }
     vectorRefs[layers[i]].scrollIntoView({
         behavior: 'smooth',
         block: 'start'
