@@ -41,38 +41,44 @@
             </div>
         </div>
     </v-navigation-drawer>
+    <v-row>
+        <v-col>
+            <ModelStats :model="model" />
+            <v-sheet class="text-center">
+                <TrainingVector ref="trainingVector" />
+            </v-sheet>
+        </v-col>
+        <v-col>
+            <TrainingStats />
+            <v-sheet class="py-2">
+                <table style="width: 100%; border-collapse: collapse; table-layout: fixed;" class="text-body-2">
+                    <tbody>
+                        <tr>
+                            <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
+                                v-for="([action, v], index) of sampleStats" :key="action">
+                                <div>
 
-    <ModelStats :model="model" />
-    <v-sheet class="my-3 text-center">
-        <TrainingVector ref="trainingVector" />
-    </v-sheet>
-    <TrainingStats class="mt-3" />
-    <v-sheet class="py-2">
-        <table style="width: 100%; border-collapse: collapse; table-layout: fixed;" class="text-body-2">
-            <tbody>
-                <tr>
-                    <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
-                        v-for="([action, v], index) of sampleStats" :key="action">
-                        <div>
+                                    <p>Action:</p>
+                                    <ActionChip :action="action" />
+                                </div>
+                                <code>Target: {{ v.target }}</code><br />
+                                <code>Predicted: {{ v.predicted }}</code><br />
+                                <code>Residual: {{ v.error }}</code><br />
+                                <small>
+                                    <code v-if="v.changes > 0" class="ml-1 text-error">+{{
+                                        v.changes }}</code>
+                                    <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
+                                        v.changes }}</code>
+                                    <code v-else class="ml-1 text-disabled">&mdash;</code>
+                                </small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </v-sheet>
+        </v-col>
+    </v-row>
 
-                            <p>Action:</p>
-                            <ActionChip :action="action" />
-                        </div>
-                        <code>Target: {{ v.target }}</code><br />
-                        <code>Predicted: {{ v.predicted }}</code><br />
-                        <code>Residual: {{ v.error }}</code><br />
-                        <small>
-                            <code v-if="v.changes > 0" class="ml-1 text-error">+{{
-                                v.changes }}</code>
-                            <code v-else-if="v.changes < 0" class="ml-1 text-success">{{
-                                v.changes }}</code>
-                            <code v-else class="ml-1 text-disabled">&mdash;</code>
-                        </small>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </v-sheet>
 </template>
 
 <script setup lang="ts">
