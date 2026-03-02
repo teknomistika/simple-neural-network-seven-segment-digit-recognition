@@ -45,12 +45,12 @@ export default defineConfig({
     vuetify(),
     // vueDevTools(),
     ViteFonts({
-      fontsource: {
+      google: {
         families: [
           {
             name: 'Roboto',
-            weights: [100, 300, 400, 500, 700, 900],
-            styles: ['normal', 'italic'],
+            // weights: [100, 300, 400, 500, 700, 900],
+            // styles: ['normal', 'italic'],
           },
         ],
       },
