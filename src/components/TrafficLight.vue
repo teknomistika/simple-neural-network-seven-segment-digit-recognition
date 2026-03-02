@@ -2,13 +2,14 @@
     <VSheet class="traffic-light py-2">
         <!-- RED -->
         <div v-for="(v, i) in model" :key="i" class="d-flex ga-2 justify-center">
-            <div class="d-flex align-center">
+            <div class="d-flex align-center" style="flex: 0">
                 <BulbSvg @click="toggle(i)" ref="bulbs" :class="{ bulb: 1, ro: readonly }" />
             </div>
-            <div class="d-flex align-center">
-                <SliderValue :readonly="readonly" v-if="withSliders" :color="v > 0 ? lightColorHexs[i] : 'grey'"
-                    v-model="model[i]" />
-                <VChip v-else :color="v > 0 ? lightColorHexs[i] : 'grey'" :value="true" label>
+            <div class="d-flex align-center" v-if="withSliders" style="flex: 1">
+                <SliderValue :readonly="readonly" :color="v > 0 ? lightColorHexs[i] : 'grey'" v-model="model[i]" />
+            </div>
+            <div class="d-flex align-center" v-else>
+                <VChip :color="v > 0 ? lightColorHexs[i] : 'grey'" :value="true" label>
                     <code>{{ v.toFixed(1) }}</code>
                 </VChip>
             </div>

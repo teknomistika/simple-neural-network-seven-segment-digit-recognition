@@ -1,6 +1,5 @@
 <template>
-    <TrainingVectorSvg class="vector" ref="vector"
-        :style="{ aspectRatio: `${ratio.w} / ${ratio.h}`, maxHeight: '900px', margin: 'auto' }" />
+    <TrainingVectorSvg class="vector" ref="vector" style="max-width: 100%; height: auto; " />
 </template>
 <style>
 .vector {
@@ -43,7 +42,6 @@ import type { MicroNNModel } from '@/types';
 import { useModel } from '@/composables/useModel';
 import { useGlowController } from '@/composables/useGlowController';
 
-const ratio = { w: 3, h: 4 }
 const vector = shallowRef<GlobalComponents['TrainingVectorSvg']>()
 const layers = ['predict', 'residual', 'gradient', 'optimizer']
 

@@ -54,12 +54,13 @@
                     <td :class="{ 'border-s': !!index, 'text-green': v.isOk }" class="text-center"
                         v-for="([action, v], index) of sampleStats" :key="action">
                         <div>
-                            <b :class="{ 'text-primary': action === currentAction }">{{ ActionLabel[action]
-                            }}</b>
+
+                            <p>Action:</p>
+                            <ActionChip :action="action" />
                         </div>
                         <code>Target: {{ v.target }}</code><br />
                         <code>Predicted: {{ v.predicted }}</code><br />
-                        <code>Error: {{ v.error }}</code><br />
+                        <code>Residual: {{ v.error }}</code><br />
                         <small>
                             <code v-if="v.changes > 0" class="ml-1 text-error">+{{
                                 v.changes }}</code>
@@ -77,21 +78,20 @@
 <script setup lang="ts">
 import { useDatasets } from '@/composables/useDatasets';
 import { useModel } from '@/composables/useModel';
-import { useSticky } from '@/composables/useSticky';
 import type { MapValue } from '@/types';
 import { fixed } from '@/utils/helper.util';
-import { ActionLabel, getActionCategory } from '@/utils/traffic-light.util';
-import { nextTick, onMounted, onUnmounted, reactive, ref, shallowRef, type GlobalComponents, type ShallowRef } from 'vue';
+import { getActionCategory } from '@/utils/traffic-light.util';
+import { nextTick, onMounted, ref, shallowRef, watch, type GlobalComponents } from 'vue';
 
 const { datasets } = useDatasets()
 const { model, predict, biasChanges, weightChanges, latestLoss } = useModel()
 
 const training = ref(false)
-// const trainMenu = shallowRef<HTMLDivElement>()
 const trainingVector = shallowRef<InstanceType<GlobalComponents['TrainingVector']>>()
-// const sticky = useSticky(trainMenu)
-const autoscroll = ref(true)
 const currentStep = ref<number | null>(null)
+
+const autoscroll = ref(localStorage.getItem('autoscroll') == 'true')
+watch(autoscroll, localStorage.setItem.bind(localStorage, 'autoscroll'))
 
 const steps = ['Predict', 'Residual', 'Gradients', 'Optimizer']
 const samples = datasets.map(v => ({
@@ -210,7 +210,7 @@ function step(i: number) {
             break
         // Gradients
         case 2:
-            latestLoss.value = fixed(0.5 * residual ** 2)
+            latestLoss.value = fixed(0.5 * residual ** 2, 4)
             gradients.value = [
                 fixed(residual * sample.value.inputs[0]),
                 fixed(residual * sample.value.inputs[1]),
@@ -255,9 +255,5 @@ onMounted(() => {
     // Reset
     trainingVector.value.stepDone()
 })
-
-// onUnmounted(() => {
-//     sticky.stop()
-// })
 
 </script>

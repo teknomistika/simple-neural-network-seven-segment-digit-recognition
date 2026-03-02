@@ -1,8 +1,8 @@
 /**
  * Fixed two digit decimals
  */
-export function fixed(n: number) {
-    return parseFloat(n.toFixed(2))
+export function fixed(n: number, digits = 2) {
+    return parseFloat(n.toFixed(digits))
 }
 
 /**

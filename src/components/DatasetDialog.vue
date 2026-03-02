@@ -17,7 +17,9 @@
                 <p>Gas Pedal Pressure :</p>
                 <GasPedal with-sliders v-model="dataset.pressure" />
                 <p>Action Category:</p>
-                <ActionChip :treshold="dataset.pressure" />
+                <div class="text-center">
+                    <ActionChip Xclass="w-100 justify-center" :treshold="dataset.pressure" />
+                </div>
             </VCardItem>
             <VDivider />
             <VCardActions>
