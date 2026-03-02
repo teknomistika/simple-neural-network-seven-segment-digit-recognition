@@ -1,12 +1,13 @@
 <template>
-    <VSheet class="traffic-light py-2">
+    <div>
         <!-- RED -->
         <div v-for="(v, i) in model" :key="i" class="d-flex ga-2 justify-center">
             <div class="d-flex align-center" style="flex: 0">
                 <BulbSvg @click="toggle(i)" ref="bulbs" :class="{ bulb: 1, ro: readonly }" />
             </div>
-            <div class="d-flex align-center" v-if="withSliders" style="flex: 1">
-                <SliderValue :readonly="readonly" :color="v > 0 ? lightColorHexs[i] : 'grey'" v-model="model[i]" />
+            <div class="d-flex align-center" v-if="withSliders || sliderOnly" style="flex: 1">
+                <SliderValue :no-value="sliderOnly" :readonly="readonly" :color="v > 0 ? lightColorHexs[i] : 'grey'"
+                    v-model="model[i]" />
             </div>
             <div class="d-flex align-center" v-else>
                 <VChip :color="v > 0 ? lightColorHexs[i] : 'grey'" :value="true" label>
@@ -14,7 +15,7 @@
                 </VChip>
             </div>
         </div>
-    </VSheet>
+    </div>
 
 </template>
 <script setup lang="ts">
@@ -27,7 +28,7 @@ import { lightColorHexs } from '@/utils/traffic-light.util';
 const model = defineModel<number[]>({
     default: [0, 0, 1]
 })
-const props = defineProps<{ withSliders?: boolean, readonly?: boolean }>()
+const props = defineProps<{ withSliders?: boolean, readonly?: boolean, sliderOnly?: boolean }>()
 const bulbs = shallowRef<GlobalComponents['BulbSvg'][]>()
 const bulbControllers: Ref<number>[] = []
 
@@ -52,7 +53,7 @@ function toggle(i: number) {
 
 <style>
 /* TRAFFIC LIGHT HOUSING */
-.traffic-light .bulb:not(.ro) {
+.bulb:not(.ro) {
     cursor: pointer;
 }
 </style>

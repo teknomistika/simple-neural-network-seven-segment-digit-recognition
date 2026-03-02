@@ -14,6 +14,10 @@ const weightChanges = ref(model.weights.map(_ => 0))
 const biasChanges = ref(NaN)
 const latestLoss = ref(NaN)
 
+function save() {
+    localStorage.setItem('micro-nn-model', JSON.stringify(model))
+}
+
 function createRandomModel() {
     const now = new Date()
     const model: MicroNNModel = {
@@ -62,17 +66,14 @@ function predict(x: Vector) {
     return z
 }
 
-export function useModel() {
-    return {
-        model,
-        // save,
-        zero,
-        randomize,
-        // train,
-        weightChanges,
-        biasChanges,
-        predict,
-        inputSize,
-        latestLoss
-    }
-}
+export const useModel = () => ({
+    model,
+    save,
+    zero,
+    randomize,
+    weightChanges,
+    biasChanges,
+    predict,
+    inputSize,
+    latestLoss
+})

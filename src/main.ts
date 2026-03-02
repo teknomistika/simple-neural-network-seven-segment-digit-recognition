@@ -32,7 +32,9 @@ declare module 'vue' {
         TrafficLight: typeof import('./components/TrafficLight.vue').default
         TrainingStats: typeof import('./components/TrainingStats.vue').default
         TextColor: typeof import('./components/TextColor.vue').default
+        InferenceVector: typeof import('./components/InferenceVector.vue').default
         TrainingVector: typeof import('./components/TrainingVector.vue').default
+        InferenceVectorSvg: ComponentPublicInstance
         TrainingVectorSvg: ComponentPublicInstance
         BulbSvg: ComponentPublicInstance
     }

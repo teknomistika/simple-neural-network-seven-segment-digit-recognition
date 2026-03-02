@@ -84,7 +84,7 @@ import { getActionCategory } from '@/utils/traffic-light.util';
 import { nextTick, onMounted, ref, shallowRef, watch, type GlobalComponents } from 'vue';
 
 const { datasets } = useDatasets()
-const { model, predict, biasChanges, weightChanges, latestLoss } = useModel()
+const { model, predict, biasChanges, weightChanges, latestLoss, save } = useModel()
 
 const training = ref(false)
 const trainingVector = shallowRef<InstanceType<GlobalComponents['TrainingVector']>>()
@@ -149,6 +149,7 @@ function multiEpochs() {
             }
             // Stop it have all OK
             stop()
+            save()
         }
     )
 }
