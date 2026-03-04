@@ -48,29 +48,19 @@ the decision logic comes afterward.
 
 Now let’s look inside the neural network while it learns.
 
-This network has:
-three inputs,
-one neuron,
-and a single output.
+This network has: three inputs, one neuron, and a single output.
 
-Each input is multiplied by a weight.
-These values are summed together, and a bias is added.
+Each input is multiplied by a weight. These values are summed together, and a bias is added.
 
 This is the entire neural network.
 
 During training, the network:
-makes a prediction,
-compares it with the correct answer,
-computes the error,
-and adjusts the weights.
+makes a prediction, compares it with the correct answer, computes the error, and adjusts the weights.
 
-Nothing magical happens here.
-Just math.
+Nothing magical happens here. Just math.
 
-As training progresses, the loss decreases,
-and the weights begin to represent meaningful relationships:
-green becomes strongly positive,
-red becomes strongly negative or neutral.
+As training progresses, the loss decreases, and the weights begin to represent meaningful relationships:
+green becomes strongly positive, red becomes strongly negative or neutral.
 
 
 *(let the viewer watch values change)*
@@ -81,36 +71,24 @@ red becomes strongly negative or neutral.
 
 Finally, we use the trained network to make a decision.
 
-We turn on a light,
-feed it into the network,
-and observe the output.
+We turn on a light, feed it into the network, and observe the output.
 
-The output is a number —
-an intensity level.
+The output is a number — an intensity level.
 
-That value is then mapped into a clear action:
-stop, wait, or go.
+That value is then mapped into a clear action: stop, wait, or go.
 
-This is how neural networks are used in real systems:
-continuous prediction,
-followed by simple decision thresholds.
+This is how neural networks are used in real systems: continuous prediction, followed by simple decision thresholds.
 
 ---
 
 ## Closing (10–15 seconds)
 
-This neural network is intentionally small.
-But it contains everything that larger networks use:
+This neural network is intentionally small. But it contains everything that larger networks use:
 weights, bias, loss, and learning.
 
-By understanding this simple example,
-you build intuition that scales to much more complex AI systems.
+By understanding this simple example, you build intuition that scales to much more complex AI systems.
 
-Neural networks are not magic.
-They are understandable,
-visual,
-and learnable —
-one neuron at a time.
+Neural networks are not magic. They are understandable, visual, and learnable — one neuron at a time.
 
 ---
 
